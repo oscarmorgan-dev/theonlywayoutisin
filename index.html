@@ -683,12 +683,18 @@
             pointer-events: none;
           }
 
-          /* Mirror desktop appearance on mobile */
+          /* Mirror desktop appearance on mobile but without scrollbar */
           .text-overlay {
             width: 80%;               /* slightly wider on mobile for readability */
             max-width: 90%;           /* ensure it fits on small screens */
             padding: 30px;            /* comfortable padding */
+            overflow: visible;        /* no scrollbar on mobile - text stretches down */
             /* Keep all other desktop properties: position absolute, background, border, etc. */
+          }
+          
+          /* Hide scrollbar on mobile */
+          .text-overlay::-webkit-scrollbar {
+            display: none;
           }
 
           /* Keep separators proportional; no change needed if you like current values.
