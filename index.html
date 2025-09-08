@@ -858,11 +858,11 @@
                 // Calculate height to span multiple sections
                 let heightMultiplier;
                 if (window.innerWidth <= 360) {
-                    heightMultiplier = 0.252; // Extra small mobile
+                    heightMultiplier = 1.0; // Extra small mobile - match desktop reach
                 } else if (window.innerWidth <= 480) {
-                    heightMultiplier = 0.294; // Small mobile
+                    heightMultiplier = 1.02; // Small mobile - match desktop reach
                 } else if (window.innerWidth <= 768) {
-                    heightMultiplier = 0.336; // Mobile
+                    heightMultiplier = 1.04; // Mobile - match desktop reach
                 } else {
                     heightMultiplier = 1.05; // Desktop
                 }
