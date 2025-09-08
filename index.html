@@ -214,39 +214,49 @@
 
         /* Two-column text overlay on last image */
         .final-text-overlay {
-            position: absolute;
-            left: 50%;
-            bottom: 188px; /* Moved up by 10% (was 80px, now ~188px to move up 10% of typical image height) */
-            transform: translateX(-50%);
-            width: 48%; /* Same width as text box */
-            max-width: 640px; /* Same max-width as text box */
-            z-index: 650; /* Higher z-index to ensure it's above everything */
-            display: flex;
-            gap: 40px; /* Space between columns */
-        }
+          /* remove absolute layout */
+          position: static;
+          left: auto; bottom: auto; transform: none;
+          /* centered measure */
+          width: clamp(320px, 72vw, 960px);
+          max-width: 960px;
+          margin: 0 auto 24px auto;
 
-        .final-text-column {
-            flex: 1; /* Equal width columns */
+          display: grid;
+          grid-template-columns: 1fr 1fr; /* two columns on desktop */
+          gap: 40px;
+          z-index: auto; /* no stacking tricks needed */
         }
-
+        .final-text-column { /* keep the wrapper, normal flow */
+          display: block;
+        }
         .final-text-overlay p {
-            font-family: 'KH Teka', Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.088; /* Same as text box */
-            color: white; /* White text on background image */
-            margin-bottom: 20px;
-            text-align: justify;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for readability */
-            hyphens: auto;
-            -webkit-hyphens: auto;
-            -ms-hyphens: auto;
-            word-wrap: break-word;
+          font-family: 'KH Teka', Arial, sans-serif;
+          font-size: 16px;
+          line-height: 1.28;
+          color: #000;           /* black text in footer */
+          margin: 0 0 16px 0;
+          text-align: left;
+          text-shadow: none;     /* remove overlay shadow */
+          hyphens: auto;
         }
 
         /* Footer slides in when the text finishes */
         .footer-panel {
-            position: fixed; top: 100vh; left: var(--side-margin); right: var(--side-margin); height: 100vh; background: #fff;
-            z-index: 1; transition: transform .6s ease; padding: 80px; display:flex; flex-direction:column; justify-content:center; align-items:center;
+          position: fixed;
+          top: 100vh;
+          left: var(--side-margin);
+          right: var(--side-margin);
+          height: 100vh;
+          background: #fff;
+          z-index: 1;
+          transition: transform .6s ease;
+          padding: 80px 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden; /* ensure nothing spills outside */
         }
         .footer-panel.show { transform: translateY(-100vh); }
 
@@ -254,30 +264,25 @@
 
         /* Navigation links below final text */
         .final-navigation-links {
-            position: absolute;
-            left: 50%;
-            bottom: 120px; /* Positioned below the moved-up text */
-            transform: translateX(-50%);
-            width: 48%; /* Same width as text overlay */
-            max-width: 640px; /* Same max-width as text overlay */
-            z-index: 650; /* Same z-index as text overlay */
-            display: flex;
-            justify-content: space-between; /* Equally spaced */
-            align-items: center;
-        }
+          position: static; left: auto; bottom: auto; transform: none;
+          width: clamp(320px, 72vw, 960px);
+          max-width: 960px;
+          margin: 12px auto 0 auto;
 
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
         .final-navigation-links a {
-            font-family: 'KH Teka', Arial, sans-serif;
-            font-size: 16px; /* Same size as page text */
-            color: white;
-            text-decoration: none;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for readability */
-            transition: text-decoration 0.3s ease;
+          font-family: 'KH Teka', Arial, sans-serif;
+          font-size: 16px;
+          color: #000;            /* black links in footer */
+          text-decoration: none;
+          text-shadow: none;
         }
-
-        .final-navigation-links a:hover {
-            text-decoration: underline;
-        }
+        .final-navigation-links a:hover { text-decoration: underline; }
 
 
 
@@ -309,6 +314,24 @@
           }
           .text-panel p { font-size: 14px; line-height: 1.35; }
           .text-panel img { width: 33%; max-width: 120px; margin: 16px auto; }
+        }
+
+        @media (max-width: 768px) {
+          .final-text-overlay {
+            grid-template-columns: 1fr;  /* single column on tablet/phone */
+            gap: 20px;
+            width: clamp(280px, 90vw, 640px);
+            max-width: 640px;
+          }
+          .final-text-overlay p { font-size: 15px; line-height: 1.3; }
+          .final-navigation-links {
+            width: clamp(280px, 90vw, 640px);
+            gap: 16px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .final-text-overlay p { font-size: 14px; line-height: 1.35; }
         }
 
 
