@@ -55,6 +55,12 @@
         .bg .background-block img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
         .background-separator { height: 28px; background: #fff; border-top: 2px solid #333; border-bottom: 2px solid #333; }
 
+        /* Footer pointer events */
+        .footer-panel { pointer-events: none; }
+        .footer-panel a,
+        .footer-panel button,
+        .final-navigation-links { pointer-events: auto; }
+
         /* Left Margin with Ruler */
         .left-margin {
             position: fixed;
@@ -160,14 +166,7 @@
         }
 
         /* White separator between background images */
-        .background-separator {
-            width: 100%;
-            height: 28px; /* Reverted to match desktop nav bar size */
-            background-color: white;
-            border-top: 2px solid #333;
-            border-bottom: 2px solid #333;
-            display: block;
-        }
+        
 
         /* Unified scroll source: text panel */
         .text-panel {
@@ -845,10 +844,16 @@
     }
   }
 
-  // Make sure scroll input always targets the text panel
-  function forwardWheelToText(e) {
-    e.preventDefault();
-    textPanel.scrollBy({ top: e.deltaY, behavior: 'auto' });
+  function isInsideTextPanel(el) {
+    return textPanel && textPanel.contains(el);
+  }
+
+  function globalWheelRouter(e) {
+    if (!isInsideTextPanel(e.target)) {
+      e.preventDefault();
+      textPanel.scrollBy({ top: e.deltaY, behavior: 'auto' });
+    }
+    // if inside the panel, let native scrolling happen
   }
 
   // Reduced motion: freeze background at offsetStart
@@ -859,10 +864,27 @@
     });
   } else {
     textPanel.addEventListener('scroll', onTextScroll, { passive: true });
-    document.getElementById('hero').addEventListener('wheel', forwardWheelToText, { passive: false });
+    window.addEventListener('wheel', globalWheelRouter, { passive: false });
     window.addEventListener('resize', () => requestAnimationFrame(update));
     window.addEventListener('load', () => requestAnimationFrame(update));
+    new ResizeObserver(() => requestAnimationFrame(update)).observe(textPanel);
   }
+
+  // Touch routing for mobile (gesture anywhere to scroll the text panel)
+  let touchRouting = { active: false, y: 0 };
+  function onTouchStart(e) {
+    touchRouting.active = !isInsideTextPanel(e.target);
+    touchRouting.y = e.touches[0].clientY;
+  }
+  function onTouchMove(e) {
+    if (!touchRouting.active) return; // native inside the panel
+    e.preventDefault();
+    const dy = touchRouting.y - e.touches[0].clientY;
+    textPanel.scrollBy({ top: dy, behavior: 'auto' });
+    touchRouting.y = e.touches[0].clientY;
+  }
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
     </script>
 </body>
 </html>
