@@ -156,6 +156,7 @@
             transform: translateX(-50%);
             width: 48%; /* Reduced by 20% from 60% */
             max-width: 640px; /* Reduced by 20% from 800px */
+            height: 60vh; /* Fixed height relative to viewport */
             background-color: rgba(255, 255, 255, 0.95);
             border: 2px solid #333;
             border-radius: 0; /* Sharpened edges */
@@ -165,6 +166,8 @@
             transition: opacity 0.8s ease-out; /* Faster, smoother fade */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(5px);
+            overflow-y: auto; /* Enable vertical scrolling */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .text-overlay.fade-in {
@@ -192,6 +195,37 @@
             margin: 30px auto;
             border-radius: 0; /* Sharpened edges */
             box-shadow: none; /* Removed drop shadow */
+        }
+
+        /* Custom scrollbar styling for text overlay */
+        .text-overlay::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .text-overlay::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+        }
+
+        .text-overlay::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 0;
+        }
+
+        .text-overlay::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Ensure smooth scrolling within text overlay */
+        .text-overlay {
+            scroll-behavior: smooth;
+        }
+
+        /* Prevent text overlay from being too tall on very large screens */
+        @media screen and (min-height: 1200px) {
+            .text-overlay {
+                height: 70vh; /* Slightly larger on very tall screens */
+            }
         }
 
         /* Hide text button in top right of first image */
@@ -333,7 +367,8 @@
             /* Adjust text overlay for mobile */
             .text-overlay {
                 width: 63%; /* 30% narrower than 90% for mobile */
-                padding: 35px; /* Proportional scaling of desktop 40px */
+                height: 50vh; /* Fixed height that fits mobile screens well */
+                padding: 20px; /* Reduced padding for mobile */
                 margin: 0 5px;
                 border-width: 1.75px; /* Proportional scaling of desktop 2px border */
             }
@@ -435,7 +470,8 @@
             /* Further adjust text overlay for small mobile */
             .text-overlay {
                 width: 66.5%; /* 30% narrower than 95% for small mobile */
-                padding: 12px; /* Very compact padding */
+                height: 45vh; /* Slightly smaller height for small mobile */
+                padding: 15px; /* Compact but usable padding */
                 margin: 0 2px;
             }
 
@@ -557,7 +593,8 @@
             /* Minimal text overlay for extra small mobile */
             .text-overlay {
                 width: 68.6%; /* 30% narrower than 98% for extra small mobile */
-                padding: 8px; /* Minimal padding */
+                height: 40vh; /* Compact height for extra small screens */
+                padding: 12px; /* Minimal but usable padding */
                 margin: 0 1px;
             }
 
@@ -771,55 +808,27 @@
             isSmallMobile = window.innerWidth <= 480;
         }
 
-        // Position the text overlay (responsive height based on device)
+        // Position the text overlay (fixed height with CSS, just set vertical position)
         function positionTextOverlay() {
             if (textOverlay) {
-                // Known dimensions: 6 images at 1080px each, 5 separators at 31px each
+                // Simple positioning - just set the top position
+                // Height is now controlled by CSS fixed heights
                 const imageHeight = 1080;
-                const separatorHeight = 31;
-                
-                // Calculate positions:
-                // Original start: 1/4 down the first image = 1080 * 0.25 = 270px from top
-                // Lift up by 30%: 270px * 0.7 = 189px from top
                 const originalStartY = imageHeight * 0.25;
                 let startY = originalStartY * 0.7; // Lifted up by 30%
                 
-                // Move mobile text box higher up the page (multiple adjustments)
+                // Move mobile text box higher up the page
                 if (window.innerWidth <= 768) {
-                    startY = startY * 0.8 * 0.8 * 0.85; // Additional 15% higher (total ~49% higher than original)
+                    startY = startY * 0.8 * 0.8 * 0.85; // Additional positioning for mobile
                 }
                 
-                // Responsive height based on screen size
-                let heightMultiplier;
-                if (window.innerWidth <= 360) {
-                    heightMultiplier = 0.252; // Extra small mobile: 12% longer than 0.225
-                } else if (window.innerWidth <= 480) {
-                    heightMultiplier = 0.294; // Small mobile: 12% longer than 0.2625
-                } else if (window.innerWidth <= 768) {
-                    heightMultiplier = 0.336; // Mobile: 12% longer than 0.3
-                } else {
-                    heightMultiplier = 1.05; // Desktop: original calculation unchanged
-                }
-                
-                // Calculate height based on device
-                const originalHeight = 5485;
-                const reducedHeight = originalHeight * 0.7;
-                const finalHeight = reducedHeight * heightMultiplier;
-                const endY = startY + finalHeight;
-                
-                // Box height spans from startY to endY
-                const boxHeight = endY - startY;
-                
-                // Apply positioning
+                // Apply only top positioning - height is handled by CSS
                 textOverlay.style.top = startY + 'px';
-                textOverlay.style.height = boxHeight + 'px';
                 
-                console.log('Text overlay positioned (responsive height):', {
+                console.log('Text overlay positioned (fixed height):', {
                     screenWidth: window.innerWidth,
-                    heightMultiplier: heightMultiplier,
                     startY: startY,
-                    endY: endY,
-                    boxHeight: boxHeight
+                    height: 'Controlled by CSS'
                 });
             }
         }
