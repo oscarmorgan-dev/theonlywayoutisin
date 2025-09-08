@@ -225,7 +225,7 @@
         .final-text-overlay {
             position: absolute;
             left: 50%;
-            bottom: 80px; /* Position just above the bottom of the image */
+            bottom: 188px; /* Moved up by 10% (was 80px, now ~188px to move up 10% of typical image height) */
             transform: translateX(-50%);
             width: 48%; /* Same width as text box */
             max-width: 640px; /* Same max-width as text box */
@@ -250,6 +250,33 @@
             -webkit-hyphens: auto;
             -ms-hyphens: auto;
             word-wrap: break-word;
+        }
+
+        /* Navigation links below final text */
+        .final-navigation-links {
+            position: absolute;
+            left: 50%;
+            bottom: 120px; /* Positioned below the moved-up text */
+            transform: translateX(-50%);
+            width: 48%; /* Same width as text overlay */
+            max-width: 640px; /* Same max-width as text overlay */
+            z-index: 650; /* Same z-index as text overlay */
+            display: flex;
+            justify-content: space-between; /* Equally spaced */
+            align-items: center;
+        }
+
+        .final-navigation-links a {
+            font-family: 'KH Teka', Arial, sans-serif;
+            font-size: 16px; /* Same size as page text */
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for readability */
+            transition: text-decoration 0.3s ease;
+        }
+
+        .final-navigation-links a:hover {
+            text-decoration: underline;
         }
 
 
@@ -338,7 +365,7 @@
             .final-text-overlay {
                 width: 63%; /* Same as text box mobile width - 30% narrower */
                 gap: 35px; /* Proportional scaling of desktop 40px gap */
-                bottom: 40px; /* Closer to bottom for mobile */
+                bottom: 140px; /* Moved up proportionally for mobile */
             }
 
             .final-text-overlay p {
@@ -349,6 +376,16 @@
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
                 word-wrap: break-word;
+            }
+
+            /* Adjust navigation links for mobile */
+            .final-navigation-links {
+                width: 63%; /* Same as text overlay mobile width */
+                bottom: 60px; /* Positioned below the moved-up text on mobile */
+            }
+
+            .final-navigation-links a {
+                font-size: 30px !important; /* 50% larger than 20px for mobile */
             }
 
         }
@@ -430,7 +467,7 @@
                 width: 66.5%; /* Same as text box small mobile width - 30% narrower */
                 flex-direction: row; /* Keep two columns side-by-side */
                 gap: 8px; /* Very tight spacing */
-                bottom: 20px; /* Much closer to bottom */
+                bottom: 40px; /* Moved up proportionally for small mobile */
             }
 
             .final-text-overlay p {
@@ -441,6 +478,16 @@
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
                 word-wrap: break-word;
+            }
+
+            /* Adjust navigation links for small mobile */
+            .final-navigation-links {
+                width: 66.5%; /* Same as text overlay small mobile width */
+                bottom: 15px; /* Positioned below the moved-up text on small mobile */
+            }
+
+            .final-navigation-links a {
+                font-size: 5.5px; /* Match text overlay benchmark */
             }
 
 
@@ -541,7 +588,7 @@
             .final-text-overlay {
                 width: 68.6%; /* Same as text box extra small mobile width - 30% narrower */
                 gap: 6px; /* Minimal gap */
-                bottom: 15px; /* Very close to bottom */
+                bottom: 30px; /* Moved up proportionally for extra small mobile */
             }
 
             .final-text-overlay p {
@@ -552,6 +599,16 @@
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
                 word-wrap: break-word;
+            }
+
+            /* Adjust navigation links for extra small mobile */
+            .final-navigation-links {
+                width: 68.6%; /* Same as text overlay extra small mobile width */
+                bottom: 10px; /* Positioned below the moved-up text on extra small mobile */
+            }
+
+            .final-navigation-links a {
+                font-size: 5px; /* Match text overlay benchmark */
             }
 
             .popup {
@@ -680,6 +737,14 @@
                 <div class="final-text-column">
                     <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
                 </div>
+            </div>
+            
+            <!-- Navigation Links Below Final Text -->
+            <div class="final-navigation-links">
+                <a href="#instagram">Instagram</a>
+                <a href="#youtube">Youtube</a>
+                <a href="#illustration">Illustration</a>
+                <a href="#nutrition">Nutrition</a>
             </div>
         </div>
     </div>
