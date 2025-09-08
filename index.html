@@ -1136,13 +1136,29 @@
             const separatorHeight = 28;
             maxDesktopScroll = (imageHeight * 6) + (separatorHeight * 6);
 
+            // Reset scroll position
+            desktopScrollPosition = 0;
+
+            // Remove existing wheel listeners to prevent duplicates
+            window.removeEventListener('wheel', handleDesktopWheel);
+            
             // Add wheel listener for desktop scrolling
             window.addEventListener('wheel', handleDesktopWheel, { passive: false });
             
             console.log('Desktop viewport setup complete:', {
                 maxDesktopScroll: maxDesktopScroll,
-                imageHeight: imageHeight
+                imageHeight: imageHeight,
+                backgroundContainer: !!desktopBackgroundContainer,
+                wheelListenerAdded: true
             });
+
+            // Test the background container immediately
+            if (desktopBackgroundContainer) {
+                console.log('Background container found, testing transform...');
+                desktopBackgroundContainer.style.transform = 'translateY(0px)';
+            } else {
+                console.error('Background container NOT found!');
+            }
         }
 
         function handleDesktopWheel(e) {
@@ -1150,18 +1166,25 @@
             
             e.preventDefault();
             
+            console.log('Desktop wheel event:', e.deltaY, 'Current position:', desktopScrollPosition);
+            
             // Update scroll position
             const scrollSpeed = 2; // Adjust scroll sensitivity
             desktopScrollPosition += e.deltaY * scrollSpeed;
             desktopScrollPosition = Math.max(0, Math.min(desktopScrollPosition, maxDesktopScroll));
             
             // Calculate scroll progress (0 to 1)
-            const scrollProgress = desktopScrollPosition / maxDesktopScroll;
+            const scrollProgress = desktopScrollPosition / Math.max(maxDesktopScroll, 1);
+            
+            console.log('Scroll progress:', scrollProgress, 'Transform:', -desktopScrollPosition);
             
             // Move background container
             const backgroundTransform = -desktopScrollPosition;
             if (desktopBackgroundContainer) {
                 desktopBackgroundContainer.style.transform = `translateY(${backgroundTransform}px)`;
+                console.log('Applied transform:', backgroundTransform);
+            } else {
+                console.error('desktopBackgroundContainer not found');
             }
             
             // Update depth counter
@@ -1555,7 +1578,7 @@
             }
         }
         
-        // Use optimized scroll handler on mobile (but not when sync scrolling is active)
+        // Only add scroll handlers for mobile - desktop uses wheel events
         if (isMobile) {
             window.addEventListener('scroll', (e) => {
                 // Don't handle scroll events when synchronized scrolling is controlling the page
@@ -1565,13 +1588,8 @@
                 requestTick();
                 ticking = false;
             }, { passive: true }); // Keep passive for performance
-        } else {
-            // Use regular handler on desktop
-            window.addEventListener('scroll', () => {
-                updateDepthCounter();
-                handleUserScroll();
-            });
         }
+        // Desktop scroll handling is done via wheel events in handleDesktopWheel
     </script>
 </body>
 </html>
