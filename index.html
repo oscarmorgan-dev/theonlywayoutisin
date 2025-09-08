@@ -40,8 +40,55 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 0; /* Remove line height to eliminate gaps */
-            margin-left: 80px; /* Create left margin */
-            margin-right: 80px; /* Create right margin */
+            margin: 0;
+            overflow: hidden; /* Lock viewport */
+            height: 100vh;
+        }
+
+        /* Desktop Viewport System */
+        .desktop-viewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Background container for scrolling images */
+        .desktop-background-container {
+            position: absolute;
+            top: 0;
+            left: 80px; /* Account for left margin */
+            right: 80px; /* Account for right margin */
+            height: 700vh; /* Tall enough for all images */
+            will-change: transform;
+        }
+
+        /* Background blocks in desktop viewport */
+        .desktop-background-container .background-block {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+
+        .desktop-background-container .background-block img {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        /* Separators between images */
+        .desktop-background-container .background-separator {
+            width: 100%;
+            height: 28px;
+            background-color: white;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            display: block;
         }
 
         /* Left Margin with Ruler */
@@ -281,6 +328,37 @@
             -webkit-hyphens: auto;
             -ms-hyphens: auto;
             word-wrap: break-word;
+        }
+
+        /* Desktop Footer Block */
+        .desktop-footer {
+            position: fixed;
+            top: 100vh;
+            left: 80px;
+            right: 80px;
+            height: 100vh;
+            background: white;
+            z-index: 2;
+            transition: transform 0.8s ease;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Show footer when background scroll is complete */
+        .desktop-footer.show {
+            transform: translateY(-100vh);
+        }
+
+        /* Hide old desktop elements */
+        .landing-page {
+            display: none;
+        }
+
+        .text-overlay {
+            display: none;
         }
 
         /* Navigation links below final text */
@@ -883,6 +961,59 @@
         </div>
     </div>
 
+    <!-- Desktop Viewport System -->
+    <div class="desktop-viewport" id="desktopViewport">
+        <!-- Background container -->
+        <div class="desktop-background-container" id="desktopBackgroundContainer">
+            <div class="background-block">
+                <img src="assets/images/background/001.png" alt="Background 001">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/002.png" alt="Background 002">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/002.5.png" alt="Background 002.5">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/003.png" alt="Background 003">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/004.png" alt="Background 004">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/005.png" alt="Background 005">
+            </div>
+            <div class="background-separator"></div>
+            <div class="background-block">
+                <img src="assets/images/background/006-3.png" alt="Background 006-3">
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop Footer -->
+    <div class="desktop-footer" id="desktopFooter">
+        <div class="final-text-overlay">
+            <div class="final-text-column">
+                <p>The convergence of art and technology creates new possibilities for human expression. Each pixel, each line of code, each design decision becomes part of a larger conversation about how we communicate, connect, and create meaning in the digital age.</p>
+            </div>
+            <div class="final-text-column">
+                <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
+            </div>
+        </div>
+        
+        <div class="final-navigation-links">
+            <a href="#instagram">Instagram</a>
+            <a href="#youtube">Youtube</a>
+            <a href="#illustration">Illustration</a>
+            <a href="#nutrition">Nutrition</a>
+        </div>
+    </div>
+
     <!-- Mobile Viewport System (only visible on mobile) -->
     <div class="mobile-viewport" id="mobileViewport" style="display: none;">
         <!-- Background container -->
@@ -964,16 +1095,17 @@
     </div>
 
     <script>
-        // Depth counter functionality
+        // Desktop viewport system elements
         const navDepthCounter = document.getElementById('navDepthCounter');
         const playButton = document.getElementById('playButton');
-        const textOverlay = document.getElementById('textOverlay');
-        const hideTextButton = document.getElementById('hideTextButton');
-        const finalTextOverlay = document.getElementById('finalTextOverlay');
+        const desktopViewport = document.getElementById('desktopViewport');
+        const desktopBackgroundContainer = document.getElementById('desktopBackgroundContainer');
+        const desktopFooter = document.getElementById('desktopFooter');
         
         let isAutoScrolling = false;
         let autoScrollInterval;
-        
+        let desktopScrollPosition = 0;
+        let maxDesktopScroll = 0;
         
         // Mobile detection - updated dynamically
         let isMobile = window.innerWidth <= 768;
@@ -983,6 +1115,71 @@
         function updateMobileDetection() {
             isMobile = window.innerWidth <= 768;
             isSmallMobile = window.innerWidth <= 480;
+        }
+
+        // Desktop viewport scrolling system
+        function setupDesktopViewport() {
+            if (window.innerWidth <= 768) {
+                // Hide desktop viewport on mobile
+                if (desktopViewport) desktopViewport.style.display = 'none';
+                if (desktopFooter) desktopFooter.style.display = 'none';
+                return;
+            }
+
+            // Show desktop viewport
+            if (desktopViewport) desktopViewport.style.display = 'block';
+            if (desktopFooter) desktopFooter.style.display = 'block';
+
+            // Calculate maximum scroll distance
+            // 6 images (100vh each) + 6 separators (28px each) = 600vh + 168px
+            const imageHeight = window.innerHeight;
+            const separatorHeight = 28;
+            maxDesktopScroll = (imageHeight * 6) + (separatorHeight * 6);
+
+            // Add wheel listener for desktop scrolling
+            window.addEventListener('wheel', handleDesktopWheel, { passive: false });
+            
+            console.log('Desktop viewport setup complete:', {
+                maxDesktopScroll: maxDesktopScroll,
+                imageHeight: imageHeight
+            });
+        }
+
+        function handleDesktopWheel(e) {
+            if (window.innerWidth <= 768) return; // Only on desktop
+            
+            e.preventDefault();
+            
+            // Update scroll position
+            const scrollSpeed = 2; // Adjust scroll sensitivity
+            desktopScrollPosition += e.deltaY * scrollSpeed;
+            desktopScrollPosition = Math.max(0, Math.min(desktopScrollPosition, maxDesktopScroll));
+            
+            // Calculate scroll progress (0 to 1)
+            const scrollProgress = desktopScrollPosition / maxDesktopScroll;
+            
+            // Move background container
+            const backgroundTransform = -desktopScrollPosition;
+            if (desktopBackgroundContainer) {
+                desktopBackgroundContainer.style.transform = `translateY(${backgroundTransform}px)`;
+            }
+            
+            // Update depth counter
+            if (navDepthCounter) {
+                const depth = Math.floor(scrollProgress * 10000);
+                navDepthCounter.textContent = depth + 'm';
+            }
+            
+            // Show footer when scroll is complete
+            if (scrollProgress >= 0.95) {
+                if (desktopFooter) {
+                    desktopFooter.classList.add('show');
+                }
+            } else {
+                if (desktopFooter) {
+                    desktopFooter.classList.remove('show');
+                }
+            }
         }
 
         // Position the text overlay (long form spanning multiple sections)
@@ -1142,25 +1339,21 @@
         // Initialize everything
         window.addEventListener('load', () => {
             updateDepthCounter();
-            // Position and fade in text overlay immediately
+            // Setup viewport systems
             setTimeout(() => {
-                positionTextOverlay();
-                positionFinalTextOverlay();
-                fadeInTextOverlay();
-                // Setup mobile viewport system
+                setupDesktopViewport();
                 setupMobileViewport();
             }, 100); // Start almost immediately after page load
         });
         
-        // Update mobile detection and text overlay on resize
+        // Update viewport systems on resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
             updateMobileDetection();
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                positionTextOverlay();
-                positionFinalTextOverlay();
-                // Reinitialize mobile viewport after resize
+                // Reinitialize viewport systems after resize
+                setupDesktopViewport();
                 setupMobileViewport();
             }, 100);
         });
