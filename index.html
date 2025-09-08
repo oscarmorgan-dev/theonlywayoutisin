@@ -666,42 +666,106 @@
         }
 
         @media (max-width: 768px) {
-          /* Make each panel tall so the background has dwell time */
-          .background-block {
-            position: relative;       /* becomes a containing block for the image */
-            min-height: 150vh;        /* tune to 140–180vh to taste */
+          /* Fixed viewport system - no page scrolling */
+          body {
+            overflow: hidden;
+            height: 100vh;
+          }
+          
+          /* Main viewport container - locked at 100vh */
+          .mobile-viewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+          }
+          
+          /* Background container - moves at different speed */
+          .mobile-background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 600vh; /* Tall enough for all background content */
+            will-change: transform;
+          }
+          
+          /* Background images in mobile viewport */
+          .mobile-background-container .background-block {
+            position: relative;
+            height: 100vh; /* Each image fills viewport */
             overflow: hidden;
           }
-          .background-block > img {
+          
+          .mobile-background-container .background-block img {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;        /* no distortion, allows cropping */
+            object-fit: cover;
             object-position: center;
             display: block;
-            pointer-events: none;
-          }
-
-          /* Fixed-height scrollable text box on mobile for synchronized scrolling */
-          .text-overlay {
-            width: 80%;               /* slightly wider on mobile for readability */
-            max-width: 90%;           /* ensure it fits on small screens */
-            padding: 30px;            /* comfortable padding */
-            height: 70vh;             /* fixed height for scrollable content */
-            overflow-y: auto;         /* enable internal scrolling */
-            overflow-x: hidden;       /* prevent horizontal scrolling */
-            /* Keep all other desktop properties: position absolute, background, border, etc. */
-          }
-
-          /* Prevent page scrolling when synchronized scrolling is active */
-          body.sync-scrolling {
-            /* Removed overflow: hidden as it was causing issues */
           }
           
-          /* Keep separators proportional; no change needed if you like current values.
-             If desired, you can reduce their visual weight a touch on small screens: */
-          /* .background-separator { opacity: 0.9; } */
+          /* Hide separators in mobile viewport */
+          .mobile-background-container .background-separator {
+            display: none;
+          }
+          
+          /* Text container - moves at different speed */
+          .mobile-text-container {
+            position: absolute;
+            top: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 90%;
+            height: 80vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #333;
+            border-radius: 0;
+            padding: 30px;
+            z-index: 10;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            will-change: transform;
+          }
+          
+          /* Footer container - appears after main experience */
+          .mobile-footer {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            z-index: 2;
+            transition: transform 0.5s ease;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          /* Show footer when experience is complete */
+          .mobile-footer.show {
+            transform: translateY(-100vh);
+          }
+          
+          /* Hide desktop elements on mobile */
+          .landing-page {
+            display: none;
+          }
+          
+          .text-overlay {
+            display: none;
+          }
         }
     </style>
 </head>
@@ -816,6 +880,86 @@
                 <a href="#illustration">Illustration</a>
                 <a href="#nutrition">Nutrition</a>
             </div>
+        </div>
+    </div>
+
+    <!-- Mobile Viewport System (only visible on mobile) -->
+    <div class="mobile-viewport" id="mobileViewport" style="display: none;">
+        <!-- Background container -->
+        <div class="mobile-background-container" id="mobileBackgroundContainer">
+            <div class="background-block">
+                <img src="assets/images/background/001.png" alt="Background 001">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/002.png" alt="Background 002">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/002.5.png" alt="Background 002.5">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/003.png" alt="Background 003">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/004.png" alt="Background 004">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/005.png" alt="Background 005">
+            </div>
+            <div class="background-block">
+                <img src="assets/images/background/006-3.png" alt="Background 006-3">
+            </div>
+        </div>
+        
+        <!-- Text container -->
+        <div class="mobile-text-container" id="mobileTextContainer">
+            <p>Welcome to an immersive journey through design and creativity. This space represents a convergence of artistic vision and technical precision, where every element has been carefully considered to create a harmonious experience that speaks to both the mind and the soul.</p>
+            
+            <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3">
+            
+            <p>The creative process begins with observation—watching how light falls across surfaces, how shadows define space, and how color creates emotion. Each project starts as a whisper of an idea, growing through iteration and refinement into something that transcends its original conception.</p>
+            
+            <p>In the digital realm, we find ourselves constantly balancing the technical with the poetic. Code becomes poetry, pixels become brushstrokes, and user interfaces become canvases for human connection. This intersection is where true innovation happens.</p>
+            
+            <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3">
+            
+            <p>Collaboration shapes every great work. Ideas evolve through dialogue, criticism, and the generous sharing of perspectives. What begins as individual vision transforms through collective wisdom into something greater than the sum of its parts.</p>
+            
+            <p>The tools we use are extensions of our creativity—whether traditional media or cutting-edge technology. Mastery comes not from the complexity of our instruments, but from our ability to bend them to serve our vision with clarity and purpose.</p>
+            
+            <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3">
+            
+            <p>Time moves differently in the creative space. Hours can pass like minutes when we're in flow, and sometimes a single moment of inspiration can illuminate weeks of work. Learning to navigate these rhythms is essential to sustainable creative practice.</p>
+            
+            <p>Every project teaches us something new about ourselves and our craft. Failure becomes education, constraints become catalysts for innovation, and limitations reveal unexpected pathways to beauty and meaning.</p>
+            
+            <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3">
+            
+            <p>The audience completes the work. Until ideas are shared, they remain incomplete—existing in potential rather than reality. The moment of connection between creator and audience is where true magic happens, where communication transcends words and touches something deeper.</p>
+            
+            <p>Looking forward, we see endless possibilities. New technologies emerge, cultural contexts shift, and human needs evolve. Our role is to remain curious, adaptable, and committed to creating work that serves both present needs and future dreams.</p>
+            
+            <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3">
+            
+            <p>This journey continues with each new project, each fresh challenge, each opportunity to push boundaries and explore uncharted territory. The path ahead is illuminated not by certainty, but by the excitement of discovery and the promise of meaningful contribution to the ongoing human story.</p>
+        </div>
+    </div>
+
+    <!-- Mobile Footer -->
+    <div class="mobile-footer" id="mobileFooter" style="display: none;">
+        <div class="final-text-overlay">
+            <div class="final-text-column">
+                <p>The convergence of art and technology creates new possibilities for human expression. Each pixel, each line of code, each design decision becomes part of a larger conversation about how we communicate, connect, and create meaning in the digital age.</p>
+            </div>
+            <div class="final-text-column">
+                <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
+            </div>
+        </div>
+        
+        <div class="final-navigation-links">
+            <a href="#instagram">Instagram</a>
+            <a href="#youtube">Youtube</a>
+            <a href="#illustration">Illustration</a>
+            <a href="#nutrition">Nutrition</a>
         </div>
     </div>
 
@@ -1003,8 +1147,8 @@
                 positionTextOverlay();
                 positionFinalTextOverlay();
                 fadeInTextOverlay();
-                // Setup synchronized scrolling for mobile
-                setupSynchronizedScrolling();
+                // Setup mobile viewport system
+                setupMobileViewport();
             }, 100); // Start almost immediately after page load
         });
         
@@ -1016,9 +1160,8 @@
             resizeTimeout = setTimeout(() => {
                 positionTextOverlay();
                 positionFinalTextOverlay();
-                // Reinitialize synchronized scrolling after resize
-                isSyncScrollingActive = false;
-                setupSynchronizedScrolling();
+                // Reinitialize mobile viewport after resize
+                setupMobileViewport();
             }, 100);
         });
         
@@ -1029,101 +1172,132 @@
             }
         });
         
-        // Synchronized scrolling for mobile: text scroll drives background scroll
-        let isSyncScrollingActive = false;
+        // Mobile viewport system with dual-speed scrolling
+        let mobileViewportActive = false;
+        let mobileScrollPosition = 0;
+        let maxMobileScroll = 0;
         
-        function setupSynchronizedScrolling() {
-            if (window.innerWidth > 768 || !textOverlay) {
-                // Remove sync scrolling class if not on mobile
-                document.body.classList.remove('sync-scrolling');
-                isSyncScrollingActive = false;
-                return; // Only on mobile
+        // Mobile viewport elements
+        const mobileViewport = document.getElementById('mobileViewport');
+        const mobileBackgroundContainer = document.getElementById('mobileBackgroundContainer');
+        const mobileTextContainer = document.getElementById('mobileTextContainer');
+        const mobileFooter = document.getElementById('mobileFooter');
+        
+        function setupMobileViewport() {
+            if (window.innerWidth > 768) {
+                // Hide mobile viewport on desktop
+                if (mobileViewport) mobileViewport.style.display = 'none';
+                if (mobileFooter) mobileFooter.style.display = 'none';
+                mobileViewportActive = false;
+                return;
             }
             
-            // Wait for text overlay to be fully rendered
-            setTimeout(() => {
-                try {
-                    // Calculate total distances safely
-                    const textScrollableHeight = Math.max(textOverlay.scrollHeight - textOverlay.clientHeight, 1);
-                    
-                    if (textScrollableHeight <= 1) {
-                        console.log('Text overlay not ready, retrying...');
-                        setTimeout(() => setupSynchronizedScrolling(), 500);
-                        return;
-                    }
-                    
-                    // Calculate background scroll distance (from start to penultimate image)
-                    // 6 images total, so penultimate is the 5th image
-                    // Each image is 150vh (1.5 * viewport height) on mobile
-                    const viewportHeight = window.innerHeight;
-                    const imageHeight = viewportHeight * 1.5; // 150vh
-                    const separatorHeight = 35; // mobile separator height
-                    
-                    // Distance to reach the top of the 5th image (penultimate)
-                    // 4 full images + 4 separators
-                    const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
-                    
-                    console.log('Sync scroll setup:', {
-                        textScrollableHeight,
-                        backgroundScrollDistance,
-                        ratio: backgroundScrollDistance / textScrollableHeight
-                    });
-                    
-                    // Remove existing scroll listeners to prevent conflicts
-                    if (textOverlay.removeEventListener) {
-                        textOverlay.removeEventListener('scroll', handleTextScroll);
-                    }
-                    
-                    // Add synchronized scroll listener
-                    textOverlay.addEventListener('scroll', handleTextScroll, { passive: false });
-                    isSyncScrollingActive = true;
-                    
-                    // Add CSS class to prevent page scrolling
-                    document.body.classList.add('sync-scrolling');
-                } catch (error) {
-                    console.error('Error setting up synchronized scrolling:', error);
-                    // Fallback: disable sync scrolling
-                    isSyncScrollingActive = false;
-                    document.body.classList.remove('sync-scrolling');
-                }
-            }, 200);
+            // Show mobile viewport
+            if (mobileViewport) mobileViewport.style.display = 'block';
+            if (mobileFooter) mobileFooter.style.display = 'block';
+            mobileViewportActive = true;
+            
+            // Calculate maximum scroll based on text content
+            if (mobileTextContainer) {
+                const textScrollableHeight = mobileTextContainer.scrollHeight - mobileTextContainer.clientHeight;
+                maxMobileScroll = Math.max(textScrollableHeight, 1);
+            }
+            
+            // Add scroll listeners for dual-speed scrolling
+            if (mobileTextContainer) {
+                mobileTextContainer.addEventListener('scroll', handleMobileScroll);
+            }
+            
+            // Add wheel/touch listeners to viewport for scroll input
+            if (mobileViewport) {
+                mobileViewport.addEventListener('wheel', handleMobileWheel, { passive: false });
+                mobileViewport.addEventListener('touchstart', handleMobileTouchStart, { passive: true });
+                mobileViewport.addEventListener('touchmove', handleMobileTouchMove, { passive: false });
+            }
+            
+            console.log('Mobile viewport setup complete:', {
+                maxMobileScroll: maxMobileScroll
+            });
         }
         
-        function handleTextScroll() {
-            if (!isSyncScrollingActive || window.innerWidth > 768 || !textOverlay) return;
+        function handleMobileScroll() {
+            if (!mobileViewportActive) return;
             
-            try {
-                const textScrollPosition = textOverlay.scrollTop || 0;
-                const textScrollableHeight = Math.max(textOverlay.scrollHeight - textOverlay.clientHeight, 1);
-                const scrollProgress = Math.min(Math.max(textScrollPosition / textScrollableHeight, 0), 1);
-                
-                // Calculate corresponding background position
-                const viewportHeight = window.innerHeight;
-                const imageHeight = viewportHeight * 1.5;
-                const separatorHeight = 35;
-                const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
-                
-                const targetPageScroll = scrollProgress * backgroundScrollDistance;
-                
-                // Smoothly scroll the page to match text scroll progress
-                if (window.scrollTo) {
-                    window.scrollTo({
-                        top: targetPageScroll,
-                        behavior: 'instant' // Use instant to avoid conflicts
-                    });
-                }
-                
-                // Update depth counter based on text scroll progress
-                if (navDepthCounter) {
-                    const depth = Math.floor(scrollProgress * 10000);
-                    navDepthCounter.textContent = depth + 'm';
-                }
-            } catch (error) {
-                console.error('Error in handleTextScroll:', error);
-                // Disable sync scrolling on error
-                isSyncScrollingActive = false;
-                document.body.classList.remove('sync-scrolling');
+            const textScrollPosition = mobileTextContainer.scrollTop;
+            const scrollProgress = Math.min(textScrollPosition / maxMobileScroll, 1);
+            
+            // Move background at different speed (slower than text)
+            const backgroundSpeed = 0.3; // Background moves at 30% of text speed
+            const backgroundTransform = -(textScrollPosition * backgroundSpeed);
+            
+            if (mobileBackgroundContainer) {
+                mobileBackgroundContainer.style.transform = `translateY(${backgroundTransform}px)`;
             }
+            
+            // Update depth counter
+            if (navDepthCounter) {
+                const depth = Math.floor(scrollProgress * 10000);
+                navDepthCounter.textContent = depth + 'm';
+            }
+            
+            // Show footer when text scroll is complete
+            if (scrollProgress >= 0.95) {
+                if (mobileFooter) {
+                    mobileFooter.classList.add('show');
+                }
+            } else {
+                if (mobileFooter) {
+                    mobileFooter.classList.remove('show');
+                }
+            }
+        }
+        
+        // Handle wheel events on mobile viewport
+        let mobileWheelTimeout;
+        function handleMobileWheel(e) {
+            if (!mobileViewportActive) return;
+            
+            e.preventDefault();
+            
+            // Scroll the text container based on wheel input
+            if (mobileTextContainer) {
+                const currentScroll = mobileTextContainer.scrollTop;
+                const newScroll = currentScroll + (e.deltaY * 0.5); // Reduce scroll speed
+                mobileTextContainer.scrollTop = Math.max(0, Math.min(newScroll, maxMobileScroll));
+            }
+        }
+        
+        // Handle touch events for mobile
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        
+        function handleMobileTouchStart(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+        }
+        
+        function handleMobileTouchMove(e) {
+            if (!mobileViewportActive) return;
+            
+            e.preventDefault();
+            
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchStartY - touchY;
+            const deltaTime = Date.now() - touchStartTime;
+            
+            // Calculate scroll velocity
+            const velocity = deltaY / (deltaTime || 1);
+            const scrollAmount = deltaY * 1.5; // Amplify touch movement
+            
+            if (mobileTextContainer) {
+                const currentScroll = mobileTextContainer.scrollTop;
+                const newScroll = currentScroll + scrollAmount;
+                mobileTextContainer.scrollTop = Math.max(0, Math.min(newScroll, maxMobileScroll));
+            }
+            
+            // Update touch start for next calculation
+            touchStartY = touchY;
+            touchStartTime = Date.now();
         }
 
         // Mobile touch handling
