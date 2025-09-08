@@ -303,29 +303,29 @@
 
             /* Adjust navigation bar */
             .nav-bar {
-                height: 42px; /* Proportional to 30px text */
+                height: 35px; /* Proportional to smaller text */
                 padding: 0 15px; /* Reduce horizontal padding */
                 border-bottom-width: 1.75px; /* Proportional scaling of 2px border */
             }
 
             .nav-text {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
+                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
             }
 
             .nav-play-button {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
+                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
                 font-family: 'Arial', sans-serif; /* Ensure vector rendering on mobile */
                 -webkit-font-feature-settings: "liga" off;
                 font-feature-settings: "liga" off;
             }
 
             .nav-depth-counter {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
+                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
             }
 
             /* Adjust separator height for mobile */
             .background-separator {
-                height: 42px; /* Match mobile nav bar height */
+                height: 35px; /* Match mobile nav bar height */
                 border-top-width: 1.75px; /* Proportional scaling of 2px border */
                 border-bottom-width: 1.75px; /* Proportional scaling of 2px border */
             }
@@ -339,9 +339,9 @@
             }
 
             .text-overlay p {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
-                line-height: 1.088; /* Same as desktop for proportional consistency */
-                margin-bottom: 36px; /* 50% larger than 24px for mobile */
+                font-size: 18px !important; /* Readable size that fits mobile text box */
+                line-height: 1.2; /* Slightly more line height for mobile readability */
+                margin-bottom: 20px; /* Proportional to desktop */
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -357,7 +357,7 @@
             /* Adjust hide text button for mobile */
             .hide-text-button {
                 right: 50px; /* Further into right corner for mobile */
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
+                font-size: 16px !important; /* Readable size for mobile */
                 padding: 10px 16px;
             }
 
@@ -369,9 +369,9 @@
             }
 
             .final-text-overlay p {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
-                line-height: 1.088; /* Same as desktop for proportional consistency */
-                margin-bottom: 36px; /* 50% larger than 24px for mobile */
+                font-size: 18px !important; /* Readable size for mobile */
+                line-height: 1.2; /* Good readability for mobile */
+                margin-bottom: 20px; /* Proportional to desktop */
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -385,7 +385,7 @@
             }
 
             .final-navigation-links a {
-                font-size: 30px !important; /* 50% larger than 20px for mobile */
+                font-size: 18px !important; /* Readable size for mobile */
             }
 
         }
@@ -408,26 +408,26 @@
 
             /* Smaller navigation */
             .nav-bar {
-                height: 38px; /* Proportional to 26px text */
+                height: 32px; /* Proportional to smaller text */
                 padding: 0 10px;
                 border-bottom-width: 1.5px; /* Proportional scaling: 75% of 2px */
             }
 
             .nav-text {
-                font-size: 26px !important; /* 50% larger than 17px for small mobile */
+                font-size: 16px !important; /* Readable size for small mobile */
             }
 
             .nav-play-button {
-                font-size: 26px !important; /* 50% larger than 17px for small mobile */
+                font-size: 16px !important; /* Readable size for small mobile */
             }
 
             .nav-depth-counter {
-                font-size: 26px !important; /* 50% larger than 17px for small mobile */
+                font-size: 16px !important; /* Readable size for small mobile */
             }
 
             /* Adjust separator height for small mobile */
             .background-separator {
-                height: 38px; /* Match small mobile nav bar height */
+                height: 32px; /* Match small mobile nav bar height */
                 border-top-width: 1.5px; /* Proportional scaling: 75% of 2px */
                 border-bottom-width: 1.5px; /* Proportional scaling: 75% of 2px */
             }
@@ -440,9 +440,9 @@
             }
 
             .text-overlay p {
-                font-size: 5.5px; /* 50% smaller for small mobile */
-                line-height: 1.5; /* Better readability */
-                margin-bottom: 8px;
+                font-size: 14px; /* Readable size for small mobile */
+                line-height: 1.3; /* Better readability */
+                margin-bottom: 15px;
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -458,7 +458,7 @@
             /* Further adjust hide text button for small mobile */
             .hide-text-button {
                 right: 30px; /* Further into right corner for small mobile */
-                font-size: 5.5px; /* Match text overlay benchmark */
+                font-size: 14px; /* Match text overlay size */
                 padding: 8px 12px;
             }
 
@@ -471,9 +471,9 @@
             }
 
             .final-text-overlay p {
-                font-size: 5.5px; /* 50% smaller for small mobile */
-                line-height: 1.5; /* Better readability */
-                margin-bottom: 6px;
+                font-size: 14px; /* Readable size for small mobile */
+                line-height: 1.3; /* Better readability */
+                margin-bottom: 15px;
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -487,7 +487,7 @@
             }
 
             .final-navigation-links a {
-                font-size: 5.5px; /* Match text overlay benchmark */
+                font-size: 14px; /* Match text overlay size */
             }
 
 
@@ -497,7 +497,7 @@
             }
 
             .nav-text {
-                font-size: 5.5px; /* Match text overlay benchmark */
+                font-size: 14px; /* Match text overlay size */
                 max-width: 60%; /* Further increased to ensure title visibility */
                 overflow: visible; /* Allow text to show */
                 text-overflow: clip;
@@ -505,11 +505,11 @@
             }
 
             .nav-play-button {
-                font-size: 5.5px; /* Match text overlay benchmark */
+                font-size: 14px; /* Match text overlay size */
             }
 
             .nav-depth-counter {
-                font-size: 5.5px; /* Match text overlay benchmark */
+                font-size: 14px; /* Match text overlay size */
             }
         }
 
@@ -530,28 +530,28 @@
             }
 
             .nav-bar {
-                height: 24px; /* Proportional to 17px text */
+                height: 28px; /* Proportional to text size */
                 padding: 0 5px;
             }
 
             .nav-text {
-                font-size: 17px !important; /* 50% larger than 11px for extra small mobile */
+                font-size: 12px !important; /* Readable size for extra small mobile */
                 max-width: 55%; /* Further increased to ensure title visibility */
                 overflow: visible; /* Allow text to show */
             }
 
             .nav-play-button {
-                font-size: 17px !important; /* 50% larger than 11px for extra small mobile */
+                font-size: 12px !important; /* Readable size for extra small mobile */
                 padding: 2px;
             }
 
             .nav-depth-counter {
-                font-size: 17px !important; /* 50% larger than 11px for extra small mobile */
+                font-size: 12px !important; /* Readable size for extra small mobile */
             }
 
             /* Adjust separator height for extra small mobile */
             .background-separator {
-                height: 24px; /* Match extra small mobile nav bar height */
+                height: 28px; /* Match extra small mobile nav bar height */
             }
 
             /* Minimal text overlay for extra small mobile */
@@ -562,9 +562,9 @@
             }
 
             .text-overlay p {
-                font-size: 5px; /* 50% smaller for extra small mobile */
-                line-height: 1.6; /* More line height for readability */
-                margin-bottom: 6px;
+                font-size: 12px; /* Readable size for extra small mobile */
+                line-height: 1.4; /* More line height for readability */
+                margin-bottom: 12px;
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -580,7 +580,7 @@
             /* Minimal hide text button for extra small mobile */
             .hide-text-button {
                 right: 20px; /* Further into right corner for extra small mobile */
-                font-size: 5px; /* Match text overlay benchmark */
+                font-size: 12px; /* Match text overlay size */
                 padding: 6px 10px;
             }
 
@@ -592,9 +592,9 @@
             }
 
             .final-text-overlay p {
-                font-size: 5px; /* 50% smaller for extra small mobile */
-                line-height: 1.6; /* Better readability */
-                margin-bottom: 4px;
+                font-size: 12px; /* Readable size for extra small mobile */
+                line-height: 1.4; /* Better readability */
+                margin-bottom: 12px;
                 hyphens: auto;
                 -webkit-hyphens: auto;
                 -ms-hyphens: auto;
@@ -608,14 +608,14 @@
             }
 
             .final-navigation-links a {
-                font-size: 5px; /* Match text overlay benchmark */
+                font-size: 12px; /* Match text overlay size */
             }
 
             .popup {
                 width: 75vw; /* Ultra compact for very small screens */
                 max-width: 250px;
                 height: 70px; /* Very small height */
-                font-size: 5px; /* Match text overlay benchmark */
+                font-size: 12px; /* Match text overlay size */
             }
 
         }
