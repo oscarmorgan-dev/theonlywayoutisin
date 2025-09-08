@@ -72,6 +72,8 @@
         @media (max-width: 768px) {
           .hero { height: 100svh; }
           .bg .background-block { height: 100svh; }
+          .left-margin,
+          .right-margin { height: 100svh; }
         }
         .background-separator { height: 28px; background: #fff; border-top: 2px solid #333; border-bottom: 2px solid #333; }
 
@@ -244,8 +246,13 @@
           justify-content: center;
           align-items: center;
           overflow: hidden; /* ensure nothing spills outside */
+          will-change: transform;
         }
         .footer-panel.show { transform: translateY(-100vh); }
+
+        @media (prefers-reduced-motion: reduce) {
+          .footer-panel { transition: none; }
+        }
 
         /* Remove old duplicates (no explicit display none for text overlay anymore) */
 
@@ -413,6 +420,7 @@
   const textPanel = document.getElementById('textPanel');
   const footer = document.getElementById('footerPanel');
   const navDepthCounter = document.getElementById('navDepthCounter');
+  const heroEl = document.getElementById('hero');
 
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -427,7 +435,7 @@
     const offsetEnd   = 1.00;
 
     // Use the hero's actual height (works with 100svh on mobile)
-    const heroH  = document.getElementById('hero').clientHeight;
+    const heroH = heroEl.clientHeight;
     const bgMax  = Math.max(1, bg.scrollHeight - heroH);
     const bgProg = clamp(offsetStart + (offsetEnd - offsetStart) * t, 0, 1);
     const y      = -bgProg * bgMax;
@@ -439,7 +447,11 @@
     if (navDepthCounter) navDepthCounter.textContent = Math.round(t * 10000) + 'm';
 
     // Footer reveal at end of text
-    if (footer) footer.classList.toggle('show', t >= 0.999);
+    const atEnd = t >= 0.999;
+    if (footer) footer.classList.toggle('show', atEnd);
+    if (atEnd && typeof stopAuto === 'function' && typeof playRaf !== 'undefined' && playRaf) {
+      stopAuto();
+    }
   }
 
   // Keep rAF smoothness without heavy work in the scroll handler
@@ -467,11 +479,13 @@
   window.addEventListener('resize', () => requestAnimationFrame(update));
   window.addEventListener('load',   () => requestAnimationFrame(update));
 
-  if (!REDUCED) {
-    window.addEventListener('wheel', globalWheelRouter, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: false });
-    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => requestAnimationFrame(update));
   }
+
+  window.addEventListener('wheel', globalWheelRouter, { passive: false });
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove',  onTouchMove,  { passive: false });
 
   new ResizeObserver(() => requestAnimationFrame(update)).observe(textPanel);
 
@@ -511,6 +525,7 @@
   }
 
   function startAuto() {
+    textPanel.focus({ preventScroll: true });
     if (REDUCED) {
       // Respect reduced motion: nudge one "page" instead of continuous animation
       textPanel.scrollBy({ top: textPanel.clientHeight * 0.9, behavior: 'smooth' });
