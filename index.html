@@ -683,20 +683,23 @@
             pointer-events: none;
           }
 
-          /* Mirror desktop appearance on mobile but without scrollbar */
+          /* Fixed-height scrollable text box on mobile for synchronized scrolling */
           .text-overlay {
             width: 80%;               /* slightly wider on mobile for readability */
             max-width: 90%;           /* ensure it fits on small screens */
             padding: 30px;            /* comfortable padding */
-            overflow: visible;        /* no scrollbar on mobile - text stretches down */
+            height: 70vh;             /* fixed height for scrollable content */
+            overflow-y: auto;         /* enable internal scrolling */
+            overflow-x: hidden;       /* prevent horizontal scrolling */
             /* Keep all other desktop properties: position absolute, background, border, etc. */
           }
-          
-          /* Hide scrollbar on mobile */
-          .text-overlay::-webkit-scrollbar {
-            display: none;
-          }
 
+          /* Prevent page scrolling when synchronized scrolling is active */
+          body.sync-scrolling {
+            overflow: hidden;
+            height: 100vh;
+          }
+          
           /* Keep separators proportional; no change needed if you like current values.
              If desired, you can reduce their visual weight a touch on small screens: */
           /* .background-separator { opacity: 0.9; } */
@@ -1001,6 +1004,8 @@
                 positionTextOverlay();
                 positionFinalTextOverlay();
                 fadeInTextOverlay();
+                // Setup synchronized scrolling for mobile
+                setupSynchronizedScrolling();
             }, 100); // Start almost immediately after page load
         });
         
@@ -1012,6 +1017,9 @@
             resizeTimeout = setTimeout(() => {
                 positionTextOverlay();
                 positionFinalTextOverlay();
+                // Reinitialize synchronized scrolling after resize
+                isSyncScrollingActive = false;
+                setupSynchronizedScrolling();
             }, 100);
         });
         
@@ -1022,6 +1030,74 @@
             }
         });
         
+        // Synchronized scrolling for mobile: text scroll drives background scroll
+        let isSyncScrollingActive = false;
+        
+        function setupSynchronizedScrolling() {
+            if (window.innerWidth > 768 || !textOverlay) {
+                // Remove sync scrolling class if not on mobile
+                document.body.classList.remove('sync-scrolling');
+                isSyncScrollingActive = false;
+                return; // Only on mobile
+            }
+            
+            // Calculate total distances
+            const textScrollableHeight = textOverlay.scrollHeight - textOverlay.clientHeight;
+            
+            // Calculate background scroll distance (from start to penultimate image)
+            // 6 images total, so penultimate is the 5th image
+            // Each image is 150vh (1.5 * viewport height) on mobile
+            const viewportHeight = window.innerHeight;
+            const imageHeight = viewportHeight * 1.5; // 150vh
+            const separatorHeight = 35; // mobile separator height
+            
+            // Distance to reach the top of the 5th image (penultimate)
+            // 4 full images + 4 separators
+            const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
+            
+            console.log('Sync scroll setup:', {
+                textScrollableHeight,
+                backgroundScrollDistance,
+                ratio: backgroundScrollDistance / textScrollableHeight
+            });
+            
+            // Remove existing scroll listeners to prevent conflicts
+            textOverlay.removeEventListener('scroll', handleTextScroll);
+            
+            // Add synchronized scroll listener
+            textOverlay.addEventListener('scroll', handleTextScroll);
+            isSyncScrollingActive = true;
+            
+            // Add CSS class to prevent page scrolling
+            document.body.classList.add('sync-scrolling');
+        }
+        
+        function handleTextScroll() {
+            if (!isSyncScrollingActive || window.innerWidth > 768) return;
+            
+            const textScrollPosition = textOverlay.scrollTop;
+            const textScrollableHeight = textOverlay.scrollHeight - textOverlay.clientHeight;
+            const scrollProgress = Math.min(textScrollPosition / textScrollableHeight, 1);
+            
+            // Calculate corresponding background position
+            const viewportHeight = window.innerHeight;
+            const imageHeight = viewportHeight * 1.5;
+            const separatorHeight = 35;
+            const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
+            
+            const targetPageScroll = scrollProgress * backgroundScrollDistance;
+            
+            // Smoothly scroll the page to match text scroll progress
+            window.scrollTo({
+                top: targetPageScroll,
+                behavior: 'instant' // Use instant to avoid conflicts
+            });
+            
+            // Update depth counter based on text scroll progress
+            const depth = Math.floor(scrollProgress * 10000);
+            navDepthCounter.textContent = depth + 'm';
+        }
+
         // Mobile touch handling
         let touchStartY = 0;
         let touchMoveY = 0;
@@ -1058,12 +1134,17 @@
             }
         }
         
-        // Use optimized scroll handler on mobile
+        // Use optimized scroll handler on mobile (but not when sync scrolling is active)
         if (isMobile) {
-            window.addEventListener('scroll', () => {
+            window.addEventListener('scroll', (e) => {
+                // Don't handle scroll events when synchronized scrolling is controlling the page
+                if (isSyncScrollingActive) {
+                    e.preventDefault();
+                    return;
+                }
                 requestTick();
                 ticking = false;
-            }, { passive: true });
+            }, { passive: false }); // Changed to false to allow preventDefault
         } else {
             // Use regular handler on desktop
             window.addEventListener('scroll', () => {
