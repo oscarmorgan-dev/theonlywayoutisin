@@ -22,6 +22,8 @@
             font-weight: 300;
             font-style: normal;
         }
+        :root { --side-margin: 80px; }
+        
         * {
             margin: 0;
             padding: 0;
@@ -48,11 +50,16 @@
         .hero { position: fixed; inset: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 1; }
         .bg {
             position: absolute;
-            top: 0; left: 80px; right: 80px; /* keep side margins */
+            top: 0; left: var(--side-margin); right: var(--side-margin);
             will-change: transform;
         }
         .bg .background-block { height: 100vh; }
         .bg .background-block img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+
+        @media (max-width: 768px) {
+          .hero { height: 100svh; }
+          .bg .background-block { height: 100svh; }
+        }
         .background-separator { height: 28px; background: #fff; border-top: 2px solid #333; border-bottom: 2px solid #333; }
 
         /* Footer pointer events */
@@ -66,7 +73,7 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 80px;
+            width: var(--side-margin);
             height: 100vh;
             background-color: white;
             z-index: 999;
@@ -78,7 +85,7 @@
             position: fixed;
             right: 0;
             top: 0;
-            width: 80px;
+            width: var(--side-margin);
             height: 100vh;
             background-color: white;
             z-index: 999;
@@ -154,11 +161,6 @@
             display: block;
         }
 
-        .background-block img {
-            width: 100%;
-            height: auto;
-            display: block; /* Remove inline spacing */
-        }
 
         /* Ensure no gaps between images */
         .background-block:not(:last-child) {
@@ -243,7 +245,7 @@
 
         /* Footer slides in when the text finishes */
         .footer-panel {
-            position: fixed; top: 100vh; left: 80px; right: 80px; height: 100vh; background: #fff;
+            position: fixed; top: 100vh; left: var(--side-margin); right: var(--side-margin); height: 100vh; background: #fff;
             z-index: 1; transition: transform .6s ease; padding: 80px; display:flex; flex-direction:column; justify-content:center; align-items:center;
         }
         .footer-panel.show { transform: translateY(-100vh); }
@@ -281,342 +283,34 @@
 
 
 
-        /* Mobile Responsive Styles */
-        @media screen and (max-width: 768px) {
-            /* Reduce margins on mobile */
-            body {
-                margin-left: 40px; /* Reduce from 80px */
-                margin-right: 40px; /* Reduce from 80px */
-            }
-
-            /* Adjust left margin */
-            .left-margin {
-                width: 40px; /* Reduce from 80px */
-            }
-
-            /* Adjust right margin */
-            .right-margin {
-                width: 40px; /* Reduce from 80px */
-            }
-
-            /* Adjust navigation bar */
-            .nav-bar {
-                height: 35px; /* Proportional to smaller text */
-                padding: 0 15px; /* Reduce horizontal padding */
-                border-bottom-width: 1.75px; /* Proportional scaling of 2px border */
-            }
-
-            .nav-text {
-                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
-            }
-
-            .nav-play-button {
-                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
-            }
-
-            .nav-depth-counter {
-                font-size: 18px !important; /* Readable size for mobile that fits nav bar */
-            }
-
-            /* Adjust separator height for mobile */
-            .background-separator {
-                height: 35px; /* Match mobile nav bar height */
-                border-top-width: 1.75px; /* Proportional scaling of 2px border */
-                border-bottom-width: 1.75px; /* Proportional scaling of 2px border */
-            }
-
-            /* Adjust text overlay for mobile */
-            .text-overlay {
-                width: 63%; /* 30% narrower than 90% for mobile */
-                height: 50vh; /* Fixed height that fits mobile screens well */
-                padding: 20px; /* Reduced padding for mobile */
-                margin: 0 5px;
-                border-width: 1.75px; /* Proportional scaling of desktop 2px border */
-            }
-
-            .text-overlay p {
-                font-size: 18px !important; /* Readable size that fits mobile text box */
-                line-height: 1.2; /* Slightly more line height for mobile readability */
-                margin-bottom: 20px; /* Proportional to desktop */
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            .text-overlay img {
-                width: 30%; /* Much smaller images for mobile */
-                max-width: 120px;
-                margin: 16px auto; /* Reduced margins */
-            }
-
-            /* Adjust hide text button for mobile */
-            .hide-text-button {
-                right: 50px; /* Further into right corner for mobile */
-                font-size: 16px !important; /* Readable size for mobile */
-                padding: 10px 16px;
-            }
-
-            /* Adjust final text overlay for mobile */
-            .final-text-overlay {
-                width: 63%; /* Same as text box mobile width - 30% narrower */
-                gap: 35px; /* Proportional scaling of desktop 40px gap */
-                bottom: 140px; /* Moved up proportionally for mobile */
-            }
-
-            .final-text-overlay p {
-                font-size: 18px !important; /* Readable size for mobile */
-                line-height: 1.2; /* Good readability for mobile */
-                margin-bottom: 20px; /* Proportional to desktop */
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            /* Adjust navigation links for mobile */
-            .final-navigation-links {
-                width: 63%; /* Same as text overlay mobile width */
-                bottom: 60px; /* Positioned below the moved-up text on mobile */
-            }
-
-            .final-navigation-links a {
-                font-size: 18px !important; /* Readable size for mobile */
-            }
-
+        /* Tablet and down */
+        @media (max-width: 768px) {
+          :root { --side-margin: 40px; }
+          .text-panel {
+            width: min(92vw, 560px);
+            top: 12svh;
+            height: 76svh;
+            padding: 24px;
+            border-width: 1.5px;
+          }
+          .text-panel p { font-size: 15px; line-height: 1.3; }
+          .text-panel img { width: 40%; max-width: 140px; margin: 20px auto; }
         }
 
-        /* Small mobile devices */
-        @media screen and (max-width: 480px) {
-            /* Further reduce margins on small screens */
-            body {
-                margin-left: 20px; /* Further reduction */
-                margin-right: 20px; /* Further reduction */
-            }
-
-            .left-margin {
-                width: 20px;
-            }
-
-            .right-margin {
-                width: 20px;
-            }
-
-            /* Smaller navigation */
-            .nav-bar {
-                height: 32px; /* Proportional to smaller text */
-                padding: 0 10px;
-                border-bottom-width: 1.5px; /* Proportional scaling: 75% of 2px */
-            }
-
-            .nav-text {
-                font-size: 16px !important; /* Readable size for small mobile */
-            }
-
-            .nav-play-button {
-                font-size: 16px !important; /* Readable size for small mobile */
-            }
-
-            .nav-depth-counter {
-                font-size: 16px !important; /* Readable size for small mobile */
-            }
-
-            /* Adjust separator height for small mobile */
-            .background-separator {
-                height: 32px; /* Match small mobile nav bar height */
-                border-top-width: 1.5px; /* Proportional scaling: 75% of 2px */
-                border-bottom-width: 1.5px; /* Proportional scaling: 75% of 2px */
-            }
-
-            /* Further adjust text overlay for small mobile */
-            .text-overlay {
-                width: 66.5%; /* 30% narrower than 95% for small mobile */
-                height: 45vh; /* Slightly smaller height for small mobile */
-                padding: 15px; /* Compact but usable padding */
-                margin: 0 2px;
-            }
-
-            .text-overlay p {
-                font-size: 14px; /* Readable size for small mobile */
-                line-height: 1.3; /* Better readability */
-                margin-bottom: 15px;
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            .text-overlay img {
-                width: 25%; /* Even smaller images */
-                max-width: 80px;
-                margin: 10px auto;
-            }
-
-            /* Further adjust hide text button for small mobile */
-            .hide-text-button {
-                right: 30px; /* Further into right corner for small mobile */
-                font-size: 14px; /* Match text overlay size */
-                padding: 8px 12px;
-            }
-
-            /* Two column final text overlay on small mobile */
-            .final-text-overlay {
-                width: 66.5%; /* Same as text box small mobile width - 30% narrower */
-                flex-direction: row; /* Keep two columns side-by-side */
-                gap: 8px; /* Very tight spacing */
-                bottom: 40px; /* Moved up proportionally for small mobile */
-            }
-
-            .final-text-overlay p {
-                font-size: 14px; /* Readable size for small mobile */
-                line-height: 1.3; /* Better readability */
-                margin-bottom: 15px;
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            /* Adjust navigation links for small mobile */
-            .final-navigation-links {
-                width: 66.5%; /* Same as text overlay small mobile width */
-                bottom: 15px; /* Positioned below the moved-up text on small mobile */
-            }
-
-            .final-navigation-links a {
-                font-size: 14px; /* Match text overlay size */
-            }
-
-
-            /* Ensure nav elements don't overlap on small screens */
-            .nav-bar {
-                padding: 0 8px;
-            }
-
-            .nav-text {
-                font-size: 14px; /* Match text overlay size */
-                max-width: 60%; /* Further increased to ensure title visibility */
-                overflow: visible; /* Allow text to show */
-                text-overflow: clip;
-                white-space: normal; /* Allow text wrapping if needed */
-            }
-
-            .nav-play-button {
-                font-size: 14px; /* Match text overlay size */
-            }
-
-            .nav-depth-counter {
-                font-size: 14px; /* Match text overlay size */
-            }
+        /* Small phones */
+        @media (max-width: 480px) {
+          :root { --side-margin: 20px; }
+          .text-panel {
+            width: 92vw;
+            top: 12svh;
+            height: 74svh;
+            padding: 16px;
+            border-width: 1.5px;
+          }
+          .text-panel p { font-size: 14px; line-height: 1.35; }
+          .text-panel img { width: 33%; max-width: 120px; margin: 16px auto; }
         }
 
-        /* Extra small mobile devices */
-        @media screen and (max-width: 360px) {
-            /* Ultra compact for very small screens */
-            body {
-                margin-left: 15px;
-                margin-right: 15px;
-            }
-
-            .left-margin {
-                width: 15px;
-            }
-
-            .right-margin {
-                width: 15px;
-            }
-
-            .nav-bar {
-                height: 28px; /* Proportional to text size */
-                padding: 0 5px;
-            }
-
-            .nav-text {
-                font-size: 12px !important; /* Readable size for extra small mobile */
-                max-width: 55%; /* Further increased to ensure title visibility */
-                overflow: visible; /* Allow text to show */
-            }
-
-            .nav-play-button {
-                font-size: 12px !important; /* Readable size for extra small mobile */
-                padding: 2px;
-            }
-
-            .nav-depth-counter {
-                font-size: 12px !important; /* Readable size for extra small mobile */
-            }
-
-            /* Adjust separator height for extra small mobile */
-            .background-separator {
-                height: 28px; /* Match extra small mobile nav bar height */
-            }
-
-            /* Minimal text overlay for extra small mobile */
-            .text-overlay {
-                width: 68.6%; /* 30% narrower than 98% for extra small mobile */
-                height: 40vh; /* Compact height for extra small screens */
-                padding: 12px; /* Minimal but usable padding */
-                margin: 0 1px;
-            }
-
-            .text-overlay p {
-                font-size: 12px; /* Readable size for extra small mobile */
-                line-height: 1.4; /* More line height for readability */
-                margin-bottom: 12px;
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            .text-overlay img {
-                width: 20%; /* Very small images */
-                max-width: 60px;
-                margin: 8px auto;
-            }
-
-            /* Minimal hide text button for extra small mobile */
-            .hide-text-button {
-                right: 20px; /* Further into right corner for extra small mobile */
-                font-size: 12px; /* Match text overlay size */
-                padding: 6px 10px;
-            }
-
-            /* Minimal final text overlay for extra small mobile */
-            .final-text-overlay {
-                width: 68.6%; /* Same as text box extra small mobile width - 30% narrower */
-                gap: 6px; /* Minimal gap */
-                bottom: 30px; /* Moved up proportionally for extra small mobile */
-            }
-
-            .final-text-overlay p {
-                font-size: 12px; /* Readable size for extra small mobile */
-                line-height: 1.4; /* Better readability */
-                margin-bottom: 12px;
-                hyphens: auto;
-                -webkit-hyphens: auto;
-                -ms-hyphens: auto;
-                word-wrap: break-word;
-            }
-
-            /* Adjust navigation links for extra small mobile */
-            .final-navigation-links {
-                width: 68.6%; /* Same as text overlay extra small mobile width */
-                bottom: 10px; /* Positioned below the moved-up text on extra small mobile */
-            }
-
-            .final-navigation-links a {
-                font-size: 12px; /* Match text overlay size */
-            }
-
-            .popup {
-                width: 75vw; /* Ultra compact for very small screens */
-                max-width: 250px;
-                height: 70px; /* Very small height */
-                font-size: 12px; /* Match text overlay size */
-            }
-
-        }
 
         /* Touch device optimizations */
         @media (hover: none) and (pointer: coarse) {
@@ -632,108 +326,6 @@
             }
         }
 
-        @media (max-width: 768px) {
-          /* Fixed viewport system - no page scrolling */
-          body.mobile-viewport-active {
-            overflow: hidden;
-            height: 100vh;
-          }
-          
-          /* Main viewport container - locked at 100vh */
-          .mobile-viewport {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 1;
-          }
-          
-          /* Background container - moves at different speed */
-          .mobile-background-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 600vh; /* Tall enough for all background content */
-            will-change: transform;
-          }
-          
-          /* Background images in mobile viewport */
-          .mobile-background-container .background-block {
-            position: relative;
-            height: 100vh; /* Each image fills viewport */
-            overflow: hidden;
-          }
-          
-          .mobile-background-container .background-block img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-          }
-          
-          /* Hide separators in mobile viewport */
-          .mobile-background-container .background-separator {
-            display: none;
-          }
-          
-          /* Text container - moves at different speed */
-          .mobile-text-container {
-            position: absolute;
-            top: 10vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            max-width: 90%;
-            height: 80vh;
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 2px solid #333;
-            border-radius: 0;
-            padding: 30px;
-            z-index: 10;
-            overflow-y: auto;
-            overflow-x: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
-            will-change: transform;
-          }
-          
-          /* Footer container - appears after main experience */
-          .mobile-footer {
-            position: fixed;
-            top: 100vh;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: white;
-            z-index: 2;
-            transition: transform 0.5s ease;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-          
-          /* Show footer when experience is complete */
-          .mobile-footer.show {
-            transform: translateY(-100vh);
-          }
-          
-          /* Hide desktop elements on mobile only when mobile viewport is active */
-          body.mobile-viewport-active .landing-page {
-            display: none;
-          }
-          
-          body.mobile-viewport-active .text-overlay {
-            display: none;
-          }
-        }
     </style>
 </head>
 <body>
