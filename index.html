@@ -121,27 +121,29 @@
         }
 
         .nav-play-button {
-            background: none;
-            border: none;
-            font-family: 'KH Teka', Arial, sans-serif;
-            font-size: 16px; /* Match text overlay benchmark */
-            color: black;
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: opacity 0.2s ease;
+          background: none;
+          border: none;
+          cursor: pointer;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          color: #000;               /* drives SVG fill via currentColor */
+          transition: opacity .2s ease, transform .2s ease;
+          padding: 0;
+          margin: 0;
         }
+        .nav-play-button .icon { width: 14px; height: 14px; fill: currentColor; display: block; }
+        .nav-play-button .icon-pause { display: none; }
+        .nav-play-button.is-playing .icon-play { display: none; }
+        .nav-play-button.is-playing .icon-pause { display: block; }
 
-        .nav-play-button:hover {
-            opacity: 0.7;
-        }
-
-        .nav-play-button:active {
-            opacity: 0.5;
-        }
+        .nav-play-button:hover { opacity: 0.7; }
+        .nav-play-button:active { opacity: 0.5; }
 
         .nav-depth-counter {
             font-family: 'KH Teka', Arial, sans-serif;
@@ -307,18 +309,9 @@
         }
 
 
-        /* Touch device optimizations */
-        @media (hover: none) and (pointer: coarse) {
-            .nav-play-button {
-                padding: 4px;
-                min-width: 24px;
-                min-height: 24px;
-            }
-
-            .nav-play-button:active {
-                opacity: 0.3;
-                transform: translateX(-50%) scale(0.95);
-            }
+        @media (max-width: 768px) {
+          .nav-play-button { width: 32px; height: 32px; }
+          .nav-play-button .icon { width: 16px; height: 16px; }
         }
 
     </style>
@@ -334,7 +327,15 @@
     <!-- Fixed Navigation Bar -->
     <nav class="nav-bar">
         <p class="nav-text">The only way out is in</p>
-        <button class="nav-play-button" id="playButton">&#9654;</button>
+        <button class="nav-play-button" id="playButton" aria-label="Play auto-scroll" title="Play">
+          <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true">
+            <polygon points="8,5 19,12 8,19"></polygon>
+          </svg>
+          <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14"></rect>
+            <rect x="14" y="5" width="4" height="14"></rect>
+          </svg>
+        </button>
         <p class="nav-depth-counter" id="navDepthCounter">0m</p>
     </nav>
     
@@ -474,6 +475,56 @@
     textPanel.scrollBy({ top: dy, behavior: 'auto' });
     touchRouting.y = e.touches[0].clientY;
   }
+
+  // --- Play/Pause auto-scroll for the text panel ---
+  const playBtn = document.getElementById('playButton');
+  let playRaf = null;
+  let lastTs = null;
+
+  function autoStep(ts) {
+    if (lastTs == null) lastTs = ts;
+    const dt = (ts - lastTs) / 1000;
+    lastTs = ts;
+
+    const SPEED_PX_PER_SEC = 220; // tune to taste
+    textPanel.scrollTop += SPEED_PX_PER_SEC * dt;
+
+    // stop at bottom
+    if (textPanel.scrollTop + textPanel.clientHeight >= textPanel.scrollHeight - 1) {
+      stopAuto();
+      return;
+    }
+    playRaf = requestAnimationFrame(autoStep);
+  }
+
+  function startAuto() {
+    if (REDUCED) {
+      // Respect reduced motion: nudge one "page" instead of continuous animation
+      textPanel.scrollBy({ top: textPanel.clientHeight * 0.9, behavior: 'smooth' });
+      return;
+    }
+    if (playRaf) return;
+    playBtn.classList.add('is-playing');
+    playBtn.setAttribute('aria-label', 'Pause auto-scroll');
+    lastTs = null;
+    playRaf = requestAnimationFrame(autoStep);
+  }
+
+  function stopAuto() {
+    if (playRaf) cancelAnimationFrame(playRaf);
+    playRaf = null;
+    lastTs = null;
+    playBtn.classList.remove('is-playing');
+    playBtn.setAttribute('aria-label', 'Play auto-scroll');
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (playRaf) stopAuto(); else startAuto();
+  });
+
+  // Optional: pause auto-scroll on any manual interaction
+  textPanel.addEventListener('wheel', stopAuto, { passive: true });
+  textPanel.addEventListener('touchstart', stopAuto, { passive: true });
     </script>
 </body>
 </html>
