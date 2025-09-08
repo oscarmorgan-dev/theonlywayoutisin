@@ -696,8 +696,7 @@
 
           /* Prevent page scrolling when synchronized scrolling is active */
           body.sync-scrolling {
-            overflow: hidden;
-            height: 100vh;
+            /* Removed overflow: hidden as it was causing issues */
           }
           
           /* Keep separators proportional; no change needed if you like current values.
@@ -1041,61 +1040,90 @@
                 return; // Only on mobile
             }
             
-            // Calculate total distances
-            const textScrollableHeight = textOverlay.scrollHeight - textOverlay.clientHeight;
-            
-            // Calculate background scroll distance (from start to penultimate image)
-            // 6 images total, so penultimate is the 5th image
-            // Each image is 150vh (1.5 * viewport height) on mobile
-            const viewportHeight = window.innerHeight;
-            const imageHeight = viewportHeight * 1.5; // 150vh
-            const separatorHeight = 35; // mobile separator height
-            
-            // Distance to reach the top of the 5th image (penultimate)
-            // 4 full images + 4 separators
-            const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
-            
-            console.log('Sync scroll setup:', {
-                textScrollableHeight,
-                backgroundScrollDistance,
-                ratio: backgroundScrollDistance / textScrollableHeight
-            });
-            
-            // Remove existing scroll listeners to prevent conflicts
-            textOverlay.removeEventListener('scroll', handleTextScroll);
-            
-            // Add synchronized scroll listener
-            textOverlay.addEventListener('scroll', handleTextScroll);
-            isSyncScrollingActive = true;
-            
-            // Add CSS class to prevent page scrolling
-            document.body.classList.add('sync-scrolling');
+            // Wait for text overlay to be fully rendered
+            setTimeout(() => {
+                try {
+                    // Calculate total distances safely
+                    const textScrollableHeight = Math.max(textOverlay.scrollHeight - textOverlay.clientHeight, 1);
+                    
+                    if (textScrollableHeight <= 1) {
+                        console.log('Text overlay not ready, retrying...');
+                        setTimeout(() => setupSynchronizedScrolling(), 500);
+                        return;
+                    }
+                    
+                    // Calculate background scroll distance (from start to penultimate image)
+                    // 6 images total, so penultimate is the 5th image
+                    // Each image is 150vh (1.5 * viewport height) on mobile
+                    const viewportHeight = window.innerHeight;
+                    const imageHeight = viewportHeight * 1.5; // 150vh
+                    const separatorHeight = 35; // mobile separator height
+                    
+                    // Distance to reach the top of the 5th image (penultimate)
+                    // 4 full images + 4 separators
+                    const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
+                    
+                    console.log('Sync scroll setup:', {
+                        textScrollableHeight,
+                        backgroundScrollDistance,
+                        ratio: backgroundScrollDistance / textScrollableHeight
+                    });
+                    
+                    // Remove existing scroll listeners to prevent conflicts
+                    if (textOverlay.removeEventListener) {
+                        textOverlay.removeEventListener('scroll', handleTextScroll);
+                    }
+                    
+                    // Add synchronized scroll listener
+                    textOverlay.addEventListener('scroll', handleTextScroll, { passive: false });
+                    isSyncScrollingActive = true;
+                    
+                    // Add CSS class to prevent page scrolling
+                    document.body.classList.add('sync-scrolling');
+                } catch (error) {
+                    console.error('Error setting up synchronized scrolling:', error);
+                    // Fallback: disable sync scrolling
+                    isSyncScrollingActive = false;
+                    document.body.classList.remove('sync-scrolling');
+                }
+            }, 200);
         }
         
         function handleTextScroll() {
-            if (!isSyncScrollingActive || window.innerWidth > 768) return;
+            if (!isSyncScrollingActive || window.innerWidth > 768 || !textOverlay) return;
             
-            const textScrollPosition = textOverlay.scrollTop;
-            const textScrollableHeight = textOverlay.scrollHeight - textOverlay.clientHeight;
-            const scrollProgress = Math.min(textScrollPosition / textScrollableHeight, 1);
-            
-            // Calculate corresponding background position
-            const viewportHeight = window.innerHeight;
-            const imageHeight = viewportHeight * 1.5;
-            const separatorHeight = 35;
-            const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
-            
-            const targetPageScroll = scrollProgress * backgroundScrollDistance;
-            
-            // Smoothly scroll the page to match text scroll progress
-            window.scrollTo({
-                top: targetPageScroll,
-                behavior: 'instant' // Use instant to avoid conflicts
-            });
-            
-            // Update depth counter based on text scroll progress
-            const depth = Math.floor(scrollProgress * 10000);
-            navDepthCounter.textContent = depth + 'm';
+            try {
+                const textScrollPosition = textOverlay.scrollTop || 0;
+                const textScrollableHeight = Math.max(textOverlay.scrollHeight - textOverlay.clientHeight, 1);
+                const scrollProgress = Math.min(Math.max(textScrollPosition / textScrollableHeight, 0), 1);
+                
+                // Calculate corresponding background position
+                const viewportHeight = window.innerHeight;
+                const imageHeight = viewportHeight * 1.5;
+                const separatorHeight = 35;
+                const backgroundScrollDistance = (imageHeight * 4) + (separatorHeight * 4);
+                
+                const targetPageScroll = scrollProgress * backgroundScrollDistance;
+                
+                // Smoothly scroll the page to match text scroll progress
+                if (window.scrollTo) {
+                    window.scrollTo({
+                        top: targetPageScroll,
+                        behavior: 'instant' // Use instant to avoid conflicts
+                    });
+                }
+                
+                // Update depth counter based on text scroll progress
+                if (navDepthCounter) {
+                    const depth = Math.floor(scrollProgress * 10000);
+                    navDepthCounter.textContent = depth + 'm';
+                }
+            } catch (error) {
+                console.error('Error in handleTextScroll:', error);
+                // Disable sync scrolling on error
+                isSyncScrollingActive = false;
+                document.body.classList.remove('sync-scrolling');
+            }
         }
 
         // Mobile touch handling
@@ -1139,12 +1167,11 @@
             window.addEventListener('scroll', (e) => {
                 // Don't handle scroll events when synchronized scrolling is controlling the page
                 if (isSyncScrollingActive) {
-                    e.preventDefault();
-                    return;
+                    return; // Just return, don't preventDefault
                 }
                 requestTick();
                 ticking = false;
-            }, { passive: false }); // Changed to false to allow preventDefault
+            }, { passive: true }); // Keep passive for performance
         } else {
             // Use regular handler on desktop
             window.addEventListener('scroll', () => {
