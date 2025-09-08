@@ -667,7 +667,7 @@
 
         @media (max-width: 768px) {
           /* Fixed viewport system - no page scrolling */
-          body {
+          body.mobile-viewport-active {
             overflow: hidden;
             height: 100vh;
           }
@@ -758,12 +758,12 @@
             transform: translateY(-100vh);
           }
           
-          /* Hide desktop elements on mobile */
-          .landing-page {
+          /* Hide desktop elements on mobile only when mobile viewport is active */
+          body.mobile-viewport-active .landing-page {
             display: none;
           }
           
-          .text-overlay {
+          body.mobile-viewport-active .text-overlay {
             display: none;
           }
         }
@@ -1184,71 +1184,97 @@
         const mobileFooter = document.getElementById('mobileFooter');
         
         function setupMobileViewport() {
-            if (window.innerWidth > 768) {
-                // Hide mobile viewport on desktop
-                if (mobileViewport) mobileViewport.style.display = 'none';
-                if (mobileFooter) mobileFooter.style.display = 'none';
-                mobileViewportActive = false;
-                return;
+            try {
+                if (window.innerWidth > 768) {
+                    // Desktop: Hide mobile viewport and show desktop content
+                    if (mobileViewport) mobileViewport.style.display = 'none';
+                    if (mobileFooter) mobileFooter.style.display = 'none';
+                    document.body.classList.remove('mobile-viewport-active');
+                    mobileViewportActive = false;
+                    return;
+                }
+                
+                // Mobile: Try to show mobile viewport
+                if (mobileViewport && mobileTextContainer) {
+                    mobileViewport.style.display = 'block';
+                    if (mobileFooter) mobileFooter.style.display = 'block';
+                    document.body.classList.add('mobile-viewport-active');
+                    mobileViewportActive = true;
+                    
+                    // Calculate maximum scroll based on text content
+                    setTimeout(() => {
+                        try {
+                            const textScrollableHeight = mobileTextContainer.scrollHeight - mobileTextContainer.clientHeight;
+                            maxMobileScroll = Math.max(textScrollableHeight, 100); // Minimum 100px scroll
+                            
+                            // Add scroll listeners for dual-speed scrolling
+                            mobileTextContainer.addEventListener('scroll', handleMobileScroll);
+                            
+                            // Add wheel/touch listeners to viewport for scroll input
+                            mobileViewport.addEventListener('wheel', handleMobileWheel, { passive: false });
+                            mobileViewport.addEventListener('touchstart', handleMobileTouchStart, { passive: true });
+                            mobileViewport.addEventListener('touchmove', handleMobileTouchMove, { passive: false });
+                            
+                            console.log('Mobile viewport setup complete:', {
+                                maxMobileScroll: maxMobileScroll
+                            });
+                        } catch (error) {
+                            console.error('Error in mobile viewport setup (delayed):', error);
+                            fallbackToDesktop();
+                        }
+                    }, 300);
+                } else {
+                    console.warn('Mobile viewport elements not found, falling back to desktop');
+                    fallbackToDesktop();
+                }
+            } catch (error) {
+                console.error('Error in setupMobileViewport:', error);
+                fallbackToDesktop();
             }
-            
-            // Show mobile viewport
-            if (mobileViewport) mobileViewport.style.display = 'block';
-            if (mobileFooter) mobileFooter.style.display = 'block';
-            mobileViewportActive = true;
-            
-            // Calculate maximum scroll based on text content
-            if (mobileTextContainer) {
-                const textScrollableHeight = mobileTextContainer.scrollHeight - mobileTextContainer.clientHeight;
-                maxMobileScroll = Math.max(textScrollableHeight, 1);
-            }
-            
-            // Add scroll listeners for dual-speed scrolling
-            if (mobileTextContainer) {
-                mobileTextContainer.addEventListener('scroll', handleMobileScroll);
-            }
-            
-            // Add wheel/touch listeners to viewport for scroll input
-            if (mobileViewport) {
-                mobileViewport.addEventListener('wheel', handleMobileWheel, { passive: false });
-                mobileViewport.addEventListener('touchstart', handleMobileTouchStart, { passive: true });
-                mobileViewport.addEventListener('touchmove', handleMobileTouchMove, { passive: false });
-            }
-            
-            console.log('Mobile viewport setup complete:', {
-                maxMobileScroll: maxMobileScroll
-            });
+        }
+        
+        function fallbackToDesktop() {
+            // If mobile viewport fails, show desktop content
+            if (mobileViewport) mobileViewport.style.display = 'none';
+            if (mobileFooter) mobileFooter.style.display = 'none';
+            document.body.classList.remove('mobile-viewport-active');
+            mobileViewportActive = false;
+            console.log('Falling back to desktop layout on mobile');
         }
         
         function handleMobileScroll() {
-            if (!mobileViewportActive) return;
+            if (!mobileViewportActive || !mobileTextContainer) return;
             
-            const textScrollPosition = mobileTextContainer.scrollTop;
-            const scrollProgress = Math.min(textScrollPosition / maxMobileScroll, 1);
-            
-            // Move background at different speed (slower than text)
-            const backgroundSpeed = 0.3; // Background moves at 30% of text speed
-            const backgroundTransform = -(textScrollPosition * backgroundSpeed);
-            
-            if (mobileBackgroundContainer) {
-                mobileBackgroundContainer.style.transform = `translateY(${backgroundTransform}px)`;
-            }
-            
-            // Update depth counter
-            if (navDepthCounter) {
-                const depth = Math.floor(scrollProgress * 10000);
-                navDepthCounter.textContent = depth + 'm';
-            }
-            
-            // Show footer when text scroll is complete
-            if (scrollProgress >= 0.95) {
-                if (mobileFooter) {
-                    mobileFooter.classList.add('show');
+            try {
+                const textScrollPosition = mobileTextContainer.scrollTop || 0;
+                const scrollProgress = Math.min(textScrollPosition / Math.max(maxMobileScroll, 1), 1);
+                
+                // Move background at different speed (slower than text)
+                const backgroundSpeed = 0.3; // Background moves at 30% of text speed
+                const backgroundTransform = -(textScrollPosition * backgroundSpeed);
+                
+                if (mobileBackgroundContainer) {
+                    mobileBackgroundContainer.style.transform = `translateY(${backgroundTransform}px)`;
                 }
-            } else {
-                if (mobileFooter) {
-                    mobileFooter.classList.remove('show');
+                
+                // Update depth counter
+                if (navDepthCounter) {
+                    const depth = Math.floor(scrollProgress * 10000);
+                    navDepthCounter.textContent = depth + 'm';
                 }
+                
+                // Show footer when text scroll is complete
+                if (scrollProgress >= 0.95) {
+                    if (mobileFooter) {
+                        mobileFooter.classList.add('show');
+                    }
+                } else {
+                    if (mobileFooter) {
+                        mobileFooter.classList.remove('show');
+                    }
+                }
+            } catch (error) {
+                console.error('Error in handleMobileScroll:', error);
             }
         }
         
