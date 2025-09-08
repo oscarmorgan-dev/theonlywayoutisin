@@ -47,7 +47,7 @@
         }
 
         /* Unified hero architecture */
-        .hero { position: fixed; inset: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 1; }
+        .hero { position: fixed; inset: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 1; touch-action: none; }
         .bg {
             position: absolute;
             top: 0; left: var(--side-margin); right: var(--side-margin);
@@ -64,6 +64,7 @@
 
         /* Footer pointer events */
         .footer-panel { pointer-events: none; }
+        .footer-panel .final-text-overlay,
         .footer-panel a,
         .footer-panel button,
         .final-navigation-links { pointer-events: auto; }
@@ -150,11 +151,6 @@
             margin: 0;
         }
 
-        .landing-page {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
 
         .background-block {
             width: 100%;
@@ -180,37 +176,13 @@
             backdrop-filter: blur(5px); box-shadow: 0 10px 30px rgba(0,0,0,.3);
             overscroll-behavior: contain;
             z-index: 2;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
         }
         .text-panel p { font-family: 'KH Teka', Arial, sans-serif; font-size: 16px; line-height: 1.28; color:#333; margin-bottom:20px; text-align: justify; hyphens: auto; }
         .text-panel img { width: 50%; max-width: 200px; height: auto; display:block; margin: 30px auto; }
 
 
-        /* Hide text button in top right of first image */
-        .hide-text-button {
-            position: absolute;
-            top: 50px; /* Below nav bar */
-            right: 90px; /* Further into right corner */
-            font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
-            font-weight: normal;
-            font-size: 14px; /* Same as nav bar title */
-            color: white;
-            background-color: transparent; /* Removed black background */
-            border: none; /* Removed outline */
-            border-radius: 0; /* Sharp edges to match text box */
-            padding: 12px 20px;
-            cursor: pointer;
-            z-index: 700; /* Above text overlay */
-            transition: all 0.3s ease;
-        }
-
-        .hide-text-button:hover {
-            opacity: 0.7;
-            transform: translateY(-1px);
-        }
-
-        .hide-text-button:active {
-            transform: translateY(0);
-        }
 
         /* Two-column text overlay on last image */
         .final-text-overlay {
@@ -371,19 +343,19 @@
     <!-- Unified hero -->
     <main id="hero" class="hero">
       <div id="bg" class="bg">
-        <div class="background-block"><img src="assets/images/background/001.png" alt="Background 001"></div>
+        <div class="background-block"><img src="assets/images/background/001.png" alt="Background 001" decoding="async" fetchpriority="high"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/002.png" alt="Background 002"></div>
+        <div class="background-block"><img src="assets/images/background/002.png" alt="Background 002" decoding="async"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/002.5.png" alt="Background 002.5"></div>
+        <div class="background-block"><img src="assets/images/background/002.5.png" alt="Background 002.5" decoding="async"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/003.png" alt="Background 003"></div>
+        <div class="background-block"><img src="assets/images/background/003.png" alt="Background 003" decoding="async"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/004.png" alt="Background 004"></div>
+        <div class="background-block"><img src="assets/images/background/004.png" alt="Background 004" decoding="async"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/005.png" alt="Background 005"></div>
+        <div class="background-block"><img src="assets/images/background/005.png" alt="Background 005" decoding="async"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/006-3.png" alt="Background 006-3"></div>
+        <div class="background-block"><img src="assets/images/background/006-3.png" alt="Background 006-3" decoding="async"></div>
       </div>
 
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
@@ -428,6 +400,8 @@
   const footer = document.getElementById('footerPanel');
   const navDepthCounter = document.getElementById('navDepthCounter');
 
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
   function update() {
@@ -435,18 +409,22 @@
     const t = clamp(textPanel.scrollTop / textMax, 0, 1);
 
     // Map text progress to background timeline with offset
-    const offsetStart = 0.10; // start background at 10%
-    const offsetEnd = 1.00;   // end at 100%
-    const bgMax = Math.max(1, bg.scrollHeight - window.innerHeight);
-    const bgProgress = clamp(offsetStart + (offsetEnd - offsetStart) * t, 0, 1);
-    const y = -bgProgress * bgMax;
+    const offsetStart = 0.10;
+    const offsetEnd   = 1.00;
 
-    bg.style.transform = `translateY(${y}px)`;
+    // Use the hero's actual height (works with 100svh on mobile)
+    const heroH  = document.getElementById('hero').clientHeight;
+    const bgMax  = Math.max(1, bg.scrollHeight - heroH);
+    const bgProg = clamp(offsetStart + (offsetEnd - offsetStart) * t, 0, 1);
+    const y      = -bgProg * bgMax;
 
-    // Depth counter 0..10000m based on background progress
-    if (navDepthCounter) navDepthCounter.textContent = Math.round(bgProgress * 10000) + 'm';
+    // Reduced motion: freeze background, but still update UI state
+    bg.style.transform = REDUCED ? 'translateY(0)' : `translateY(${y}px)`;
 
-    // Footer reveal when text is finished
+    // Depth counter should start at 0m (use text progress, not bgProg)
+    if (navDepthCounter) navDepthCounter.textContent = Math.round(t * 10000) + 'm';
+
+    // Footer reveal at end of text
     if (footer) footer.classList.toggle('show', t >= 0.999);
   }
 
@@ -471,19 +449,17 @@
     // if inside the panel, let native scrolling happen
   }
 
-  // Reduced motion: freeze background at offsetStart
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) {
-    textPanel.addEventListener('scroll', () => {
-      if (navDepthCounter) navDepthCounter.textContent = '0m';
-    });
-  } else {
-    textPanel.addEventListener('scroll', onTextScroll, { passive: true });
+  textPanel.addEventListener('scroll', onTextScroll, { passive: true });
+  window.addEventListener('resize', () => requestAnimationFrame(update));
+  window.addEventListener('load',   () => requestAnimationFrame(update));
+
+  if (!REDUCED) {
     window.addEventListener('wheel', globalWheelRouter, { passive: false });
-    window.addEventListener('resize', () => requestAnimationFrame(update));
-    window.addEventListener('load', () => requestAnimationFrame(update));
-    new ResizeObserver(() => requestAnimationFrame(update)).observe(textPanel);
+    window.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
   }
+
+  new ResizeObserver(() => requestAnimationFrame(update)).observe(textPanel);
 
   // Touch routing for mobile (gesture anywhere to scroll the text panel)
   let touchRouting = { active: false, y: 0 };
@@ -498,8 +474,6 @@
     textPanel.scrollBy({ top: dy, behavior: 'auto' });
     touchRouting.y = e.touches[0].clientY;
   }
-  window.addEventListener('touchstart', onTouchStart, { passive: false });
-  window.addEventListener('touchmove', onTouchMove, { passive: false });
     </script>
 </body>
 </html>
