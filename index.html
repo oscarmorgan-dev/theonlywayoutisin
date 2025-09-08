@@ -165,7 +165,6 @@
             transform: translateX(-50%);
             width: 48%; /* Reduced by 20% from 60% */
             max-width: 640px; /* Reduced by 20% from 800px */
-            height: 60vh; /* Fixed height relative to viewport */
             background-color: rgba(255, 255, 255, 0.95);
             border: 2px solid #333;
             border-radius: 0; /* Sharpened edges */
@@ -177,6 +176,25 @@
             backdrop-filter: blur(5px);
             overflow-y: auto; /* Enable vertical scrolling */
             overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Custom scrollbar styling for text overlay */
+        .text-overlay::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .text-overlay::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+        }
+
+        .text-overlay::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 0;
+        }
+
+        .text-overlay::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
         .text-overlay.fade-in {
@@ -206,36 +224,6 @@
             box-shadow: none; /* Removed drop shadow */
         }
 
-        /* Custom scrollbar styling for text overlay */
-        .text-overlay::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .text-overlay::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 0;
-        }
-
-        .text-overlay::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 0;
-        }
-
-        .text-overlay::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        /* Ensure smooth scrolling within text overlay */
-        .text-overlay {
-            scroll-behavior: smooth;
-        }
-
-        /* Prevent text overlay from being too tall on very large screens */
-        @media screen and (min-height: 1200px) {
-            .text-overlay {
-                height: 70vh; /* Slightly larger on very tall screens */
-            }
-        }
 
         /* Hide text button in top right of first image */
         .hide-text-button {
@@ -695,16 +683,12 @@
             pointer-events: none;
           }
 
-          /* Let the PAGE scroll, not the overlay */
+          /* Mirror desktop appearance on mobile */
           .text-overlay {
-            position: sticky;         /* replaces absolute on mobile */
-            top: 12vh;                /* clears nav */
-            height: auto;             /* remove fixed height */
-            max-height: 70vh;         /* guardrail for very short screens */
-            overflow: visible;        /* kill inner scrollbar */
-            z-index: 600;             /* stays above backgrounds */
-            padding: 20px;            /* slightly tighter than desktop */
-            line-height: 1.6;
+            width: 80%;               /* slightly wider on mobile for readability */
+            max-width: 90%;           /* ensure it fits on small screens */
+            padding: 30px;            /* comfortable padding */
+            /* Keep all other desktop properties: position absolute, background, border, etc. */
           }
 
           /* Keep separators proportional; no change needed if you like current values.
@@ -849,21 +833,53 @@
             isSmallMobile = window.innerWidth <= 480;
         }
 
-        // Position the text overlay (mobile sticky vs desktop absolute)
+        // Position the text overlay (long form spanning multiple sections)
         function positionTextOverlay() {
-            if (!textOverlay) return;
-
-            // On mobile, sticky CSS controls the position
-            if (window.innerWidth <= 768) {
-                textOverlay.style.top = '';
-                textOverlay.style.position = ''; // allow CSS to apply 'position: sticky' from the media query
-                return;
+            if (textOverlay) {
+                // Calculate positioning for the long text overlay
+                const imageHeight = 1080;
+                const separatorHeight = 31;
+                
+                // Start position: 1/4 down the first image, lifted up by 30%
+                const originalStartY = imageHeight * 0.25;
+                let startY = originalStartY * 0.7; // Lifted up by 30%
+                
+                // Mobile adjustments
+                if (window.innerWidth <= 768) {
+                    startY = startY * 0.8 * 0.8 * 0.85; // Additional positioning for mobile
+                }
+                
+                // Calculate height to span multiple sections
+                let heightMultiplier;
+                if (window.innerWidth <= 360) {
+                    heightMultiplier = 0.252; // Extra small mobile
+                } else if (window.innerWidth <= 480) {
+                    heightMultiplier = 0.294; // Small mobile
+                } else if (window.innerWidth <= 768) {
+                    heightMultiplier = 0.336; // Mobile
+                } else {
+                    heightMultiplier = 1.05; // Desktop
+                }
+                
+                // Calculate final height
+                const originalHeight = 5485;
+                const reducedHeight = originalHeight * 0.7;
+                const finalHeight = reducedHeight * heightMultiplier;
+                const endY = startY + finalHeight;
+                const boxHeight = endY - startY;
+                
+                // Apply positioning and height
+                textOverlay.style.top = startY + 'px';
+                textOverlay.style.height = boxHeight + 'px';
+                
+                console.log('Text overlay positioned (long form):', {
+                    screenWidth: window.innerWidth,
+                    heightMultiplier: heightMultiplier,
+                    startY: startY,
+                    endY: endY,
+                    boxHeight: boxHeight
+                });
             }
-
-            // Desktop: keep your absolute + top behavior
-            const desktopTop = Math.round(window.innerHeight * 0.25); // similar to prior intent
-            textOverlay.style.position = 'absolute';
-            textOverlay.style.top = desktopTop + 'px';
         }
 
         // Trigger fade-in animation
