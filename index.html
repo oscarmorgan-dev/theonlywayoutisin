@@ -166,6 +166,7 @@
             color: black; /* Black text */
             font-size: 16px; /* Match text overlay benchmark */
             margin: 0;
+            font-variant-numeric: tabular-nums; /* prevents jitter when numbers change */
         }
 
 
@@ -447,7 +448,10 @@
     bg.style.transform = REDUCED ? 'translateY(0)' : `translateY(${y}px)`;
 
     // Depth counter should start at 0m (use text progress, not bgProg)
-    if (navDepthCounter) navDepthCounter.textContent = Math.round(t * 10000) + 'm';
+    if (navDepthCounter) {
+      const depth = Math.round(t * 10000);
+      navDepthCounter.textContent = depth === 0 ? '0m' : `- ${depth}m`;
+    }
 
     // Footer reveal at end of text
     const atEnd = t >= 0.999;
