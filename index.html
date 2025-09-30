@@ -277,6 +277,18 @@
           margin-bottom: 0;
         }
 
+        /* Per-image fit controls for small squares */
+        .small-image-box img[data-fit="contain"],
+        .small-image-box img.fit-contain { object-fit: contain; }
+
+        .small-image-box img[data-fit="cover"],
+        .small-image-box img.fit-cover   { object-fit: cover; }
+
+        /* Optional: top/left alignment when using contain */
+        .small-image-box img[data-pos="top"]    { object-position: 50% 0%; }
+        .small-image-box img[data-pos="left"]   { object-position: 0% 50%; }
+        .small-image-box img[data-pos="top-left"] { object-position: 0% 0%; }
+
 
 
         /* Two-column text overlay on last image */
@@ -380,6 +392,8 @@
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 250px; height: 250px; margin-bottom: 30px; display: block; overflow: hidden; }
           .small-image-box img { width: 100%; height: 100%; object-fit: cover; margin: 0; padding: 0; }
+          .small-image-box img[data-fit="contain"], .small-image-box img.fit-contain { object-fit: contain; }
+          .small-image-box img[data-fit="cover"], .small-image-box img.fit-cover { object-fit: cover; }
           .image-box { margin-bottom: 30px; }
           .image-box-natural { margin-bottom: 30px; }
         }
@@ -401,6 +415,8 @@
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 200px; height: 200px; margin-bottom: 24px; display: block; overflow: hidden; }
           .small-image-box img { width: 100%; height: 100%; object-fit: cover; margin: 0; padding: 0; }
+          .small-image-box img[data-fit="contain"], .small-image-box img.fit-contain { object-fit: contain; }
+          .small-image-box img[data-fit="cover"], .small-image-box img.fit-cover { object-fit: cover; }
           .image-box { margin-bottom: 24px; }
           .image-box-natural { margin-bottom: 24px; }
         }
@@ -478,43 +494,43 @@
 
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
         <div class="small-image-box">
-          <img src="assets/images/popups/001.png" alt="Popup Image 001" decoding="async">
+          <img src="assets/images/popups/001.png" alt="Popup Image 001" data-fit="cover" decoding="async">
         </div>
         <div class="image-box image-box-natural">
           <img src="assets/images/journey/001.png" alt="Journey Image 001" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
+          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" data-fit="contain" decoding="async">
         </div>
         <div class="image-box image-box-natural">
           <img src="assets/images/journey/002.png" alt="Journey Image 002" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/journey-line-2.svg" alt="Journey Line 2" decoding="async">
+          <img src="assets/images/icons/SVG/journey-line-2.svg" alt="Journey Line 2" data-fit="contain" decoding="async">
         </div>
         <div class="image-box">
           <img src="assets/images/popups/003.png" alt="Image 003" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/Journey-line.svg" alt="Journey Line" decoding="async">
+          <img src="assets/images/icons/SVG/Journey-line.svg" alt="Journey Line" data-fit="contain" decoding="async">
         </div>
         <div class="image-box">
           <img src="assets/images/popups/004.png" alt="Image 004" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/city-scape.svg" alt="City Scape" decoding="async">
+          <img src="assets/images/icons/SVG/city-scape.svg" alt="City Scape" data-fit="contain" decoding="async">
         </div>
         <div class="image-box">
           <img src="assets/images/popups/005.png" alt="Image 005" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/ICON-2.svg" alt="Icon 2" decoding="async">
+          <img src="assets/images/icons/SVG/ICON-2.svg" alt="Icon 2" data-fit="contain" decoding="async">
         </div>
         <div class="image-box">
           <img src="assets/images/popups/006.png" alt="Image 006" decoding="async">
         </div>
         <div class="small-image-box">
-          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
+          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" data-fit="contain" decoding="async">
         </div>
       </section>
     </main>
