@@ -212,7 +212,8 @@
           margin-bottom: 40px;
         }
 
-        .image-box img {
+        .image-box img,
+        .small-image-box img {
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -260,13 +261,6 @@
           overflow: hidden;
         }
 
-        .small-image-box img {
-          width: 100%;
-          height: auto;
-          object-fit: cover;
-          object-position: center;
-          display: block;
-        }
 
         /* Remove bottom margin from last image box */
         .image-box:last-child,
@@ -374,11 +368,11 @@
           .text-panel p { font-size: 15px; line-height: 1.3; }
           .text-panel img { width: 40%; max-width: 140px; margin: 20px auto; }
           .image-box { height: 500px; }
-          .image-box img { width: 100%; height: 100%; margin: 0; max-width: none; }
+          .image-box img,
+          .small-image-box img { width: 100%; height: 100%; margin: 0; max-width: none; object-fit: cover; object-position: center; display: block; }
           .image-box-natural { height: auto; min-height: 150px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 250px; height: 250px; margin-bottom: 30px; display: block; overflow: hidden; }
-          .small-image-box img { width: 100%; height: auto; object-fit: cover; object-position: center; display: block; }
           .image-box { margin-bottom: 30px; }
           .image-box-natural { margin-bottom: 30px; }
         }
@@ -395,11 +389,11 @@
           .text-panel p { font-size: 14px; line-height: 1.35; }
           .text-panel img { width: 33%; max-width: 120px; margin: 16px auto; }
           .image-box { height: 500px; }
-          .image-box img { width: 100%; height: 100%; margin: 0; max-width: none; }
+          .image-box img,
+          .small-image-box img { width: 100%; height: 100%; margin: 0; max-width: none; object-fit: cover; object-position: center; display: block; }
           .image-box-natural { height: auto; min-height: 120px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 200px; height: 200px; margin-bottom: 24px; display: block; overflow: hidden; }
-          .small-image-box img { width: 100%; height: auto; object-fit: cover; object-position: center; display: block; }
           .image-box { margin-bottom: 24px; }
           .image-box-natural { margin-bottom: 24px; }
         }
