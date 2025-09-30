@@ -136,12 +136,12 @@
         }
 
         .nav-play-button {
-          background: none;
-          border: none;
-          cursor: pointer;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -207,7 +207,7 @@
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          border: 2px solid #333;
+            border: 2px solid #333;
           box-sizing: border-box;
           margin-bottom: 40px;
         }
@@ -242,9 +242,9 @@
 
         .image-box-natural img {
           width: 100%;
-          height: auto;
+            height: auto;
           object-fit: contain;
-          display: block;
+            display: block;
           margin: 0 auto;
         }
 
@@ -263,7 +263,7 @@
         .small-image-box img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center;
           display: block;
           margin: 0;
@@ -299,14 +299,14 @@
           display: block;
         }
         .final-text-overlay p {
-          font-family: 'KH Teka', Arial, sans-serif;
-          font-size: 16px;
+            font-family: 'KH Teka', Arial, sans-serif;
+            font-size: 16px;
           line-height: 1.28;
           color: #000;           /* black text in footer */
           margin: 0 0 16px 0;
           text-align: left;
           text-shadow: none;     /* remove overlay shadow */
-          hyphens: auto;
+            hyphens: auto;
         }
 
         /* Footer slides in when the text finishes */
@@ -379,7 +379,7 @@
           .image-box-natural { height: auto; min-height: 150px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 250px; height: 250px; margin-bottom: 30px; display: block; overflow: hidden; }
-          .small-image-box img { width: 100%; height: 100%; object-fit: contain; margin: 0; padding: 0; }
+          .small-image-box img { width: 100%; height: 100%; object-fit: cover; margin: 0; padding: 0; }
           .image-box { margin-bottom: 30px; }
           .image-box-natural { margin-bottom: 30px; }
         }
@@ -400,13 +400,13 @@
           .image-box-natural { height: auto; min-height: 120px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
           .small-image-box { width: 200px; height: 200px; margin-bottom: 24px; display: block; overflow: hidden; }
-          .small-image-box img { width: 100%; height: 100%; object-fit: contain; margin: 0; padding: 0; }
+          .small-image-box img { width: 100%; height: 100%; object-fit: cover; margin: 0; padding: 0; }
           .image-box { margin-bottom: 24px; }
           .image-box-natural { margin-bottom: 24px; }
         }
 
         @media (max-width: 768px) {
-          .final-text-overlay {
+            .final-text-overlay {
             grid-template-columns: 1fr;  /* single column on tablet/phone */
             gap: 20px;
             width: clamp(280px, 90vw, 640px);
@@ -521,26 +521,26 @@
 
     <footer id="footerPanel" class="footer-panel" aria-label="Footer">
       <div class="final-text-overlay">
-        <div class="final-text-column">
-          <p>The convergence of art and technology creates new possibilities for human expression. Each pixel, each line of code, each design decision becomes part of a larger conversation about how we communicate, connect, and create meaning in the digital age.</p>
-        </div>
-        <div class="final-text-column">
-          <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
-        </div>
-      </div>
+                <div class="final-text-column">
+                    <p>The convergence of art and technology creates new possibilities for human expression. Each pixel, each line of code, each design decision becomes part of a larger conversation about how we communicate, connect, and create meaning in the digital age.</p>
+                </div>
+                <div class="final-text-column">
+                    <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
+                </div>
+            </div>
       <div class="final-navigation-links">
         <a href="#instagram">Instagram</a>
         <a href="#youtube">Youtube</a>
         <a href="#illustration">Illustration</a>
         <a href="#nutrition">Nutrition</a>
-      </div>
+        </div>
     </footer>
 
     <script>
   const bg = document.getElementById('bg');
   const textPanel = document.getElementById('textPanel');
   const footer = document.getElementById('footerPanel');
-  const navDepthCounter = document.getElementById('navDepthCounter');
+        const navDepthCounter = document.getElementById('navDepthCounter');
   const heroEl = document.getElementById('hero');
 
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -643,8 +643,8 @@
     // stop at bottom
     if (textPanel.scrollTop + textPanel.clientHeight >= textPanel.scrollHeight - 1) {
       stopAuto();
-      return;
-    }
+                    return;
+                }
     playRaf = requestAnimationFrame(autoStep);
   }
 
