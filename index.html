@@ -209,6 +209,7 @@
           overflow: hidden;
           border: 2px solid #333;
           box-sizing: border-box;
+          margin-bottom: 40px;
         }
 
         .image-box img {
@@ -236,6 +237,7 @@
           padding: 0;
           border: 2px solid #333;
           box-sizing: border-box;
+          margin-bottom: 40px;
         }
 
         .image-box-natural img {
@@ -253,7 +255,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto;
+          margin: 0 auto 40px auto;
           border: 2px solid #333;
           box-sizing: border-box;
           background: #fff;
@@ -266,6 +268,13 @@
           height: auto;
           object-fit: contain;
           display: block;
+        }
+
+        /* Remove bottom margin from last image box */
+        .image-box:last-child,
+        .image-box-natural:last-child,
+        .small-image-box:last-child {
+          margin-bottom: 0;
         }
 
 
@@ -369,8 +378,10 @@
           .image-box img { width: 100%; height: 100%; margin: 0; max-width: none; }
           .image-box-natural { height: auto; min-height: 150px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
-          .small-image-box { width: 250px; height: 250px; }
+          .small-image-box { width: 250px; height: 250px; margin-bottom: 30px; }
           .small-image-box img { max-width: 85%; max-height: 85%; }
+          .image-box { margin-bottom: 30px; }
+          .image-box-natural { margin-bottom: 30px; }
         }
 
         /* Small phones */
@@ -388,8 +399,10 @@
           .image-box img { width: 100%; height: 100%; margin: 0; max-width: none; }
           .image-box-natural { height: auto; min-height: 120px; }
           .image-box-natural img { width: 100%; height: auto; object-fit: contain; }
-          .small-image-box { width: 200px; height: 200px; }
+          .small-image-box { width: 200px; height: 200px; margin-bottom: 24px; }
           .small-image-box img { max-width: 90%; max-height: 90%; }
+          .image-box { margin-bottom: 24px; }
+          .image-box-natural { margin-bottom: 24px; }
         }
 
         @media (max-width: 768px) {
@@ -467,51 +480,39 @@
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/ICON-2.svg" alt="Icon 2" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box image-box-natural">
           <img src="assets/images/journey/001.png" alt="Journey Image 001" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box image-box-natural">
           <img src="assets/images/journey/002.png" alt="Journey Image 002" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/journey-line-2.svg" alt="Journey Line 2" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box">
           <img src="assets/images/popups/003.png" alt="Image 003" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/Journey-line.svg" alt="Journey Line" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box">
           <img src="assets/images/popups/004.png" alt="Image 004" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/city-scape.svg" alt="City Scape" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box">
           <img src="assets/images/popups/005.png" alt="Image 005" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/ICON-2.svg" alt="Icon 2" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="image-box">
           <img src="assets/images/popups/006.png" alt="Image 006" decoding="async">
         </div>
-        <div class="image-separator"></div>
         <div class="small-image-box">
           <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
         </div>
