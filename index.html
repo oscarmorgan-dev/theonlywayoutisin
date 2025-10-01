@@ -269,6 +269,21 @@
           margin-bottom: 0;
         }
 
+        /* Title image styling */
+        .title-image {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          margin-bottom: 40px;
+          padding: 0 var(--side-margin);
+        }
+
+        .title-image img {
+          width: 300px;
+          height: auto;
+          display: block;
+        }
+
 
 
 
@@ -375,6 +390,8 @@
           .small-image-box { width: 250px; height: 250px; margin-bottom: 30px; display: block; overflow: hidden; }
           .image-box { margin-bottom: 30px; }
           .image-box-natural { margin-bottom: 30px; }
+          .title-image { margin-bottom: 30px; padding: 0 var(--side-margin); }
+          .title-image img { width: 250px; }
         }
 
         /* Small phones */
@@ -396,6 +413,8 @@
           .small-image-box { width: 200px; height: 200px; margin-bottom: 24px; display: block; overflow: hidden; }
           .image-box { margin-bottom: 24px; }
           .image-box-natural { margin-bottom: 24px; }
+          .title-image { margin-bottom: 24px; padding: 0 var(--side-margin); }
+          .title-image img { width: 200px; }
         }
 
         @media (max-width: 768px) {
@@ -467,6 +486,11 @@
         <div class="background-block"><img src="assets/images/background/005.png" alt="Background 005" decoding="async"></div>
         <div class="background-separator"></div>
         <div class="background-block"><img src="assets/images/background/006-3.png" alt="Background 006-3" decoding="async"></div>
+      </div>
+
+      <!-- Title Image -->
+      <div class="title-image">
+        <img src="assets/images/titles/thewalledgarden.png" alt="The Walled Garden" decoding="async">
       </div>
 
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
