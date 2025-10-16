@@ -11,9 +11,19 @@
     <style>
         @font-face {
             font-family: 'MonumentGrotesk-Semi-Mono';
-            src: url('MonumentGrotesk-Semi-Mono.ttf') format('truetype');
-            font-weight: normal;
+            src: local('MonumentGrotesk-Semi-Mono'), local('Monument Grotesk Semi Mono'), url('MonumentGrotesk-Semi-Mono.ttf') format('truetype');
+            font-weight: 400;
             font-style: normal;
+            font-display: swap;
+        }
+
+        /* Alias to match requested family name exactly */
+        @font-face {
+            font-family: 'Monument Semi Grotesk';
+            src: local('MonumentGrotesk-Semi-Mono'), local('Monument Semi Grotesk'), url('MonumentGrotesk-Semi-Mono.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
         }
 
         @font-face {
@@ -22,7 +32,31 @@
             font-weight: 300;
             font-style: normal;
         }
-        :root { --side-margin: 80px; --content-pad: 40px; }
+        :root { --side-margin: 80px; --content-pad: 40px; --pellet-bg: rgba(255,255,255,0.75); --pellet-border: #333; --pellet-font-size: 16px; --pellet-line: 1.1; --pellet-maxw: 66%; }
+        /* Pellet token (shared styles) */
+        .text-panel .pellet {
+          padding: 8px 14px;
+          border-radius: 999px;
+          background: var(--pellet-bg);
+          border: 2px solid var(--pellet-border);
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.40),
+            inset 0 -1px 0 rgba(0,0,0,0.12),
+            0 2px 10px rgba(0,0,0,0.08);
+          backdrop-filter: blur(6px) saturate(1.05);
+          -webkit-backdrop-filter: blur(6px) saturate(1.05);
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
+          font-size: var(--pellet-font-size);
+          line-height: var(--pellet-line);
+          color: #000; letter-spacing: 0.01em; text-align: left;
+          width: fit-content; max-width: var(--pellet-maxw);
+          white-space: normal; overflow-wrap: anywhere; user-select: none;
+        }
+        /* Remove stroke on all pellets */
+        .text-panel .hud-pellet,
+        .text-panel .square-pellet,
+        .text-panel .video-pellet,
+        .text-panel .black-pellet { border: none !important; }
         
         * {
             margin: 0;
@@ -242,6 +276,9 @@
           margin-bottom: 40px;
         }
 
+        /* Half-width variant for post-HUD image */
+        .text-panel .image-box-natural.half { width: 50%; margin-left: auto; margin-right: auto; }
+
         .image-box-natural img {
           width: 100%;
             height: auto;
@@ -293,12 +330,16 @@
         
         /* Hero intro text box under top cube */
         .hero-text-box {
-          border: none;
-          background: transparent;
-          padding: var(--content-pad) 0; /* align with left/right panel edge */
+          border: 2px solid #333;
+          background: #fff;
+          padding: calc(var(--content-pad) * 0.8) var(--content-pad); /* reduce height ~20% */
           margin: 16px 0 0 0;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.50),
+            inset 0 -1px 0 rgba(0,0,0,0.18),
+            0 2px 12px rgba(0,0,0,0.08);
         }
-        .hero-text-box p { font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 11.2px; line-height: 1.28; color:#333; margin: 0; text-align: left; }
+        .hero-text-box p { font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 11.2px; line-height: 0.9; color:#333; margin: 0; text-align: center; }
         .hero-spacer { height: 28px; }
         /* word-by-word fade-up rollout for hero title */
         .hero-text { line-height: 1.152; transform: translateY(-20%); }
@@ -308,8 +349,8 @@
 
         /* Hero CTA button */
         .hero-cta {
-          display: inline-block;
-          margin-top: 12px;
+          display: block;
+          margin: 8px auto 0 auto;
           padding: 0;
           border: none;
           background: transparent;
@@ -317,18 +358,26 @@
           text-decoration: none;
           font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
           font-size: 11.2px;
-          line-height: 1;
+          line-height: 0.9;
           cursor: pointer;
+        }
+
+        /* Hero action buttons */
+        .hero-actions { display:flex; justify-content:center; align-items:center; gap:12px; margin-top: 12px; }
+        .hero-btn {
+          display:inline-block; text-decoration:none; cursor:pointer;
+          padding: 8px 14px; border: 2px solid #333; background:#000; color:#fff;
+          font-family: 'KH Teka', Arial, sans-serif; font-size: 11.2px; line-height: 0.9;
         }
 
         /* Title for strategy section (kept, no grid) */
         .text-panel .tv-title {
           font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
-          font-size: 16px; /* mirror site title text size */
-          line-height: 1.2;
+          font-size: 11.2px; /* 30% smaller than 16px */
+          line-height: 0.9;
           color: #333;
           margin: 16px 0 8px 0;
-          text-align: left;
+          text-align: center;
         }
 
         .title-text p {
@@ -439,14 +488,13 @@
         /* === HUD demo (scoped to text panel) === */
         .text-panel .hud-slot {
           position: relative;
-          width: 100%;
-          height: 50vh;
-          max-height: 600px;
-          min-height: 280px;
+          width: 60%;
+          height: auto;
+          aspect-ratio: 1 / 1; /* make square */
           overflow: hidden;
           background: rgba(255,255,255,0.02);
-          margin: 12px 0 var(--content-pad) 0;
-          border: none; /* remove frame stroke */
+          margin: 12px auto var(--content-pad) auto; /* center */
+          border: 2px solid #333; /* match site frame width */
           /* glassy embossed edge */
           box-shadow:
             inset 0 1px 0 rgba(255,255,255,0.50), /* top highlight */
@@ -483,6 +531,16 @@
         .text-panel .hud-lines { position:absolute; inset:0; width:100%; height:100%; display:block; }
         .text-panel .hud-lines line { stroke: rgb(0, 255, 0); stroke-width:1; opacity:1; vector-effect: non-scaling-stroke; shape-rendering: crispEdges; stroke-linecap: square; }
         .text-panel .hud-lines line.cross { stroke-dasharray:3 3; opacity:1; }
+        /* Glassy pellet overlay for HUD title */
+        .text-panel .hud-pellet { display: none !important; }
+        .text-panel .hud-caption {
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
+          font-size: 11.2px; line-height: 0.9; color: #333; letter-spacing: 0;
+          width: 60%;
+          margin: 6px auto var(--content-pad) auto; /* aligns with frame width and center */
+          text-align: left;
+          transform: translateY(-20%); /* move 20% upward toward frame */
+        }
         /* Static glassy grid frame */
         .text-panel .glass-frame {
           position: relative;
@@ -574,6 +632,183 @@
           .text-panel .breadth-anim .draw { animation: none; stroke-dashoffset: 0; }
           .text-panel .breadth-anim::before, .text-panel .breadth-anim::after { animation: none; opacity: 0; }
         }
+        /* Square frame with pellet overlay */
+        .text-panel .square-frame {
+          position: relative;
+          width: 60%;
+          height: auto;
+          aspect-ratio: 1 / 1; /* match HUD square */
+          border: 2px solid #333; /* same frame width */
+          background: rgba(255,255,255,0.02); /* glassy base */
+          overflow: hidden;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.50), /* top highlight */
+            inset 0 -1px 0 rgba(0,0,0,0.18),      /* bottom shadow */
+            0 2px 12px rgba(0,0,0,0.08);          /* soft outer glow */
+          box-sizing: border-box;
+          margin: 12px auto var(--content-pad) auto; /* center, same spacing */
+          perspective: 1000px;
+        }
+        .text-panel .square-frame .square-img {
+          position: absolute; inset: 0;
+          display: flex; align-items: center; justify-content: center;
+          transform-style: preserve-3d;
+          pointer-events: none;
+        }
+        .text-panel .square-frame .square-img img {
+          max-width: 90%; max-height: 90%; width: auto; height: auto; object-fit: contain; display: block;
+          filter: none; opacity: 1;
+        }
+        .text-panel .square-frame .square-pellet {
+          position: absolute;
+          top: 30%; left: 12px; transform: translateY(-50%);
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-weight: 400;
+          font-size: 11.2px; line-height: 1.0; color: #fff; letter-spacing: 0;
+          background: #000; border: none; box-shadow: none; padding: 8px 14px; border-radius: 0;
+          text-align: left; max-width: 80%; white-space: normal; overflow-wrap: anywhere;
+          user-select: none; pointer-events: none; z-index: 2;
+        }
+
+        /* Process animation (three spheres) */
+        .text-panel .process-frame {
+          position: relative;
+          width: 60%;
+          height: auto;
+          aspect-ratio: 16 / 9;
+          border: none;
+          background: transparent;
+          overflow: hidden;
+          box-shadow: none;
+          box-sizing: border-box;
+          margin: 12px auto var(--content-pad) auto; /* neat padding in textPanel */
+        }
+        .text-panel .process-spheres { position:absolute; inset:0; }
+        .text-panel .sphere {
+          position: absolute; width: 72px; height: 72px; border-radius: 50%;
+          background: #fff;
+          border: 2px solid #333;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.50),
+            inset 0 -1px 0 rgba(0,0,0,0.18);
+          opacity: 1;
+          will-change: transform, opacity;
+        }
+        .text-panel .sphere .sphere-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 11.2px; line-height:1; color:#000; text-align:center; pointer-events:none; }
+        .text-panel .sphere--ring { width: 64px; height: 64px; }
+        .text-panel .ring-nodes { position:absolute; inset:0; }
+        
+
+        /* Video frame styled like HUD/square frame */
+        .text-panel .video-frame {
+          position: relative;
+          width: 78%; /* 30% wider than 60% */
+          height: auto;
+          aspect-ratio: 16 / 9; /* 16:9 video */
+          border: 2px solid #333;
+          background: #000; /* avoid light seam on subpixel edges */
+          overflow: hidden;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.50),
+            inset 0 -1px 0 rgba(0,0,0,0.18),
+            0 2px 12px rgba(0,0,0,0.08);
+          box-sizing: border-box;
+          margin: var(--content-pad) auto var(--content-pad) auto; /* comfortable padding */
+        }
+        .text-panel .video-frame video {
+          position: absolute; inset: 0;
+          /* Slight overscan to avoid subpixel seams */
+          width: 102%; height: 102%;
+          left: -1%; top: -1%;
+          object-fit: cover; /* crop to fit */
+          display: block;
+          transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .text-panel .video-frame .video-pellet {
+          position: absolute;
+          top: 30%; left: 12px; transform: translateY(-50%);
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-weight: 400;
+          font-size: 11.2px; line-height: 1.0; color: #fff; letter-spacing: 0;
+          background: #000; border: none; box-shadow: none; padding: 8px 14px; border-radius: 0;
+          text-align: left; max-width: 80%; white-space: normal; overflow-wrap: anywhere;
+          user-select: none; pointer-events: none; z-index: 2;
+        }
+
+        /* Three small image boxes under video */
+        .text-panel .thumb-row {
+          width: 78%;
+          margin: 12px auto var(--content-pad) auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 12px;
+          flex-wrap: nowrap;
+        }
+        .text-panel .thumb-row > div { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; }
+        .text-panel .thumb-row .small-image-box {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          height: auto;
+          margin: 0;
+          overflow: hidden;
+          display: block;
+          opacity: 0; /* will fade in via scroll */
+          transform: translateX(-20px);
+          will-change: opacity, transform;
+          transition: opacity .35s ease, transform .35s ease;
+          /* maintain original frame sizing */
+        }
+        .text-panel .thumb-row .small-image-box img {
+          width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .text-panel .thumb-row .small-caption {
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif;
+          font-size: 11.2px; line-height: 0.9; color:#333; text-align:center;
+          margin-top: 6px; opacity: 0; transition: opacity .35s ease;
+        }
+
+        /* Black square image box with pellet (styled like other frames) */
+        .text-panel .black-square-frame {
+          position: relative;
+          width: 60%;
+          height: auto;
+          aspect-ratio: 1 / 1;
+          border: 2px solid #333;
+          background: #000 center/cover no-repeat; /* allow full-bleed bg image */
+          overflow: hidden;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.20),
+            inset 0 -1px 0 rgba(0,0,0,0.40),
+            0 2px 12px rgba(0,0,0,0.08);
+          box-sizing: border-box;
+          margin: var(--content-pad) auto var(--content-pad) auto;
+        }
+        .text-panel .black-square-frame .black-pellet {
+          position: absolute;
+          top: 30%; left: 12px; transform: translateY(-50%);
+          font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-weight: 400;
+          font-size: 11.2px; line-height: 1.0; color: #fff; letter-spacing: 0;
+          background: #000; border: none; box-shadow: none; padding: 8px 14px; border-radius: 0;
+          text-align: left; max-width: 80%; white-space: normal; overflow-wrap: anywhere;
+          user-select: none; pointer-events: none; z-index: 2;
+        }
+        .text-panel .black-square-frame .black-img { position: absolute; inset: 0; line-height: 0; }
+        .text-panel .black-square-frame .black-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transform: translateZ(0); }
+        /* Ring of circles animation */
+        .text-panel .ring-frame { position: relative; width: 72%; aspect-ratio: 1 / 1; margin: calc(var(--content-pad) * 0.7) auto calc(var(--content-pad) * 0.7) auto; overflow: visible; }
+        .text-panel .ring-svg { position:absolute; inset:0; display:block; }
+        .text-panel .ring-svg .ring-path { stroke:#333; stroke-width:2; fill:none; vector-effect: non-scaling-stroke; stroke-linecap: round; display:none; }
+        .text-panel .ring-node { fill:#fff; stroke:#333; stroke-width:2; }
+        .text-panel .ring-label { fill:#000; font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 9.6px; text-anchor: middle; dominant-baseline: middle; alignment-baseline: middle; pointer-events: none; opacity: 0; }
+        /* Flow process */
+        .text-panel .flow-frame { position: relative; width: 78%; height: auto; aspect-ratio: 16 / 6; border: none; background: transparent; margin: var(--content-pad) auto var(--content-pad) auto; box-shadow: none; overflow:hidden; }
+        .text-panel .flow-row { position:absolute; inset: 12px; display:flex; align-items:center; justify-content: space-between; gap: 12px; }
+        .text-panel .flow-box { position:relative; flex:1 1 0; min-width:0; background:#fff; border:2px solid #333; padding:10px 12px; text-align:center; font-family:'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size:11.2px; line-height:1; color:#000; opacity:0; transform: translateX(-16px); transition: opacity .35s ease, transform .35s ease; }
+        .text-panel .flow-box:not(:last-child)::after { content:""; position:absolute; top:50%; right:-10px; transform: translateY(-50%); width:0; height:0; border-left: 10px solid #333; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+        .text-panel .flow-lines { position:absolute; inset:0; pointer-events:none; }
+        .text-panel .flow-lines path { stroke:#333; stroke-width:2; fill:none; vector-effect: non-scaling-stroke; }
+        /* HUD module overrides */
+        .text-panel .section-hud .section-inner{ padding: 0; transform: none; }
+        .text-panel .section-hud .hud-slot{ width: 100%; height: 100%; aspect-ratio: auto; margin: 0; border: none; background: transparent; box-shadow: none; }
         /* Tablet and down */
         @media (max-width: 768px) {
           :root { --side-margin: 40px; --content-pad: 24px; }
@@ -597,6 +832,13 @@
           .title-image img { width: 250px; }
           .title-text { margin-bottom: 30px; }
           .title-text p, .title-credit { font-size: 15px; }
+
+          /* Modules - comfortable mobile layout */
+          .text-panel .section { height: 78svh; }
+          .text-panel .section-inner { padding: 24px 6%; transform: translateY(-6%); }
+          .section-title { font-size: 26px; }
+          .section-body { font-size: 15px; line-height: 1.38; max-width: 64ch; }
+          .intro-square { width: min(84vw, 420px); }
         }
 
         /* Small phones */
@@ -622,6 +864,13 @@
           .title-image img { width: 200px; }
           .title-text { margin-bottom: 24px; }
           .title-text p, .title-credit { font-size: 14px; }
+
+          /* Modules - small phones */
+          .text-panel .section { height: 74svh; }
+          .text-panel .section-inner { padding: 20px 6%; transform: translateY(-4%); }
+          .section-title { font-size: 22px; letter-spacing: 0.005em; }
+          .section-body { font-size: 14px; line-height: 1.4; max-width: 66ch; }
+          .intro-square { width: min(88vw, 380px); }
         }
 
         @media (max-width: 768px) {
@@ -733,6 +982,40 @@
           .cube { transition: none !important; }
         }
 
+        /* ===== Earthy palette for modules ===== */
+        :root{
+          --mod-surface:  #e6e7e8;
+          --mod-systems:  #a7a9ac;
+          --mod-signals:  #f15a29;
+          --mod-substance:#2e3192;
+          --mod-core:     #414042;
+        }
+        /* ===== Sections inside the existing text panel ===== */
+        /* Make modules cover the panel with the same translucent feel */
+        .text-panel { padding: 0; }
+        .text-panel .section{ position: relative; width: 100%; height: 80vh; display: flex; align-items: center; border: none; }
+        .text-panel .section + .section{ border-top: 2px solid #333; }
+        .text-panel .section-01{ background: rgba(255,255,255,0.95); }
+        .text-panel .section-02{ background: rgba(230,231,232,0.95); }
+        .text-panel .section-03{ background: rgba(167,169,172,0.95); }
+        .text-panel .section-04{ background: rgba(241,90,41,0.95); }
+        .text-panel .section-05{ background: rgba(46,49,146,0.95); }
+        .text-panel .section-06{ background: rgba(65,64,66,0.95); }
+        .text-panel .section-inner{ width: 100%; margin: 0; padding: 32px 5%; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: left; transform: translateY(-10%); }
+        .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; }
+        /* ===== Type system ===== */
+        .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
+        .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 16px; line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
+        .section-05 .section-title, .section-05 .section-body, .section-06 .section-title, .section-06 .section-body{ color: #F5F6F7; }
+        /* ===== Intro (module 1) ===== */
+        .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
+        .section-01 .intro-links{ margin-top: 8px; }
+        .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0 auto; }
+        #cubeMount, #cubeMount > *{ width: 100%; height: 100%; }
+        .intro-links{ display: none; }
+        .intro-link{ font-family: "Monument Semi Grotesk", system-ui, -apple-system, Arial, sans-serif; font-size: 18px; text-decoration: none; color: #000; }
+        .section-06 .intro-link { color: #F5F6F7; }
+
 
     </style>
 </head>
@@ -780,169 +1063,61 @@
       </div>
 
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
-        <!-- === 3D Scroll Cube (Header) === -->
-        <div class="cube-block" data-ax="xy" data-speed="1.00" data-ease="smooth">
-          <div class="cube-scene">
-            <div class="cube">
-              <div class="cube-face cube-face--front"><span class="cube-text">Oscar B Morgan</span></div>
-              <div class="cube-face cube-face--back"><span class="cube-text">studio@oscarbmorgan.com</span></div>
-              <div class="cube-face cube-face--right"><span class="cube-text">Image and text services</span></div>
-              <div class="cube-face cube-face--left"><span class="cube-text">© Oscar B Morgan 2025</span></div>
-              <div class="cube-face cube-face--top"><span id="helsinkiClock" class="cube-clock"></span></div>
-              <div class="cube-face cube-face--bottom"></div>
+        <!-- ===== Six-module scaffold (inside #textPanel) ===== -->
+        <section class="section section-01" aria-label="Intro">
+          <div class="section-inner intro-grid">
+            <div class="intro-square">
+              <div id="cubeMount" aria-hidden="true"></div>
             </div>
+            <nav class="intro-links" aria-label="Primary links">
+              <a class="intro-link" href="mailto:studio@oscarbmorgan.com">Contact</a>
+              <a class="intro-link" href="#about">About</a>
+            </nav>
           </div>
-        </div>
-        
-        <!-- Hero intro framed text box -->
-        <div class="hero-text-box" role="region" aria-label="Intro text">
-          <p id="heroIntroText" class="hero-text"></p>
-          <a class="hero-cta" href="mailto:studio@oscarbmorgan.com">[Contact]</a>
-        </div>
-        <div class="hero-spacer"></div>
-
-        <p class="tv-title">Creative strategy through cultural interrogation</p>
-
-        <!-- HUD demo block -->
-        <div class="hud-slot" aria-label="HUD demo">
-          <div class="hud-layer hud-grid"></div>
-          <div class="hud-layer hud-images" id="hudImgs"></div>
-          <canvas class="hud-layer hud-bitmap" id="hudBitmap"></canvas>
-          <div class="hud-layer hud-micro" id="hudMicro"></div>
-          <div class="hud-layer hud-threshold"></div>
-          <div class="hud-layer hud-overlay" id="hudOverlay">
-            <div class="hud-label top-left" id="hudTL">00:00:00 • X:0 Y:0</div>
-            <div class="hud-label bottom-left" id="hudBL">[304]</div>
-            <div class="hud-label bottom-right" id="hudBR">00129</div>
-            <svg class="hud-lines" id="hudLines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </section>
+        <section class="section section-02" aria-label="Surface">
+          <div class="section-inner">
+            <h2 class="section-title">Surface</h2>
+            <p class="section-body">Creative strategy through cultural interrogation. Brand stewardship, project-based concept development, and the building of scaleable frameworks that integrate automation into the planning and execution of creative work. Text and images. Images only. Text only.</p>
           </div>
-        </div>
-
-        
-        
-        <div class="image-box image-box-natural">
-          <img src="assets/images/popups/009.png" alt="Popup Image 009" decoding="async">
-        </div>
-        <p class="tv-title">Technology as tools for growth and greater understanding</p>
-
-        <div class="code-anim">
-          <pre id="codeScreen" class="code-screen" aria-label="Code typing animation"></pre>
-          <div class="code-threshold"></div>
-        </div>
-
-        <p class="tv-title">Breadth, but also depth.</p>
-        <div class="code-anim breadth-frame" aria-label="Breadth animation frame">
-          <div class="breadth-anim" aria-hidden="true">
-            <!-- light bitmap reference (fallback) -->
-            <img class="ref" src="assets/images/grid 3/breadth.png" alt="Breadth diagram reference" decoding="async">
-            <!-- vector overlay -->
-            <div class="breadth-svg">
-              <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                <!-- Outer frame (approximate to image edges) -->
-                <rect class="stroke draw glow" x="100" y="60" width="760" height="420" rx="2" ry="2" />
-                <!-- Central burst lines -->
-                <line class="stroke draw d2" x1="480" y1="270" x2="860" y2="270" />
-                <line class="stroke draw d2" x1="480" y1="270" x2="100" y2="270" />
-                <line class="stroke draw d3" x1="480" y1="270" x2="480" y2="100" />
-                <line class="stroke draw d3" x1="480" y1="270" x2="480" y2="440" />
-                <!-- Diagonals -->
-                <line class="stroke draw d3" x1="480" y1="270" x2="840" y2="120" />
-                <line class="stroke draw d3" x1="480" y1="270" x2="840" y2="420" />
-                <line class="stroke draw d3" x1="480" y1="270" x2="120" y2="120" />
-                <line class="stroke draw d3" x1="480" y1="270" x2="120" y2="420" />
-                <!-- Concentric arcs (approximated as rounded rectangles) -->
-                <rect class="stroke dashed draw d4" x="180" y="140" width="600" height="260" rx="130" ry="130" />
-                <rect class="stroke dashed draw d4" x="240" y="180" width="480" height="180" rx="90" ry="90" />
-                <!-- Labels -->
-                <text class="label" x="480" y="88" text-anchor="middle">breadth over depth</text>
-              </svg>
-            </div>
+        </section>
+        <section class="section section-03" aria-label="Systems">
+          <div class="section-inner">
+            <h2 class="section-title">Systems</h2>
+            <p class="section-body">Augmented research based on repeatable systems. Interrogation of new tools and emerging technologies.</p>
           </div>
-          <div class="code-threshold"></div>
-        </div>
-        <div class="image-box image-box-natural">
-          <img src="assets/images/popups/008.png" alt="Popup Image 008" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/popups/007.png" alt="Popup Image 007" decoding="async">
-        </div>
-        <div class="image-box image-box-natural">
-          <img src="assets/images/journey/001.png" alt="Journey Image 001" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
-        </div>
-        
-        <!-- === 3D Scroll Cube 1 === -->
-        <div class="cube-block" data-ax="xy" data-speed="1.00" data-ease="smooth">
-          <div class="cube-scene">
-            <div class="cube">
-              <div class="cube-face cube-face--front"></div>
-              <div class="cube-face cube-face--back"></div>
-              <div class="cube-face cube-face--right"></div>
-              <div class="cube-face cube-face--left"></div>
-              <div class="cube-face cube-face--top"></div>
-              <div class="cube-face cube-face--bottom"></div>
-            </div>
+        </section>
+        <section class="section section-04" aria-label="Signals">
+          <div class="section-inner">
+            <h2 class="section-title">Signals</h2>
+            <p class="section-body">What’s happening and where it’s happening: Parsing feeds and IRL, collecting data and codifying.</p>
           </div>
-        </div>
-        
-        <div class="image-box image-box-natural">
-          <img src="assets/images/journey/002.png" alt="Journey Image 002" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/journey-line-2.svg" alt="Journey Line 2" decoding="async">
-        </div>
-        <div class="image-box">
-          <img src="assets/images/journey/003.png" alt="Journey Image 003" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/Journey-line.svg" alt="Journey Line" decoding="async">
-        </div>
-        <div class="image-box">
-          <img src="assets/images/popups/004.png" alt="Image 004" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/city-scape.svg" alt="City Scape" decoding="async">
-        </div>
-        
-        <!-- === 3D Scroll Cube 2 === -->
-        <div class="cube-block" data-ax="xz" data-speed="0.90" data-ease="easeOut">
-          <div class="cube-scene">
-            <div class="cube">
-              <div class="cube-face cube-face--front"></div>
-              <div class="cube-face cube-face--back"></div>
-              <div class="cube-face cube-face--right"></div>
-              <div class="cube-face cube-face--left"></div>
-              <div class="cube-face cube-face--top"></div>
-              <div class="cube-face cube-face--bottom"></div>
-            </div>
+        </section>
+        <section class="section section-05" aria-label="Substance">
+          <div class="section-inner">
+            <h2 class="section-title">Substance</h2>
+            <p class="section-body">People first and always. Ethical approaches to artificial intelligence, production, and execution.</p>
           </div>
-        </div>
-        
-        <div class="image-box">
-          <img src="assets/images/popups/005.png" alt="Image 005" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/ICON-2.svg" alt="Icon 2" decoding="async">
-        </div>
-        <div class="image-box">
-          <img src="assets/images/popups/006.png" alt="Image 006" decoding="async">
-        </div>
-        <div class="small-image-box">
-          <img src="assets/images/icons/SVG/icon-3.svg" alt="Icon 3" decoding="async">
-        </div>
-        
-        <!-- === 3D Scroll Cube 3 === -->
-        <div class="cube-block" data-ax="yz" data-speed="1.15" data-ease="easeIn">
-          <div class="cube-scene">
-            <div class="cube">
-              <div class="cube-face cube-face--front"></div>
-              <div class="cube-face cube-face--back"></div>
-              <div class="cube-face cube-face--right"></div>
-              <div class="cube-face cube-face--left"></div>
-              <div class="cube-face cube-face--top"></div>
-              <div class="cube-face cube-face--bottom"></div>
+        </section>
+        <section class="section section-06" aria-label="Core">
+          <div class="section-inner">
+            <h2 class="section-title">Core</h2>
+            <p class="section-body">Collaborative work based on shared principles.</p>
+          </div>
+        </section>
+
+        <!-- Stash original cube so existing logic initializes, JS will remount into #cubeMount -->
+        <div id="cubeStash" style="display:none">
+          <div class="cube-block" data-ax="xy" data-speed="1.00" data-ease="smooth">
+            <div class="cube-scene">
+              <div class="cube">
+                <div class="cube-face cube-face--front"><span class="cube-text">Oscar B Morgan</span></div>
+                <div class="cube-face cube-face--back"><span class="cube-text">studio@oscarbmorgan.com</span></div>
+                <div class="cube-face cube-face--right"><span class="cube-text">Image and text services</span></div>
+                <div class="cube-face cube-face--left"><span class="cube-text">© Oscar B Morgan 2025</span></div>
+                <div class="cube-face cube-face--top"><span id="helsinkiClock" class="cube-clock"></span></div>
+                <div class="cube-face cube-face--bottom"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -964,6 +1139,7 @@
         <a href="#illustration">Illustration</a>
         <a href="#nutrition">Nutrition</a>
         </div>
+      <div id="page-end"></div>
     </footer>
 
     <script>
@@ -972,6 +1148,10 @@
   const footer = document.getElementById('footerPanel');
         const navDepthCounter = document.getElementById('navDepthCounter');
   const heroEl = document.getElementById('hero');
+  // Footer reveal damping state
+  let footerRevealTimer = null;
+  let footerHideTimer = null;
+  let footerIsShown = false;
 
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -1106,12 +1286,147 @@
       navDepthCounter.textContent = depth === 0 ? '0m' : `- ${depth}m`;
     }
 
-    // Footer reveal at end of text
+    // --- Process spheres animation ---
+    (function animateProcess(){
+      const frame = document.getElementById('processFrame');
+      if (!frame) return;
+      const r = frame.getBoundingClientRect();
+      const s = textPanel.getBoundingClientRect();
+      // progress relative to the top of first animation (enter -> exit of frame)
+      let p = 1 - clamp((r.top - s.top) / s.height, 0, 1); // 0..1 in view
+      // drive emergence only after top reaches panel top; reverse when leaving
+      // map 0..1 to -0.2..1.2 for gentle ease near edges
+      p = clamp(p, 0, 1);
+
+      const W = r.width, H = r.height;
+      const y = H * 0.5 - 36; // center vertically (72px spheres)
+      // start all spheres from left origin (x0)
+      const x0 = Math.round(W * 0.08);
+      // target centers at equal thirds
+      const c1 = W * (1/6);
+      const c2 = W * 0.5;
+      const c3 = W * (5/6);
+      // increase spacing by 30% from the middle
+      const SPREAD = 1.3;
+      const c1e = c2 + (c1 - c2) * SPREAD;
+      const c3e = c2 + (c3 - c2) * SPREAD;
+      // convert to top-left (subtract radius 36) and clamp into frame
+      const clampTL = (x) => Math.max(0, Math.min(W - 72, Math.round(x - 36)));
+      const x1 = clampTL(c1e);
+      const x2 = clampTL(c2);
+      const x3 = clampTL(c3e);
+
+      const s1 = document.getElementById('sphere1');
+      const s2 = document.getElementById('sphere2');
+      const s3 = document.getElementById('sphere3');
+      if (!(s1 && s2 && s3)) return;
+
+      // simple ease (smoothstep)
+      const ease = v => v*v*(3-2*v);
+      const e = ease(p);
+
+      const t1 = x0 + (x1 - x0) * e;
+      const t2 = x0 + (x2 - x0) * e;
+      const t3 = x0 + (x3 - x0) * e;
+
+      s1.style.transform = `translate(${t1}px, ${y}px)`;
+      s2.style.transform = `translate(${t2}px, ${y}px)`;
+      s3.style.transform = `translate(${t3}px, ${y}px)`;
+
+      // subtle scale in on entry
+      const sc = 0.85 + 0.15 * e;
+      s1.style.scale = sc; s2.style.scale = sc; s3.style.scale = sc;
+      // fade from 0 to 1 across progress
+      const a = e;
+      s1.style.opacity = a; s2.style.opacity = a; s3.style.opacity = a;
+
+      // loop animation removed
+    })();
+
+    // --- Ring of circles rollout (top -> right -> bottom -> left) with stroke follow ---
+    (function animateRing(){
+      const frame = document.getElementById('ringFrame');
+      const ring = document.getElementById('ringPath');
+      const nodesWrap = document.getElementById('ringNodes');
+      const topEl = document.getElementById('ringTop');
+      const rightEl = document.getElementById('ringRight');
+      const bottomEl = document.getElementById('ringBottom');
+      const leftEl = document.getElementById('ringLeft');
+      if (!frame || !ring || !nodesWrap || !topEl || !rightEl || !bottomEl || !leftEl) return;
+      const fr = frame.getBoundingClientRect();
+      const sr = textPanel.getBoundingClientRect();
+      let p = 1 - clamp((fr.top - sr.top) / sr.height, 0, 1); // 0..1
+      p = clamp(p, 0, 1);
+
+      const W = fr.width, H = fr.height;
+      const cx = W * 0.5, cy = H * 0.5, R = Math.min(W,H) * 0.34;
+      const pos = (ang)=> ({ x: cx + R * Math.cos(ang), y: cy + R * Math.sin(ang) });
+      const top = pos(-Math.PI/2), right = pos(0), bottom = pos(Math.PI/2), left = pos(Math.PI);
+      const place = (el, pt)=> { el.style.transform = `translate(${Math.round(pt.x-32)}px, ${Math.round(pt.y-32)}px)`; };
+      place(topEl, top); place(rightEl, right); place(bottomEl, bottom); place(leftEl, left);
+
+      // remove animation: always show nodes at full opacity and scale
+      [topEl, rightEl, bottomEl, leftEl].forEach((el)=>{
+        el.style.opacity = '1';
+        el.style.scale = '1';
+      });
+    })();
+
+    // Blur removed
+
+    // Footer reveal at end of text with slight damping
     const atEnd = t >= 0.999;
-    if (footer) footer.classList.toggle('show', atEnd);
-    if (atEnd && typeof stopAuto === 'function' && typeof playRaf !== 'undefined' && playRaf) {
-      stopAuto();
+    if (footer) {
+      if (atEnd) {
+        // cancel any pending hide
+        if (footerHideTimer) { clearTimeout(footerHideTimer); footerHideTimer = null; }
+        if (!footerIsShown && !footerRevealTimer) {
+          footerRevealTimer = setTimeout(() => {
+            footer.classList.add('show');
+            footerIsShown = true;
+            footerRevealTimer = null;
+            if (typeof stopAuto === 'function' && typeof playRaf !== 'undefined' && playRaf) {
+              stopAuto();
+            }
+          }, 220); // slight, damp delay
+        }
+      } else {
+        // cancel any pending reveal
+        if (footerRevealTimer) { clearTimeout(footerRevealTimer); footerRevealTimer = null; }
+        if (footerIsShown && !footerHideTimer) {
+          footerHideTimer = setTimeout(() => {
+            footer.classList.remove('show');
+            footerIsShown = false;
+            footerHideTimer = null;
+          }, 120);
+        }
+      }
     }
+
+    // Clean left-to-right rollout for thumbnails, tied to video top; reversible
+    (function rolloutThumbs(){
+      const vf = document.querySelector('.video-frame');
+      const row = vf ? vf.nextElementSibling : null;
+      if (!vf || !row || !row.classList.contains('thumb-row')) return;
+      const vr = vf.getBoundingClientRect();
+      const sr = textPanel.getBoundingClientRect();
+      // progress anchored to when video top hits panel top (0..1)
+      let p = 1 - clamp((vr.top - sr.top) / sr.height, 0, 1);
+      p = clamp(p, 0, 1);
+      const ease = (v)=> v*v*(3-2*v);
+      const e = ease(p);
+      const wrappers = Array.from(row.children);
+      const boxes = wrappers.map(w => w.querySelector('.small-image-box'));
+      const thresholds = [0, 1/3, 2/3];
+      boxes.forEach((box, i) => {
+        const start = thresholds[i] || 0;
+        const local = clamp((e - start) * 3, 0, 1); // map [start..start+1/3] -> [0..1]
+        box.style.opacity = local;
+        box.style.transform = `translateX(${Math.round((1-local)*20)}px)`;
+        const cap = wrappers[i].querySelector('.small-caption');
+        if (cap) cap.style.opacity = local;
+      });
+    })();
   }
 
   // Keep rAF smoothness without heavy work in the scroll handler
@@ -1232,6 +1547,17 @@
     setInterval(fmt, 1000);
   })();
 
+  // Mount the existing cube into the framed square in section-01
+  document.addEventListener('DOMContentLoaded', () => {
+    const mount = document.getElementById('cubeMount');
+    const cubeEl = document.querySelector('.text-panel .cube-block') || document.querySelector('#cubeStash .cube-block');
+    if (mount && cubeEl && !mount.contains(cubeEl)) {
+      mount.appendChild(cubeEl);
+      cubeEl.style.width = '100%';
+      cubeEl.style.height = '100%';
+    }
+  });
+
   // --- Initialize hero copy (word-by-word rollout) ---
   (function initHeroCopy(){
     const el = document.getElementById('heroIntroText');
@@ -1298,6 +1624,90 @@
       setTimeout(typeNext, 18); // typing speed per char
     }
     typeNext();
+  })();
+  // Flow process animation and connectors
+  (function initFlow(){
+    const row = document.getElementById('flowRow');
+    if (!row) return;
+    const boxes = Array.from(row.querySelectorAll('.flow-box'));
+    const svg = row.parentElement.querySelector('.flow-lines');
+
+    function render(){
+      if (!svg) return;
+      const bb = boxes.map(b => b.getBoundingClientRect());
+      const fr = row.getBoundingClientRect();
+      const toPct = (v, max) => (v / max) * 100;
+      svg.setAttribute('viewBox','0 0 100 100');
+      svg.innerHTML = '';
+      for (let i=0;i<bb.length-1;i++){
+        const a = bb[i], b = bb[i+1];
+        const ax = a.right - fr.left, ay = a.top + a.height/2 - fr.top;
+        const bx = b.left - fr.left,  by = b.top + b.height/2 - fr.top;
+        const mx = (ax + bx) / 2;
+        const d = `M ${toPct(ax, fr.width)},${toPct(ay, fr.height)} C ${toPct(mx, fr.width)},${toPct(ay, fr.height)} ${toPct(mx, fr.width)},${toPct(by, fr.height)} ${toPct(bx, fr.width)},${toPct(by, fr.height)}`;
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', d);
+        path.setAttribute('marker-end','url(#arrow)');
+        svg.appendChild(path);
+      }
+      // Define arrow marker once
+      if (!svg.querySelector('defs')){
+        const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+        const marker = document.createElementNS('http://www.w3.org/2000/svg','marker');
+        marker.setAttribute('id','arrow');
+        marker.setAttribute('viewBox','0 0 10 10');
+        marker.setAttribute('refX','10');
+        marker.setAttribute('refY','5');
+        marker.setAttribute('markerWidth','6');
+        marker.setAttribute('markerHeight','6');
+        marker.setAttribute('orient','auto');
+        const tip = document.createElementNS('http://www.w3.org/2000/svg','path');
+        tip.setAttribute('d','M 0 0 L 10 5 L 0 10 z');
+        tip.setAttribute('fill','#333');
+        marker.appendChild(tip);
+        defs.appendChild(marker);
+        svg.prepend(defs);
+      }
+    }
+
+    function updateFlow(){
+      const sr = textPanel.getBoundingClientRect();
+      const fr = row.parentElement.getBoundingClientRect();
+      let p = 1 - Math.min(1, Math.max(0, (fr.top - sr.top)/sr.height));
+      const thresholds = [0, .2, .4, .6];
+      boxes.forEach((b, i)=>{
+        const local = Math.max(0, Math.min(1, (p - thresholds[i]) * 5));
+        b.style.opacity = String(local);
+        b.style.transform = `translateX(${Math.round((1-local)*16)}px)`;
+      });
+      render();
+    }
+
+    new ResizeObserver(updateFlow).observe(row);
+    textPanel.addEventListener('scroll', updateFlow, { passive: true });
+    window.addEventListener('resize', updateFlow);
+    window.addEventListener('load', updateFlow);
+    updateFlow();
+  })();
+  // Resolve thumbnail fallbacks if primary paths fail
+  (function resolveThumbs(){
+    const attempts = [
+      { id: 'thumbNE003' },
+      { id: 'thumbNE002' },
+      { id: 'thumbVOCE' }
+    ];
+    attempts.forEach(({id})=>{
+      const img = document.getElementById(id);
+      if (!img) return;
+      const candidates = (img.getAttribute('data-fallbacks')||'').split(',').map(s=>s.trim()).filter(Boolean);
+      let i = 0;
+      function tryNext(){
+        if (i >= candidates.length) return;
+        img.src = candidates[i++];
+      }
+      img.addEventListener('error', tryNext);
+      tryNext();
+    });
   })();
   // --- HUD demo animation ---
   (function initHud(){
