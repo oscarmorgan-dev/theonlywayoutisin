@@ -817,6 +817,10 @@
             top: 12svh;
             height: 76svh;
             border-width: 1.5px;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: 0 6px 18px rgba(0,0,0,.18);
+            background: #fff;
           }
           .text-panel p { font-size: 15px; line-height: 1.3; }
           .text-panel img { width: 40%; max-width: 140px; margin: 20px auto; }
@@ -849,6 +853,10 @@
             top: 12svh;
             height: 74svh;
             border-width: 1.5px;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: 0 6px 18px rgba(0,0,0,.18);
+            background: #fff;
           }
           .text-panel p { font-size: 14px; line-height: 1.35; }
           .text-panel img { width: 33%; max-width: 120px; margin: 16px auto; }
@@ -1016,6 +1024,10 @@
         .intro-link{ font-family: "Monument Semi Grotesk", system-ui, -apple-system, Arial, sans-serif; font-size: 18px; text-decoration: none; color: #000; }
         .section-06 .intro-link { color: #F5F6F7; }
 
+        /* Scroll-reveal base */
+        .text-panel .sr { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .6s ease; will-change: opacity, transform; transition-delay: var(--sr-delay, 0s); }
+        .text-panel .sr.revealed { opacity: 1; transform: translateY(0); }
+
 
     </style>
 </head>
@@ -1049,24 +1061,24 @@
       <div id="bg" class="bg">
         <div class="background-block"><img src="assets/images/background/001.png" alt="Background 001" decoding="async" fetchpriority="high"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/002.png" alt="Background 002" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/002.png" alt="Background 002" decoding="async" loading="lazy"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/002.5.png" alt="Background 002.5" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/002.5.png" alt="Background 002.5" decoding="async" loading="lazy"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/003.png" alt="Background 003" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/003.png" alt="Background 003" decoding="async" loading="lazy"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/004.png" alt="Background 004" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/004.png" alt="Background 004" decoding="async" loading="lazy"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/005.png" alt="Background 005" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/005.png" alt="Background 005" decoding="async" loading="lazy"></div>
         <div class="background-separator"></div>
-        <div class="background-block"><img src="assets/images/background/006-3.png" alt="Background 006-3" decoding="async"></div>
+        <div class="background-block"><img src="assets/images/background/006-3.png" alt="Background 006-3" decoding="async" loading="lazy"></div>
       </div>
 
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
         <!-- ===== Six-module scaffold (inside #textPanel) ===== -->
         <section class="section section-01" aria-label="Intro">
           <div class="section-inner intro-grid">
-            <div class="intro-square">
+            <div class="intro-square sr revealed">
               <div id="cubeMount" aria-hidden="true"></div>
             </div>
             <nav class="intro-links" aria-label="Primary links">
@@ -1077,32 +1089,32 @@
         </section>
         <section class="section section-02" aria-label="Surface">
           <div class="section-inner">
-            <h2 class="section-title">Surface</h2>
-            <p class="section-body">Creative strategy through cultural interrogation. Brand stewardship, project-based concept development, and the building of scaleable frameworks that integrate automation into the planning and execution of creative work. Text and images. Images only. Text only.</p>
+            <h2 class="section-title sr">Surface</h2>
+            <p class="section-body sr">Creative strategy through cultural interrogation. Brand stewardship, project-based concept development, and the building of scaleable frameworks that integrate automation into the planning and execution of creative work. Text and images. Images only. Text only.</p>
           </div>
         </section>
         <section class="section section-03" aria-label="Systems">
           <div class="section-inner">
-            <h2 class="section-title">Systems</h2>
-            <p class="section-body">Augmented research based on repeatable systems. Interrogation of new tools and emerging technologies.</p>
+            <h2 class="section-title sr">Systems</h2>
+            <p class="section-body sr">Augmented research based on repeatable systems. Interrogation of new tools and emerging technologies.</p>
           </div>
         </section>
         <section class="section section-04" aria-label="Signals">
           <div class="section-inner">
-            <h2 class="section-title">Signals</h2>
-            <p class="section-body">What’s happening and where it’s happening: Parsing feeds and IRL, collecting data and codifying.</p>
+            <h2 class="section-title sr">Signals</h2>
+            <p class="section-body sr">What’s happening and where it’s happening: Parsing feeds and IRL, collecting data and codifying.</p>
           </div>
         </section>
         <section class="section section-05" aria-label="Substance">
           <div class="section-inner">
-            <h2 class="section-title">Substance</h2>
-            <p class="section-body">People first and always. Ethical approaches to artificial intelligence, production, and execution.</p>
+            <h2 class="section-title sr">Substance</h2>
+            <p class="section-body sr">People first and always. Ethical approaches to artificial intelligence, production, and execution.</p>
           </div>
         </section>
         <section class="section section-06" aria-label="Core">
           <div class="section-inner">
-            <h2 class="section-title">Core</h2>
-            <p class="section-body">Collaborative work based on shared principles.</p>
+            <h2 class="section-title sr">Core</h2>
+            <p class="section-body sr">Collaborative work based on shared principles.</p>
           </div>
         </section>
 
@@ -1231,7 +1243,8 @@
 
   // Animate cubes continuously
   let lastCubeTime = performance.now();
-  function animateCubes(time) {
+  let cubesRAF = null, cubesActive = false;
+  function tickCubes(time) {
     if (!REDUCED_MOTION && cubeStates.length > 0) {
       const dt = (time - lastCubeTime) / 1000; // delta in seconds
       lastCubeTime = time;
@@ -1259,9 +1272,19 @@
         }
       }
     }
-    requestAnimationFrame(animateCubes);
+    cubesRAF = requestAnimationFrame(tickCubes);
   }
-  requestAnimationFrame(animateCubes);
+  function startCubes(){ if (!cubesActive){ cubesActive = true; cubesRAF = requestAnimationFrame(tickCubes); } }
+  // Keep the cube moving gently at all times (no stop)
+  function stopCubes(){ /* intentionally no-op to preserve gentle continuous motion */ }
+
+  const tp = document.getElementById('textPanel');
+  let scrollStopTimer;
+  tp.addEventListener('scroll', () => {
+    startCubes();
+  }, { passive: true });
+  // start immediately
+  startCubes();
 
   function update() {
     const textMax = Math.max(1, textPanel.scrollHeight - textPanel.clientHeight);
@@ -1282,8 +1305,12 @@
 
     // Depth counter should start at 0m (use text progress, not bgProg)
     if (navDepthCounter) {
-      const depth = Math.round(t * 10000);
-      navDepthCounter.textContent = depth === 0 ? '0m' : `- ${depth}m`;
+      // Ease the counter value for a smoother feel
+      const targetDepth = Math.round(t * 10000);
+      if (!update._depth) update._depth = 0;
+      update._depth += (targetDepth - update._depth) * 0.12; // lerp
+      const shown = Math.round(update._depth);
+      navDepthCounter.textContent = shown === 0 ? '0m' : `- ${shown}m`;
     }
 
     // --- Process spheres animation ---
@@ -1457,6 +1484,48 @@
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => requestAnimationFrame(update));
   }
+
+  // Simple scroll-reveal using IntersectionObserver inside textPanel
+  (function initScrollReveal(){
+    const items = Array.from(textPanel.querySelectorAll('.sr'));
+    if (items.length === 0) return;
+    const rootMargin = '0px 0px -10% 0px';
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+        } else {
+          e.target.classList.remove('revealed');
+        }
+      });
+    }, { root: textPanel, threshold: 0.12, rootMargin });
+    // Stagger paragraphs by sentence (non-destructive; fallback to whole paragraph if split fails)
+    items.forEach(el => {
+      if (el.matches('.section-body')) {
+        const text = el.textContent || '';
+        const safeText = text.replace(/\s+/g,' ').trim();
+        const split = safeText.split(/(?<=[.!?])\s+/); // split on sentence boundaries keeping punctuation
+        if (split && split.length > 1) {
+          // remove reveal class from the parent to avoid hiding children
+          el.classList.remove('sr','revealed');
+          el.innerHTML = '';
+          split.forEach((s, i) => {
+            const span = document.createElement('span');
+            span.className = 'sr';
+            span.style.setProperty('--sr-delay', (0.08 * i).toFixed(2) + 's');
+            span.textContent = s + (i < split.length - 1 ? ' ' : '');
+            el.appendChild(span);
+            io.observe(span);
+          });
+          return; // we already observed the spans
+        } else {
+          // fallback: keep original paragraph intact
+          el.style.setProperty('--sr-delay', '0s');
+        }
+      }
+      io.observe(el);
+    });
+  })();
 
   window.addEventListener('wheel', globalWheelRouter, { passive: false });
   window.addEventListener('touchstart', onTouchStart, { passive: false });
