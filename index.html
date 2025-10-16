@@ -945,7 +945,7 @@
           position: absolute;
           width: 200px;
           height: 200px;
-          background: rgba(255,255,255,0.98);  /* 98% opacity */
+          background: rgba(255,255,255,0.83);  /* ~15% more transparent than before */
           border: 2px solid #333;         /* match site stroke weight */
           backface-visibility: visible;   /* show back faces to see through */
           transform: translateZ(0);       /* force GPU acceleration */
@@ -1013,12 +1013,59 @@
         .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; }
         /* ===== Type system ===== */
         .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
+        .section-title .dist, .section-title .status { display:block; font-size: 16px; line-height: 1.2; letter-spacing: 0; margin-top: 2px; }
         .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 16px; line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
         .section-05 .section-title, .section-05 .section-body, .section-06 .section-title, .section-06 .section-body{ color: #F5F6F7; }
         /* ===== Intro (module 1) ===== */
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
-        .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0 auto; }
+        .intro-grid{ position: relative; }
+        .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0 auto; position: relative; z-index: 2; }
+        .intro-copy{ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 5%; text-align: left; text-align-last: left; z-index: 1; pointer-events: auto; width: 100%; }
+        .intro-copy .intro-text{
+          font-family: 'MonumentGrotesk-Semi-Mono', 'Monument Semi Grotesk', Arial, sans-serif;
+          color: #000;
+          letter-spacing: 0.01em;
+          /* 50% smaller from the previous size */
+          font-size: clamp(21px, 4.25vw, 41px);
+          text-align: left;
+          text-align-last: left;
+          line-height: 1.08;
+          margin: 0;
+          margin-top: 8vh; /* move text ~10% down the 80vh module */
+          width: auto;
+          max-width: 90%;
+          align-self: flex-start; /* align left to match buttons */
+          hyphens: none !important;
+          -webkit-hyphens: none !important;
+          -ms-hyphens: none !important;
+          overflow-wrap: normal !important;
+          word-break: normal !important;
+        }
+        /* Intro actions (buttons below intro text) */
+        .intro-actions{ display: flex; gap: 12px; align-self: flex-start; margin-top: 16px; width: auto; max-width: 90%; pointer-events: auto; }
+        .intro-button{ appearance: none; -webkit-appearance: none; border: none; background: #000; color: #fff; padding: 8px 14px; font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 12px; line-height: 1; letter-spacing: 0.02em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; position: relative; z-index: 10; }
+        .intro-button:focus{ outline: 2px solid #333; outline-offset: 2px; }
+        .intro-button[disabled]{ opacity: 0.6; cursor: default; }
+        .intro-square.hidden{ display: none; }
+        /* Use title formatting for all intro text, scaled 200% to fill the module */
+        .intro-copy .section-title,
+        .intro-copy .section-body{
+          font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', Arial, sans-serif;
+          color: #000;
+          letter-spacing: 0.01em;
+          font-size: 48px; /* unified size */
+          line-height: 1.1;
+          text-align: left;
+          hyphens: none;
+          -webkit-hyphens: none;
+          -ms-hyphens: none;
+        }
+        .intro-copy .section-title{ margin: 0 0 12px 0; width: 100%; }
+        .intro-copy .section-body{ max-width: 100%; width: 100%; }
+        /* ensure last line justifies to edges */
+        .intro-copy .section-title::after,
+        .intro-copy .section-body::after{ content: ""; display: inline-block; width: 100%; }
         #cubeMount, #cubeMount > *{ width: 100%; height: 100%; }
         .intro-links{ display: none; }
         .intro-link{ font-family: "Monument Semi Grotesk", system-ui, -apple-system, Arial, sans-serif; font-size: 18px; text-decoration: none; color: #000; }
@@ -1027,6 +1074,8 @@
         /* Scroll-reveal base */
         .text-panel .sr { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .6s ease; will-change: opacity, transform; transition-delay: var(--sr-delay, 0s); }
         .text-panel .sr.revealed { opacity: 1; transform: translateY(0); }
+        /* Paragraphs as single blocks (no per-sentence/word lines) */
+        .text-panel .section-body .sr { display: inline; }
 
 
     </style>
@@ -1078,8 +1127,16 @@
         <!-- ===== Six-module scaffold (inside #textPanel) ===== -->
         <section class="section section-01" aria-label="Intro">
           <div class="section-inner intro-grid">
-            <div class="intro-square sr revealed">
+            <div class="intro-square">
               <div id="cubeMount" aria-hidden="true"></div>
+            </div>
+            <div class="intro-copy">
+              <p class="intro-text">The only way out is in. Or process and intention meets outcome and optimisation. Or creativity enhanced through a continuous loop of learning and development.</p>
+              <div class="intro-actions" role="group" aria-label="Intro actions">
+                <a class="intro-button" href="mailto:studio@oscarbmorgan.com">Contact</a>
+                <a class="intro-button" href="#about">About</a>
+                <button id="toggleCubeBtn" class="intro-button" type="button">Hide cube</button>
+              </div>
             </div>
             <nav class="intro-links" aria-label="Primary links">
               <a class="intro-link" href="mailto:studio@oscarbmorgan.com">Contact</a>
@@ -1089,32 +1146,32 @@
         </section>
         <section class="section section-02" aria-label="Surface">
           <div class="section-inner">
-            <h2 class="section-title sr">Surface</h2>
-            <p class="section-body sr">Creative strategy through cultural interrogation. Brand stewardship, project-based concept development, and the building of scaleable frameworks that integrate automation into the planning and execution of creative work. Text and images. Images only. Text only.</p>
+            <h2 class="section-title sr"><span class="ttl">Surface</span><span class="dist">0-2000m</span><span class="status">[Visible]</span></h2>
+            <p class="section-body sr">Creative strategy based on cultural observation, interrogation, and participation. Brand stewardship, concept development, text and image consultation.</p>
           </div>
         </section>
         <section class="section section-03" aria-label="Systems">
           <div class="section-inner">
-            <h2 class="section-title sr">Systems</h2>
-            <p class="section-body sr">Augmented research based on repeatable systems. Interrogation of new tools and emerging technologies.</p>
+            <h2 class="section-title sr"><span class="ttl">Systems</span><span class="dist">2000-4000m</span><span class="status">[Support strata]</span></h2>
+            <p class="section-body sr">Augmented research based on repeatable systems. The assessment and integration of new tools and emerging technologies. The building of scalable frameworks for creative output that utilise automation with intention.</p>
           </div>
         </section>
         <section class="section section-04" aria-label="Signals">
           <div class="section-inner">
-            <h2 class="section-title sr">Signals</h2>
-            <p class="section-body sr">What’s happening and where it’s happening: Parsing feeds and IRL, collecting data and codifying.</p>
+            <h2 class="section-title sr"><span class="ttl">Signals</span><span class="dist">4000-5000m</span><span class="status">[Ledge bed]</span></h2>
+            <p class="section-body sr">What’s happening and where it’s happening. The collection of media and trend mapping.</p>
           </div>
         </section>
         <section class="section section-05" aria-label="Substance">
           <div class="section-inner">
-            <h2 class="section-title sr">Substance</h2>
-            <p class="section-body sr">People first and always. Ethical approaches to artificial intelligence, production, and execution.</p>
+            <h2 class="section-title sr"><span class="ttl">Substance</span><span class="dist">5000-8000m</span><span class="status">[Bedrock]</span></h2>
+            <p class="section-body sr">People first, always. Ongoing analysis of ethical approaches to shifting technology used in the production and distribution of creative work. Leadership with empathy that creates space for experimentation.</p>
           </div>
         </section>
         <section class="section section-06" aria-label="Core">
           <div class="section-inner">
-            <h2 class="section-title sr">Core</h2>
-            <p class="section-body sr">Collaborative work based on shared principles.</p>
+            <h2 class="section-title sr"><span class="ttl">Core</span><span class="dist">8000-10000m</span><span class="status">[Early formations]</span></h2>
+            <p class="section-body sr">The ongoing pursuit of successful integration of attitudes towards art, culture, and commerce in creative as a service.</p>
           </div>
         </section>
 
@@ -1305,11 +1362,19 @@
 
     // Depth counter should start at 0m (use text progress, not bgProg)
     if (navDepthCounter) {
-      // Ease the counter value for a smoother feel
-      const targetDepth = Math.round(t * 10000);
-      if (!update._depth) update._depth = 0;
-      update._depth += (targetDepth - update._depth) * 0.12; // lerp
-      const shown = Math.round(update._depth);
+      // Ease the counter value for a smoother feel, but snap at boundaries
+      const targetDepth = Math.max(0, Math.round(t * 10000));
+      if (t < 0.001) {
+        // snap to 0 at the very top to avoid lingering values
+        update._depth = 0;
+      } else if (typeof update._depth === 'undefined') {
+        update._depth = targetDepth;
+      } else {
+        const delta = targetDepth - update._depth;
+        // snap when within 1m to avoid jitter
+        if (Math.abs(delta) < 1) update._depth = targetDepth; else update._depth += delta * 0.18;
+      }
+      const shown = Math.max(0, Math.round(update._depth));
       navDepthCounter.textContent = shown === 0 ? '0m' : `- ${shown}m`;
     }
 
@@ -1502,26 +1567,8 @@
     // Stagger paragraphs by sentence (non-destructive; fallback to whole paragraph if split fails)
     items.forEach(el => {
       if (el.matches('.section-body')) {
-        const text = el.textContent || '';
-        const safeText = text.replace(/\s+/g,' ').trim();
-        const split = safeText.split(/(?<=[.!?])\s+/); // split on sentence boundaries keeping punctuation
-        if (split && split.length > 1) {
-          // remove reveal class from the parent to avoid hiding children
-          el.classList.remove('sr','revealed');
-          el.innerHTML = '';
-          split.forEach((s, i) => {
-            const span = document.createElement('span');
-            span.className = 'sr';
-            span.style.setProperty('--sr-delay', (0.08 * i).toFixed(2) + 's');
-            span.textContent = s + (i < split.length - 1 ? ' ' : '');
-            el.appendChild(span);
-            io.observe(span);
-          });
-          return; // we already observed the spans
-        } else {
-          // fallback: keep original paragraph intact
-          el.style.setProperty('--sr-delay', '0s');
-        }
+        // Ensure the paragraph remains a single block; don't rewrite inner HTML
+        el.style.setProperty('--sr-delay', '0s');
       }
       io.observe(el);
     });
@@ -1617,6 +1664,33 @@
   })();
 
   // Mount the existing cube into the framed square in section-01
+  // Toggle cube visibility from intro button
+  function initToggleCube(){
+    const btn = document.getElementById('toggleCubeBtn');
+    const square = document.querySelector('.intro-square');
+    if (!btn || !square) {
+      console.log('Toggle cube elements not found');
+      return;
+    }
+    function refreshLabel(){ 
+      btn.textContent = square.classList.contains('hidden') ? 'Show cube' : 'Hide cube'; 
+    }
+    btn.addEventListener('click', (e) => { 
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Toggle button clicked');
+      square.classList.toggle('hidden'); 
+      refreshLabel(); 
+    });
+    refreshLabel();
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initToggleCube);
+  } else {
+    initToggleCube();
+  }
   document.addEventListener('DOMContentLoaded', () => {
     const mount = document.getElementById('cubeMount');
     const cubeEl = document.querySelector('.text-panel .cube-block') || document.querySelector('#cubeStash .cube-block');
