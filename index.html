@@ -170,30 +170,45 @@
             margin: 0;
         }
 
-        .nav-play-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-          display: flex;
+        /* Simple nav music player centered in app bar */
+        .nav-player{
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          display: inline-flex;
           align-items: center;
-          justify-content: center;
-          width: 28px;
-          height: 28px;
-          color: #000;               /* drives SVG fill via currentColor */
-          transition: opacity .2s ease, transform .2s ease;
-          padding: 0;
-          margin: 0;
+          gap: 8px;
+          height: 28px; /* match bar height */
+          line-height: 28px;
+          font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif;
+          font-size: 12px; /* match intro button size */
+          color: #000;
+          white-space: nowrap;
         }
-        .nav-play-button .icon { width: 14px; height: 14px; fill: currentColor; display: block; }
-        .nav-play-button .icon-pause { display: none; }
-        .nav-play-button.is-playing .icon-play { display: none; }
-        .nav-play-button.is-playing .icon-pause { display: block; }
-
-        .nav-play-button:hover { opacity: 0.7; }
-        .nav-play-button:active { opacity: 0.5; }
+        .nav-player .label{ opacity: 0.9; }
+        .nav-player .track{ font-weight: 400; }
+        .nav-player button.nav-mute{
+          appearance: none; -webkit-appearance: none;
+          border: none; background: transparent; color: #000; cursor: pointer;
+          padding: 0; margin: 0; font: inherit; line-height: inherit;
+          position: relative;
+        }
+        .nav-player button.nav-mute:focus{ outline: none; }
+        /* Underline animation matching intro buttons */
+        .nav-player button.nav-mute::after{
+          content: "";
+          position: absolute;
+          left: 0; right: 0; bottom: 7px;
+          height: 1px; background: currentColor;
+          transform: scaleX(0);
+          transform-origin: left center;
+          opacity: 0;
+          transition: transform 240ms cubic-bezier(0.2, 0.6, 0.15, 1), opacity 160ms ease;
+          will-change: transform, opacity;
+        }
+        .nav-player button.nav-mute:hover::after,
+        .nav-player button.nav-mute:focus-visible::after{ transform: scaleX(1); opacity: 1; }
+        .nav-player button.nav-mute:active::after{ animation: underlineClick 180ms ease-out; }
 
         .nav-depth-counter {
             font-family: 'KH Teka', Arial, sans-serif;
@@ -481,7 +496,7 @@
           text-decoration: none;
           text-shadow: none;
         }
-        .final-navigation-links a:hover { text-decoration: underline; }
+        .final-navigation-links a:hover { text-decoration: none; }
 
 
 
@@ -903,6 +918,9 @@
           .final-navigation-links { font-size: 14px; }
         }
 
+        /* Footer buttons: match intro button text size exactly */
+        .final-navigation-links .intro-button{ font-size: 12px; }
+
 
         @media (max-width: 768px) {
           .nav-play-button { width: 32px; height: 32px; }
@@ -1151,7 +1169,13 @@
           .intro-button{ padding: 10px 0; }
           /* Ensure cube container remains perfectly centered on small screens */
           .section-01 .intro-grid{ place-items: center; }
-          .intro-square{ left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
+          .intro-square{ 
+            left: 50%; 
+            top: 50%; 
+            /* slight upward optical correction on small screens so it feels perfectly centered */
+            transform: translate(-50%, calc(-50% - 8px)); 
+            margin: 0; 
+          }
         }
         .intro-button:active{ outline: none; }
         .intro-button[disabled]{ opacity: 0.6; cursor: default; }
@@ -1199,15 +1223,11 @@
     <!-- Fixed Navigation Bar -->
     <nav class="nav-bar">
         <p class="nav-text"></p>
-        <button class="nav-play-button" id="playButton" aria-label="Play auto-scroll" title="Play">
-          <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true">
-            <polygon points="8,5 19,12 8,19"></polygon>
-          </svg>
-          <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="6" y="5" width="4" height="14"></rect>
-            <rect x="14" y="5" width="4" height="14"></rect>
-          </svg>
-        </button>
+        <div class="nav-player" role="group" aria-label="Playback">
+          <span class="label">Now playing:</span>
+          <span id="navTrackTitle" class="track">Track title</span>
+          <button id="navMuteBtn" class="nav-mute" type="button" aria-pressed="false">Mute</button>
+        </div>
         <p class="nav-depth-counter" id="navDepthCounter">0m</p>
     </nav>
     
@@ -1704,56 +1724,34 @@
     touchRouting.y = e.touches[0].clientY;
   }
 
-  // --- Play/Pause auto-scroll for the text panel ---
-  const playBtn = document.getElementById('playButton');
-  let playRaf = null;
-  let lastTs = null;
-
-  function autoStep(ts) {
-    if (lastTs == null) lastTs = ts;
-    const dt = (ts - lastTs) / 1000;
-    lastTs = ts;
-
-    const SPEED_PX_PER_SEC = 220; // tune to taste
-    textPanel.scrollTop += SPEED_PX_PER_SEC * dt;
-
-    // stop at bottom
-    if (textPanel.scrollTop + textPanel.clientHeight >= textPanel.scrollHeight - 1) {
-      stopAuto();
-                    return;
-                }
-    playRaf = requestAnimationFrame(autoStep);
-  }
-
-  function startAuto() {
-    textPanel.focus({ preventScroll: true });
-    if (REDUCED) {
-      // Respect reduced motion: nudge one "page" instead of continuous animation
-      textPanel.scrollBy({ top: textPanel.clientHeight * 0.9, behavior: 'smooth' });
-      return;
+  // --- Simple nav player: set track title and mute toggle ---
+  (function initNavPlayer(){
+    const muteBtn = document.getElementById('navMuteBtn');
+    const titleEl = document.getElementById('navTrackTitle');
+    if (!muteBtn || !titleEl) return;
+    // Optional: if there is an <audio> element on page, we can reflect its metadata
+    const audioEl = document.querySelector('audio');
+    if (audioEl) {
+      if (audioEl.getAttribute('data-title')) {
+        titleEl.textContent = audioEl.getAttribute('data-title');
+      }
+      audioEl.addEventListener('loadedmetadata', () => {
+        if (audioEl.getAttribute('data-title')) titleEl.textContent = audioEl.getAttribute('data-title');
+      });
     }
-    if (playRaf) return;
-    playBtn.classList.add('is-playing');
-    playBtn.setAttribute('aria-label', 'Pause auto-scroll');
-    lastTs = null;
-    playRaf = requestAnimationFrame(autoStep);
-  }
-
-  function stopAuto() {
-    if (playRaf) cancelAnimationFrame(playRaf);
-    playRaf = null;
-    lastTs = null;
-    playBtn.classList.remove('is-playing');
-    playBtn.setAttribute('aria-label', 'Play auto-scroll');
-  }
-
-  playBtn.addEventListener('click', () => {
-    if (playRaf) stopAuto(); else startAuto();
-  });
-
-  // Optional: pause auto-scroll on any manual interaction
-  textPanel.addEventListener('wheel', stopAuto, { passive: true });
-  textPanel.addEventListener('touchstart', stopAuto, { passive: true });
+    function setMuted(m){
+      // Mute any audio/video elements on the page
+      document.querySelectorAll('audio, video').forEach(el => { el.muted = m; });
+      muteBtn.textContent = m ? 'Unmute' : 'Mute';
+      muteBtn.setAttribute('aria-pressed', String(m));
+    }
+    // Initialize
+    setMuted(true);
+    muteBtn.addEventListener('click', () => {
+      const isPressed = muteBtn.getAttribute('aria-pressed') === 'true';
+      setMuted(!isPressed);
+    });
+  })();
 
   // --- Helsinki clock on header cube (Europe/Helsinki) ---
   (function initHelsinkiClock(){
