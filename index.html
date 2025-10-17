@@ -234,6 +234,8 @@
         }
         .text-panel p { font-family: 'KH Teka', Arial, sans-serif; font-size: 16px; line-height: 1.28; color:#333; margin-bottom:20px; text-align: justify; hyphens: auto; }
         .text-panel img { width: 50%; max-width: 200px; height: auto; display:block; margin: 30px auto; }
+        /* Override justification for intro module text */
+        .text-panel .section-01 .intro-subtext{ text-align: left !important; text-align-last: left !important; hyphens: none !important; -webkit-hyphens: none !important; }
 
         /* Image boxes and separators */
         .image-box {
@@ -1010,7 +1012,7 @@
         .text-panel .section-05{ background: rgba(46,49,146,0.95); }
         .text-panel .section-06{ background: rgba(65,64,66,0.95); }
         .text-panel .section-inner{ width: 100%; margin: 0; padding: 32px 5%; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: left; transform: translateY(-10%); }
-        .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; }
+        .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; transform: none; }
         /* ===== Type system ===== */
         .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
         .section-title .dist, .section-title .status { display:block; font-size: 16px; line-height: 1.2; letter-spacing: 0; margin-top: 2px; }
@@ -1020,7 +1022,8 @@
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
         .intro-grid{ position: relative; }
-        .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0 auto; position: relative; z-index: 2; }
+        .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; opacity: 1; transition: opacity 320ms ease; }
+        .intro-square .cube-block{ margin: 0; }
         .intro-copy{ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 5%; text-align: left; text-align-last: left; z-index: 1; pointer-events: auto; width: 100%; }
         .intro-copy .intro-text{
           font-family: 'MonumentGrotesk-Semi-Mono', 'Monument Semi Grotesk', Arial, sans-serif;
@@ -1028,26 +1031,128 @@
           letter-spacing: 0.01em;
           /* 50% smaller from the previous size */
           font-size: clamp(21px, 4.25vw, 41px);
-          text-align: left;
-          text-align-last: left;
+          text-align: center;
+          text-align-last: center;
           line-height: 1.08;
           margin: 0;
-          margin-top: 8vh; /* move text ~10% down the 80vh module */
           width: auto;
           max-width: 90%;
-          align-self: flex-start; /* align left to match buttons */
+          align-self: center;
           hyphens: none !important;
           -webkit-hyphens: none !important;
           -ms-hyphens: none !important;
           overflow-wrap: normal !important;
           word-break: normal !important;
+          position: relative;
+          z-index: 0; /* text sits behind cube */
         }
-        /* Intro actions (buttons below intro text) */
-        .intro-actions{ display: flex; gap: 12px; align-self: flex-start; margin-top: 16px; width: auto; max-width: 90%; pointer-events: auto; }
-        .intro-button{ appearance: none; -webkit-appearance: none; border: none; background: #000; color: #fff; padding: 8px 14px; font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 12px; line-height: 1; letter-spacing: 0.02em; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; position: relative; z-index: 10; }
-        .intro-button:focus{ outline: 2px solid #333; outline-offset: 2px; }
+        /* Subtext reveal under title */
+        .intro-subtext{ 
+          font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif !important; 
+          color: #9aa0a6; /* light grey */
+          letter-spacing: 0.01em; 
+          font-size: clamp(6px, 2.2vw, 18px) !important; 
+          line-height: 1.1; 
+          margin: 8px 0 0 0; 
+          max-width: 90%; 
+          opacity: 0; 
+          transform: translateY(8px); 
+          pointer-events: none; 
+          text-align: left; 
+          text-align-last: left; 
+          position: absolute; 
+          top: calc(50% + 28px); /* appear below centered title without affecting layout */
+        }
+        .intro-subtext .word{ opacity: 0; display: inline-block; transform: translateY(8px); }
+        .intro-subtext.revealed{ opacity: 1; transform: translateY(0); transition: opacity 360ms cubic-bezier(0.2, 0.6, 0.15, 1), transform 360ms cubic-bezier(0.2, 0.6, 0.15, 1); }
+
+        /* Title shift animation when cube is hidden */
+        .title-shift{ transition: transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1); will-change: transform; transform: translateY(0); }
+        .title-shift.up{ transform: translateY(-56px); }
+        /* Intro actions (buttons at base of module) */
+        .section-01{ position: relative; }
+        .intro-actions-bottom{ 
+          position: absolute; 
+          bottom: 2px; 
+          left: 0; 
+          right: 0; 
+          display: flex; 
+          gap: 12px; 
+          justify-content: center; 
+          padding: 0 5%; 
+          pointer-events: auto; 
+          z-index: 20; 
+          transform: translateY(0);
+          transition: none;
+        }
+        .intro-button{ 
+          appearance: none; 
+          -webkit-appearance: none; 
+          border: none; 
+          background: transparent; 
+          color: #000; 
+          padding: 8px 0; 
+          font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; 
+          font-size: 12px; 
+          line-height: 1; 
+          letter-spacing: 0.02em; 
+          text-decoration: none; 
+          display: inline-flex; 
+          align-items: center; 
+          justify-content: center; 
+          cursor: pointer; 
+          pointer-events: auto; 
+          position: relative; 
+          z-index: 20; 
+          outline: none;
+          /* underline animation handled via ::after */
+        }
+        html { scroll-behavior: smooth; }
+        .intro-button:focus{ outline: none; }
+        /* Elegant underline animation */
+        .intro-button::after{
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 7px;             /* align near text baseline (padding-bottom is 8px) */
+          height: 1px;             /* thin, elegant line */
+          background: currentColor;
+          transform: scaleX(0);
+          transform-origin: left center;
+          opacity: 0;
+          transition: transform 240ms cubic-bezier(0.2, 0.6, 0.15, 1), opacity 160ms ease;
+          will-change: transform, opacity;
+        }
+        .intro-button:hover::after,
+        .intro-button:focus-visible::after{
+          transform: scaleX(1);
+          opacity: 1;
+        }
+        /* Click micro-animation */
+        .intro-button:active::after{
+          animation: underlineClick 180ms ease-out;
+        }
+        @keyframes underlineClick{
+          0%   { transform: scaleX(1); height: 1px; }
+          50%  { transform: scaleX(0.9); height: 2px; }
+          100% { transform: scaleX(1); height: 1px; }
+        }
+        @media (prefers-reduced-motion: reduce){
+          .intro-button::after{ transition: none; transform: scaleX(1); }
+        }
+
+        /* Mobile refinements */
+        @media (max-width: 480px){
+          /* Keep subtext readable and properly placed on small screens */
+          .intro-subtext{ font-size: clamp(12px, 3.8vw, 18px) !important; top: calc(52% + 20px); }
+          /* Improve tap targets and avoid home-indicator overlap */
+          .intro-actions-bottom{ padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+          .intro-button{ padding: 10px 0; }
+        }
+        .intro-button:active{ outline: none; }
         .intro-button[disabled]{ opacity: 0.6; cursor: default; }
-        .intro-square.hidden{ display: none; }
+        .intro-square.hidden{ opacity: 0; pointer-events: none; }
         /* Use title formatting for all intro text, scaled 200% to fill the module */
         .intro-copy .section-title,
         .intro-copy .section-body{
@@ -1131,17 +1236,18 @@
               <div id="cubeMount" aria-hidden="true"></div>
             </div>
             <div class="intro-copy">
-              <p class="intro-text">The only way out is in. Or process and intention meets outcome and optimisation. Or creativity enhanced through a continuous loop of learning and development.</p>
-              <div class="intro-actions" role="group" aria-label="Intro actions">
-                <a class="intro-button" href="mailto:studio@oscarbmorgan.com">Contact</a>
-                <a class="intro-button" href="#about">About</a>
-                <button id="toggleCubeBtn" class="intro-button" type="button">Hide cube</button>
-              </div>
+              <p class="intro-text title-shift">The only way out is in.</p>
+              <p id="introSubtext" class="intro-subtext" aria-live="polite"></p>
             </div>
             <nav class="intro-links" aria-label="Primary links">
               <a class="intro-link" href="mailto:studio@oscarbmorgan.com">Contact</a>
               <a class="intro-link" href="#about">About</a>
             </nav>
+          </div>
+          <div class="intro-actions-bottom" role="group" aria-label="Intro actions">
+            <a class="intro-button" href="mailto:studio@oscarbmorgan.com">Contact</a>
+            <a class="intro-button" href="#footerPanel">About</a>
+            <button id="toggleCubeBtn" class="intro-button" type="button">Hide cube</button>
           </div>
         </section>
         <section class="section section-02" aria-label="Surface">
@@ -1668,28 +1774,99 @@
   function initToggleCube(){
     const btn = document.getElementById('toggleCubeBtn');
     const square = document.querySelector('.intro-square');
+    const title = document.querySelector('.intro-copy .intro-text');
+    const subtext = document.getElementById('introSubtext');
     if (!btn || !square) {
       console.log('Toggle cube elements not found');
       return;
     }
+    // Prepare subtext words on first run
+    const subtextString = 'Or process and intention meets outcome and optimisation. Or creativity enhanced through a continuous loop of learning and development.';
+    let subtextPrepared = false;
+    function prepareSubtext(){
+      if (subtextPrepared || !subtext) return;
+      const words = subtextString.split(/(\s+)/); // keep spaces
+      subtext.innerHTML = words.map((w, i) => {
+        if (w.trim().length === 0) return w; // space
+        return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms;\">${w}</span>`;
+      }).join('');
+      subtextPrepared = true;
+    }
     function refreshLabel(){ 
       btn.textContent = square.classList.contains('hidden') ? 'Show cube' : 'Hide cube'; 
+    }
+
+    function alignSubtextToTitle(){
+      if (!title || !subtext) return;
+      const titleRect = title.getBoundingClientRect();
+      const containerRect = document.querySelector('.section-01')?.getBoundingClientRect();
+      if (!containerRect) return;
+      const leftOffset = Math.max(0, titleRect.left - containerRect.left);
+      subtext.style.left = `${leftOffset}px`;
+      subtext.style.right = `${Math.max(0, containerRect.right - titleRect.right)}px`;
     }
     btn.addEventListener('click', (e) => { 
       e.preventDefault();
       e.stopPropagation();
-      console.log('Toggle button clicked');
-      square.classList.toggle('hidden'); 
-      refreshLabel(); 
+      console.log('Toggle button clicked, square:', square);
+      // If showing cube -> reverse animation then fade in cube after
+      if (square.classList.contains('hidden')){
+        // Reverse: hide subtext, move title back down, then show cube
+        if (title) title.classList.remove('up');
+        alignSubtextToTitle();
+        if (subtext){
+          const words = subtext.querySelectorAll('.word');
+          words.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; });
+          subtext.classList.remove('revealed');
+        }
+        // Wait for text to settle, then fade in cube
+        setTimeout(() => {
+          square.classList.remove('hidden');
+          console.log('Square classes after toggle (show):', square.className);
+          refreshLabel();
+        }, 460);
+      } else {
+        // Hiding cube -> fade cube, lift title, then reveal subtext
+        prepareSubtext();
+        // start cube fade immediately
+        square.classList.add('hidden');
+        if (title) title.classList.add('up');
+        alignSubtextToTitle();
+        // then reveal subtext slightly after title starts moving
+        setTimeout(() => {
+          if (subtext){
+            subtext.classList.add('revealed');
+            const words = subtext.querySelectorAll('.word');
+            words.forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+          }
+          refreshLabel();
+        }, 220);
+      }
+
+    // Align on load and on resize
+    alignSubtextToTitle();
+    window.addEventListener('resize', alignSubtextToTitle);
     });
     refreshLabel();
   }
   
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initToggleCube);
-  } else {
+  // Initialize when DOM is ready and after cube mounting
+  function initAll() {
     initToggleCube();
+    
+    // Test all buttons are clickable
+    const buttons = document.querySelectorAll('.intro-button');
+    buttons.forEach((btn, i) => {
+      btn.addEventListener('click', (e) => {
+        console.log(`Button ${i} clicked:`, btn.textContent);
+      });
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
   }
   document.addEventListener('DOMContentLoaded', () => {
     const mount = document.getElementById('cubeMount');
