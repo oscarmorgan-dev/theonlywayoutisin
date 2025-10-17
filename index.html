@@ -1149,6 +1149,9 @@
           /* Improve tap targets and avoid home-indicator overlap */
           .intro-actions-bottom{ padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
           .intro-button{ padding: 10px 0; }
+          /* Ensure cube container remains perfectly centered on small screens */
+          .section-01 .intro-grid{ place-items: center; }
+          .intro-square{ left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
         }
         .intro-button:active{ outline: none; }
         .intro-button[disabled]{ opacity: 0.6; cursor: default; }
@@ -1247,6 +1250,7 @@
           <div class="intro-actions-bottom" role="group" aria-label="Intro actions">
             <a class="intro-button" href="mailto:studio@oscarbmorgan.com">Contact</a>
             <a class="intro-button" href="#footerPanel">About</a>
+            <a class="intro-button" href="#">Shop</a>
             <button id="toggleCubeBtn" class="intro-button" type="button">Hide cube</button>
           </div>
         </section>
@@ -1308,12 +1312,12 @@
                     <p>The future belongs to those who can navigate complexity while maintaining clarity of vision. As tools evolve and possibilities multiply, the fundamental challenge remains: how do we create work that serves human needs and elevates the human experience?</p>
                 </div>
             </div>
-      <div class="final-navigation-links">
-        <a href="#instagram">Instagram</a>
-        <a href="#youtube">Youtube</a>
-        <a href="#illustration">Illustration</a>
-        <a href="#nutrition">Nutrition</a>
-        </div>
+      <div class="final-navigation-links" style="pointer-events:auto; display:flex; justify-content:center; gap:12px; padding: 16px 0;">
+        <a class="intro-button" href="#instagram">Instagram</a>
+        <a class="intro-button" href="#youtube">Youtube</a>
+        <a class="intro-button" href="#soundcloud">Soundcloud</a>
+        <a id="backToTopBtn" class="intro-button" href="#textPanel">Back to top</a>
+      </div>
       <div id="page-end"></div>
     </footer>
 
@@ -1776,10 +1780,7 @@
     const square = document.querySelector('.intro-square');
     const title = document.querySelector('.intro-copy .intro-text');
     const subtext = document.getElementById('introSubtext');
-    if (!btn || !square) {
-      console.log('Toggle cube elements not found');
-      return;
-    }
+    if (!btn || !square) { return; }
     // Prepare subtext words on first run
     const subtextString = 'Or process and intention meets outcome and optimisation. Or creativity enhanced through a continuous loop of learning and development.';
     let subtextPrepared = false;
@@ -1808,7 +1809,6 @@
     btn.addEventListener('click', (e) => { 
       e.preventDefault();
       e.stopPropagation();
-      console.log('Toggle button clicked, square:', square);
       // If showing cube -> reverse animation then fade in cube after
       if (square.classList.contains('hidden')){
         // Reverse: hide subtext, move title back down, then show cube
@@ -1822,7 +1822,6 @@
         // Wait for text to settle, then fade in cube
         setTimeout(() => {
           square.classList.remove('hidden');
-          console.log('Square classes after toggle (show):', square.className);
           refreshLabel();
         }, 460);
       } else {
@@ -1854,13 +1853,49 @@
   function initAll() {
     initToggleCube();
     
-    // Test all buttons are clickable
-    const buttons = document.querySelectorAll('.intro-button');
-    buttons.forEach((btn, i) => {
-      btn.addEventListener('click', (e) => {
-        console.log(`Button ${i} clicked:`, btn.textContent);
+    // (removed temporary debug listener)
+
+    // Ensure About anchors scroll the internal text panel to the footer panel
+    const aboutLink = document.querySelector('.intro-actions-bottom a[href="#footerPanel"]');
+    function scrollPanelToFooter(e){
+      if (e) e.preventDefault();
+      const container = document.querySelector('.text-panel');
+      const target = document.getElementById('footerPanel');
+      if (container){
+        if (target && container.contains(target)){
+          const containerRect = container.getBoundingClientRect();
+          const targetRect = target.getBoundingClientRect();
+          const top = targetRect.top - containerRect.top + container.scrollTop;
+          container.scrollTo({ top, behavior: 'smooth' });
+          if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
+          setTimeout(() => { try { target.focus({ preventScroll: true }); } catch(_) {} }, 300);
+        } else {
+          // Footer is outside the scroll panel; scroll the panel to its bottom
+          const top = container.scrollHeight - container.clientHeight;
+          container.scrollTo({ top, behavior: 'smooth' });
+        }
+        // Update hash without jumping
+        if (history && history.replaceState) history.replaceState(null, '', '#footerPanel');
+      } else if (target) {
+        // No internal panel; fall back to page scroll
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
+        setTimeout(() => { try { target.focus({ preventScroll: true }); } catch(_) {} }, 300);
+      }
+    }
+    if (aboutLink){ aboutLink.addEventListener('click', scrollPanelToFooter); }
+
+    // Back to top: scroll the text panel to the very top smoothly
+    const backToTop = document.getElementById('backToTopBtn');
+    if (backToTop){
+      backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        const container = document.querySelector('.text-panel');
+        if (container){ container.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        if (history && history.replaceState) history.replaceState(null, '', '#');
       });
-    });
+    }
   }
   
   if (document.readyState === 'loading') {
