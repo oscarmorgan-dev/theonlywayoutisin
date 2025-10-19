@@ -32,6 +32,27 @@
             font-weight: 300;
             font-style: normal;
         }
+
+        @font-face {
+            font-family: 'Minion Pro';
+            src: url('Minion3-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Minion Pro';
+            src: url('Minion3-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Minion Pro';
+            src: url('Minion3-Italic.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
         :root { --side-margin: 80px; --content-pad: 40px; --pellet-bg: rgba(255,255,255,0.75); --pellet-border: #333; --pellet-font-size: 16px; --pellet-line: 1.1; --pellet-maxw: 66%; }
         /* Pellet token (shared styles) */
         .text-panel .pellet {
@@ -1219,7 +1240,7 @@
           position: absolute; inset: 0; display: block; pointer-events: none; opacity: 0;
           transition: opacity 820ms cubic-bezier(0.2, 0.6, 0.15, 1);
           will-change: opacity;
-          z-index: 100;
+          z-index: 1000;
           margin: 0; padding: 0; border: none; outline: none;
         }
         .module-popup.show{ opacity: 1; pointer-events: none; }
@@ -1256,7 +1277,7 @@
         }
 
         /* Anchor the module button to the module (not the text flow) */
-        .text-panel .section .module-popup-btn{ position: absolute; left: 5%; bottom: 16px; z-index: 9999; }
+        .text-panel .section .module-popup-btn{ position: absolute; left: 5%; bottom: 16px; z-index: 99999; }
         /* White text for buttons in white-text modules */
         .text-panel .section-05 .module-popup-btn,
         .text-panel .section-06 .module-popup-btn{ color: #F5F6F7; }
@@ -1372,9 +1393,8 @@
         </section>
         <section class="section section-02" aria-label="Surface">
           <div class="section-inner">
-            <h2 class="section-title sr"><span class="ttl">Surface</span><span class="dist">0-2000m</span><span class="status">[Visible]</span></h2>
-            <p class="section-body sr">Creative strategy based on cultural observation, interrogation, and participation. Brand stewardship, concept development, text and image consultation.</p>
-            <button class="intro-button module-popup-btn" data-module="section-02" type="button" aria-haspopup="dialog">[Click to view]</button>
+            <h2 class="section-title sr"><span class="ttl">Surface</span></h2>
+            <p class="section-body sr">Work visible in the world. <span style="font-family: 'Minion Pro', serif;">Creative strategy based on cultural observation, interrogation, and participation. Brand stewardship, concept development, text and image consultation.</span></p>
             <div class="module-popup" data-module="section-02" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1382,12 +1402,12 @@
               </div>
             </div>
           </div>
+          <button class="intro-button module-popup-btn" data-module="section-02" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
-        <section class="section section-03" aria-label="Systems">
+        <section class="section section-03" aria-label="Formation">
           <div class="section-inner">
-            <h2 class="section-title sr"><span class="ttl">Systems</span><span class="dist">2000-4000m</span><span class="status">[Support strata]</span></h2>
-            <p class="section-body sr">Augmented research based on repeatable systems. The assessment and integration of new tools and emerging technologies. The building of scalable frameworks for creative output that utilise automation with intention.</p>
-            <button class="intro-button module-popup-btn" data-module="section-03" type="button" aria-haspopup="dialog">[Click to view]</button>
+            <h2 class="section-title sr"><span class="ttl">Formation</span></h2>
+            <p class="section-body sr">Systems for efficiency and repeatability. <span style="font-family: 'Minion Pro', serif;">The assessment and integration of new tools and emerging technologies. The building of scalable frameworks for creative output that utilise automation with intention.</span></p>
             <div class="module-popup" data-module="section-03" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1395,12 +1415,12 @@
               </div>
             </div>
           </div>
+          <button class="intro-button module-popup-btn" data-module="section-03" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
         <section class="section section-04" aria-label="Signals">
           <div class="section-inner">
             <h2 class="section-title sr"><span class="ttl">Signals</span><span class="dist">4000-5000m</span><span class="status">[Ledge bed]</span></h2>
             <p class="section-body sr">What’s happening and where it’s happening. The collection of media and trend mapping.</p>
-            <button class="intro-button module-popup-btn" data-module="section-04" type="button" aria-haspopup="dialog">[Click to view]</button>
             <div class="module-popup" data-module="section-04" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1408,12 +1428,12 @@
               </div>
             </div>
           </div>
+          <button class="intro-button module-popup-btn" data-module="section-04" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
         <section class="section section-05" aria-label="Substance">
           <div class="section-inner">
             <h2 class="section-title sr"><span class="ttl">Substance</span><span class="dist">5000-8000m</span><span class="status">[Bedrock]</span></h2>
             <p class="section-body sr">People first, always. Ongoing analysis of ethical approaches to shifting technology used in the production and distribution of creative work. Leadership with empathy that creates space for experimentation.</p>
-            <button class="intro-button module-popup-btn" data-module="section-05" type="button" aria-haspopup="dialog">[Click to view]</button>
             <div class="module-popup" data-module="section-05" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1421,12 +1441,12 @@
               </div>
             </div>
           </div>
+          <button class="intro-button module-popup-btn" data-module="section-05" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
         <section class="section section-06" aria-label="Core">
           <div class="section-inner">
             <h2 class="section-title sr"><span class="ttl">Core</span><span class="dist">8000-10000m</span><span class="status">[Early formations]</span></h2>
             <p class="section-body sr">The ongoing pursuit of successful integration of attitudes towards art, culture, and commerce in creative as a service.</p>
-            <button class="intro-button module-popup-btn" data-module="section-06" type="button" aria-haspopup="dialog">[Click to view]</button>
             <div class="module-popup" data-module="section-06" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1434,6 +1454,7 @@
               </div>
             </div>
           </div>
+          <button class="intro-button module-popup-btn" data-module="section-06" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
 
         <!-- Stash original cube so existing logic initializes, JS will remount into #cubeMount -->
