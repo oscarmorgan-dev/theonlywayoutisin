@@ -1219,27 +1219,85 @@
           position: absolute; inset: 0; display: block; pointer-events: none; opacity: 0;
           transition: opacity 820ms cubic-bezier(0.2, 0.6, 0.15, 1);
           will-change: opacity;
+          z-index: 100;
+          margin: 0; padding: 0; border: none; outline: none;
         }
-        .module-popup.show{ opacity: 1; pointer-events: auto; }
+        .module-popup.show{ opacity: 1; pointer-events: none; }
+        .module-popup.show .module-popup-btn{ pointer-events: auto; }
         .module-popup .popup-backdrop{ display: none; }
         .module-popup .popup-card{
-          position: absolute; top: 50%; left: 50%;
-          transform: translate(-50%, -50%) scale(0.985);
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+          transform: scale(0.985);
           transition: transform 900ms cubic-bezier(0.2, 0.6, 0.15, 1);
           will-change: transform;
-          width: min(42vw, 240px); aspect-ratio: 1 / 1; background: #fff; border: none; display: grid; place-items: center; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+          width: 100%; height: 100%; background: transparent; border: none; display: block; overflow: hidden; box-shadow: none; margin: 0 !important; padding: 0 !important;
+          box-sizing: border-box !important;
+          z-index: 1;
         }
-        .module-popup.show .popup-card{ transform: translate(-50%, -50%) scale(1); }
-        .module-popup .popup-card img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+        .module-popup.show .popup-card{ transform: scale(1); }
+        .module-popup .popup-card img{ 
+          position: absolute; 
+          top: 0; 
+          left: 0; 
+          right: 0;
+          bottom: 0;
+          width: 100%; 
+          height: 100%; 
+          object-fit: cover; 
+          display: block; 
+          margin: 0 !important; 
+          padding: 0 !important;
+          border: none !important;
+          outline: none !important;
+          box-sizing: border-box !important;
+          vertical-align: top !important;
+          max-width: none !important;
+          max-height: none !important;
+        }
 
         /* Anchor the module button to the module (not the text flow) */
-        .text-panel .section .module-popup-btn{ position: absolute; left: 5%; bottom: 16px; z-index: 6; }
+        .text-panel .section .module-popup-btn{ position: absolute; left: 5%; bottom: 16px; z-index: 9999; }
         /* White text for buttons in white-text modules */
         .text-panel .section-05 .module-popup-btn,
         .text-panel .section-06 .module-popup-btn{ color: #F5F6F7; }
-        /* Blur only the text when module popup is open; buttons remain crisp */
+        /* Fade the text when module popup is open; buttons remain visible */
         .text-panel .section.blur-text .section-title,
-        .text-panel .section.blur-text .section-body{ filter: blur(3px); }
+        .text-panel .section.blur-text .section-body{ 
+          opacity: 0; 
+          transition: opacity 820ms cubic-bezier(0.2, 0.6, 0.15, 1);
+        }
+        /* Ensure module popup button stays visible and doesn't fade */
+        .text-panel .section.blur-text .module-popup-btn,
+        .text-panel .section.blur-text .intro-button,
+        .text-panel .section.blur-text .module-popup-btn.sr,
+        .text-panel .section.blur-text .intro-button.sr{
+          opacity: 1 !important;
+          transition: none !important;
+          transform: none !important;
+        }
+        /* Maximum specificity override for button visibility */
+        .text-panel .section.blur-text button.module-popup-btn.intro-button{
+          opacity: 1 !important;
+          transition: none !important;
+          transform: none !important;
+          visibility: visible !important;
+          display: block !important;
+          position: fixed !important;
+          z-index: 9999 !important;
+        }
+        /* Nuclear option: override any possible fade with maximum specificity */
+        .text-panel .section.blur-text .section-inner .module-popup-btn,
+        .text-panel .section.blur-text .section-inner .intro-button,
+        .text-panel .section.blur-text .module-popup-btn,
+        .text-panel .section.blur-text .intro-button{
+          opacity: 1 !important;
+          visibility: visible !important;
+          display: block !important;
+          pointer-events: auto !important;
+          transition: none !important;
+          transform: none !important;
+          filter: none !important;
+        }
 
         /* Scroll-reveal base */
         .text-panel .sr { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .6s ease; will-change: opacity, transform; transition-delay: var(--sr-delay, 0s); }
@@ -1865,13 +1923,25 @@
           popup.setAttribute('aria-hidden', 'true');
           btn.textContent = '[Click to view]';
           const sectionEl = btn.closest('.section');
-          if (sectionEl) sectionEl.classList.remove('blur-text');
+          if (sectionEl) {
+            // Restore opacity to text elements
+            const titleEl = sectionEl.querySelector('.section-title');
+            const bodyEl = sectionEl.querySelector('.section-body');
+            if (titleEl) titleEl.style.opacity = '';
+            if (bodyEl) bodyEl.style.opacity = '';
+          }
         } else {
           popup.classList.add('show');
           popup.setAttribute('aria-hidden', 'false');
           btn.textContent = '[Click to hide]';
           const sectionEl = btn.closest('.section');
-          if (sectionEl) sectionEl.classList.add('blur-text');
+          if (sectionEl) {
+            // Instead of adding blur-text to the entire section, target specific elements
+            const titleEl = sectionEl.querySelector('.section-title');
+            const bodyEl = sectionEl.querySelector('.section-body');
+            if (titleEl) titleEl.style.opacity = '0';
+            if (bodyEl) bodyEl.style.opacity = '0';
+          }
         }
       });
     });
@@ -1883,8 +1953,16 @@
           const mod = popup.getAttribute('data-module');
           const section = popup.closest('.section');
           const btn = section ? section.querySelector(`.module-popup-btn[data-module="${mod}"]`) : document.querySelector(`.module-popup-btn[data-module="${mod}"]`);
-          if (btn) btn.textContent = '[Click to view]';
-          if (section) section.classList.remove('blur-text');
+          if (btn) {
+            btn.textContent = '[Click to view]';
+          }
+          if (section) {
+            // Restore opacity to text elements
+            const titleEl = section.querySelector('.section-title');
+            const bodyEl = section.querySelector('.section-body');
+            if (titleEl) titleEl.style.opacity = '';
+            if (bodyEl) bodyEl.style.opacity = '';
+          }
         }
       });
     });
