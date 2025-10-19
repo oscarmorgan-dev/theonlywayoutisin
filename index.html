@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -73,6 +73,13 @@
           width: fit-content; max-width: var(--pellet-maxw);
           white-space: normal; overflow-wrap: anywhere; user-select: none;
         }
+        /* Performance optimization: Disable expensive filters on mobile */
+        @media (max-width: 768px) {
+          .text-panel .pellet {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+          }
+        }
         /* Remove stroke on all pellets */
         .text-panel .hud-pellet,
         .text-panel .square-pellet,
@@ -103,11 +110,12 @@
         }
 
         /* Unified hero architecture */
-        .hero { position: fixed; inset: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 1; touch-action: none; }
+        .hero { position: fixed; inset: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 1; touch-action: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
         .bg {
             position: absolute;
             top: 0; left: var(--side-margin); right: var(--side-margin);
             will-change: transform;
+            pointer-events: none;
         }
         .bg .background-block { height: 100vh; }
         .bg .background-block img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
@@ -147,6 +155,7 @@
             top: 0;
             width: var(--side-margin);
             height: 100vh;
+            pointer-events: none;
             background-color: white;
             z-index: 999;
             border-right: 2px solid #333;
@@ -159,6 +168,7 @@
             top: 0;
             width: var(--side-margin);
             height: 100vh;
+            pointer-events: none;
             background-color: white;
             z-index: 999;
             border-left: 2px solid #333;
@@ -267,6 +277,11 @@
             z-index: 2;
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
+            /* Mobile performance optimizations */
+            -webkit-transform: translateX(-50%) translateZ(0);
+            transform: translateX(-50%) translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
         .text-panel p { font-family: 'KH Teka', Arial, sans-serif; font-size: 16px; line-height: 1.28; color:#333; margin-bottom:20px; text-align: justify; hyphens: auto; }
         .text-panel img { width: 50%; max-width: 200px; height: auto; display:block; margin: 30px auto; }
@@ -560,6 +575,10 @@
           opacity: 0;
         }
         .text-panel .hud-threshold { pointer-events:none; background: rgba(255,255,255,0.12); mix-blend-mode: screen; backdrop-filter: contrast(1.6) saturate(1.4) brightness(1.25); }
+        /* Performance optimization: Disable expensive filters on mobile */
+        @media (max-width: 768px) {
+          .text-panel .hud-threshold { backdrop-filter: none; -webkit-backdrop-filter: none; }
+        }
         .text-panel .hud-overlay { pointer-events: none; }
         .text-panel .hud-rect { position:absolute; border:1px solid #ef4136; }
         .text-panel .hud-label { position:absolute; font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 8.4px; color: #000; }
@@ -635,6 +654,10 @@
         }
         .text-panel .code-screen::-webkit-scrollbar { display: none; }
         .text-panel .code-threshold { position:absolute; inset:0; pointer-events:none; background: rgba(255,255,255,0.10); mix-blend-mode: screen; backdrop-filter: contrast(1.4) saturate(1.2) brightness(1.15); }
+        /* Performance optimization: Disable expensive filters on mobile */
+        @media (max-width: 768px) {
+          .text-panel .code-threshold { backdrop-filter: none; -webkit-backdrop-filter: none; }
+        }
         .text-panel .hud-rect-label { position:absolute; left:2px; bottom:2px; font-family: 'MonumentGrotesk-Semi-Mono', Arial, sans-serif; font-size: 8.4px; color:#000; line-height:1; pointer-events:none; }
 
         /* Vector diagram animation */
@@ -859,6 +882,9 @@
             -webkit-backdrop-filter: none !important;
             box-shadow: 0 6px 18px rgba(0,0,0,.18);
             background: #fff;
+            /* Optimize mobile scrolling */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
           }
           .text-panel p { font-size: 15px; line-height: 1.3; }
           .text-panel img { width: 40%; max-width: 140px; margin: 20px auto; }
@@ -880,6 +906,7 @@
           .text-panel .section-inner { padding: 24px 6%; transform: translateY(-6%); }
           .section-title { font-size: 26px; }
           .section-body { font-size: 15px; line-height: 1.38; max-width: 64ch; }
+          .module-number { font-size: 15px; }
           .intro-square { width: min(84vw, 420px); }
         }
 
@@ -895,6 +922,11 @@
             -webkit-backdrop-filter: none !important;
             box-shadow: 0 6px 18px rgba(0,0,0,.18);
             background: #fff;
+            /* Optimize mobile scrolling */
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            /* Prevent horizontal scroll */
+            overflow-x: hidden;
           }
           .text-panel p { font-size: 14px; line-height: 1.35; }
           .text-panel img { width: 33%; max-width: 120px; margin: 16px auto; }
@@ -916,6 +948,7 @@
           .text-panel .section-inner { padding: 20px 6%; transform: translateY(-4%); }
           .section-title { font-size: 22px; letter-spacing: 0.005em; }
           .section-body { font-size: 14px; line-height: 1.4; max-width: 66ch; }
+          .module-number { font-size: 14px; }
           .intro-square { width: min(88vw, 380px); }
         }
 
@@ -941,6 +974,22 @@
 
         /* Footer buttons: match intro button text size exactly */
         .final-navigation-links .intro-button{ font-size: 12px; }
+        
+        /* Mobile accessibility improvements */
+        @media (max-width: 768px) {
+          /* Ensure proper focus indicators on mobile */
+          .intro-button:focus,
+          .module-popup-btn:focus,
+          .final-navigation-links .intro-button:focus {
+            outline: 2px solid #333;
+            outline-offset: 2px;
+          }
+          /* Improve touch targets for navigation */
+          .final-navigation-links .intro-button {
+            min-height: 44px;
+            padding: 8px 12px;
+          }
+        }
 
 
         @media (max-width: 768px) {
@@ -1053,6 +1102,8 @@
         .text-panel .section-inner{ width: 100%; margin: 0; padding: 32px 5%; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: left; transform: translateY(-10%); }
         .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; transform: none; }
         /* ===== Type system ===== */
+        .module-number{ font-family: 'Minion Pro', serif; font-size: 16px; letter-spacing: 0.02em; margin: 0 0 16px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; position: relative; z-index: 1; }
+        .section-05 .module-number, .section-06 .module-number{ color: #F5F6F7; }
         .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
         .section-title .dist, .section-title .status { display:block; font-size: 16px; line-height: 1.2; letter-spacing: 0; margin-top: 2px; }
         .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 16px; line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
@@ -1198,7 +1249,7 @@
           .intro-subtext{ font-size: clamp(12px, 3.8vw, 18px) !important; top: calc(52% + 20px); }
           /* Improve tap targets and avoid home-indicator overlap */
           .intro-actions-bottom{ padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
-          .intro-button{ padding: 10px 0; }
+          .intro-button{ padding: 10px 0; min-height: 44px; /* iOS recommended tap target */ }
           /* Ensure cube container remains perfectly centered on small screens */
           .section-01 .intro-grid{ place-items: center; }
           .intro-square{ 
@@ -1207,6 +1258,25 @@
             /* slight upward optical correction on small screens so it feels perfectly centered */
             transform: translate(-50%, calc(-50% - 8px)); 
             margin: 0; 
+          }
+          /* Optimize scrolling performance on mobile */
+          .text-panel { 
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+          }
+          /* Prevent zoom on input focus */
+          input, textarea, select { font-size: 16px; }
+          /* Optimize animations for mobile */
+          .intro-square { 
+            -webkit-transform: translate(-50%, calc(-50% - 8px)); 
+            transform: translate(-50%, calc(-50% - 8px)); 
+          }
+          /* Ensure proper touch targets for all interactive elements */
+          .module-popup-btn { min-height: 44px; padding: 8px 0; }
+          /* Optimize text rendering on mobile */
+          .section-title, .section-body, .module-number { 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
           }
         }
         .intro-button:active{ outline: none; }
@@ -1271,7 +1341,6 @@
           border: none !important;
           outline: none !important;
           box-sizing: border-box !important;
-          vertical-align: top !important;
           max-width: none !important;
           max-height: none !important;
         }
@@ -1393,6 +1462,7 @@
         </section>
         <section class="section section-02" aria-label="Surface">
           <div class="section-inner">
+            <div class="module-number">001</div>
             <h2 class="section-title sr"><span class="ttl">Surface</span></h2>
             <p class="section-body sr">Work visible in the world. <span style="font-family: 'Minion Pro', serif;">Creative strategy based on cultural observation, interrogation, and participation. Brand stewardship, concept development, text and image consultation.</span></p>
             <div class="module-popup" data-module="section-02" aria-hidden="true">
@@ -1406,6 +1476,7 @@
         </section>
         <section class="section section-03" aria-label="Formation">
           <div class="section-inner">
+            <div class="module-number">002</div>
             <h2 class="section-title sr"><span class="ttl">Formation</span></h2>
             <p class="section-body sr">Systems for efficiency and repeatability. <span style="font-family: 'Minion Pro', serif;">The assessment and integration of new tools and emerging technologies. The building of scalable frameworks for creative output that utilise automation with intention.</span></p>
             <div class="module-popup" data-module="section-03" aria-hidden="true">
@@ -1417,10 +1488,11 @@
           </div>
           <button class="intro-button module-popup-btn" data-module="section-03" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
-        <section class="section section-04" aria-label="Signals">
+        <section class="section section-04" aria-label="Seam">
           <div class="section-inner">
-            <h2 class="section-title sr"><span class="ttl">Signals</span><span class="dist">4000-5000m</span><span class="status">[Ledge bed]</span></h2>
-            <p class="section-body sr">What’s happening and where it’s happening. The collection of media and trend mapping.</p>
+            <div class="module-number">003</div>
+            <h2 class="section-title sr"><span class="ttl">Seam</span></h2>
+            <p class="section-body sr">Intuition – or, what's happening and where it's happening. <span style="font-family: 'Minion Pro', serif;">Trend mapping and the collection and ongoing interaction with media.</span></p>
             <div class="module-popup" data-module="section-04" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1430,10 +1502,11 @@
           </div>
           <button class="intro-button module-popup-btn" data-module="section-04" type="button" aria-haspopup="dialog">[Click to view]</button>
         </section>
-        <section class="section section-05" aria-label="Substance">
+        <section class="section section-05" aria-label="Bedrock">
           <div class="section-inner">
-            <h2 class="section-title sr"><span class="ttl">Substance</span><span class="dist">5000-8000m</span><span class="status">[Bedrock]</span></h2>
-            <p class="section-body sr">People first, always. Ongoing analysis of ethical approaches to shifting technology used in the production and distribution of creative work. Leadership with empathy that creates space for experimentation.</p>
+            <div class="module-number">004</div>
+            <h2 class="section-title sr"><span class="ttl">Bedrock</span></h2>
+            <p class="section-body sr">Interrogating existing systems of power. <span style="font-family: 'Minion Pro', serif;">Thinking about why we do things, how, and who they affect. Ongoing analysis of ethical approaches to shifting technology used in the production and distribution of creative work. Leadership with empathy that creates space for experimentation.</span></p>
             <div class="module-popup" data-module="section-05" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1445,8 +1518,9 @@
         </section>
         <section class="section section-06" aria-label="Core">
           <div class="section-inner">
-            <h2 class="section-title sr"><span class="ttl">Core</span><span class="dist">8000-10000m</span><span class="status">[Early formations]</span></h2>
-            <p class="section-body sr">The ongoing pursuit of successful integration of attitudes towards art, culture, and commerce in creative as a service.</p>
+            <div class="module-number">005</div>
+            <h2 class="section-title sr"><span class="ttl">Core</span></h2>
+            <p class="section-body sr">Simply, the ongoing pursuit of the successful integration of attitudes towards art, culture, and commerce into creative as a service.</p>
             <div class="module-popup" data-module="section-06" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
@@ -1580,9 +1654,12 @@
     return p;
   }
 
-  // Animate cubes continuously
+  // Animate cubes continuously - Performance optimized
   let lastCubeTime = performance.now();
   let cubesRAF = null, cubesActive = false;
+  let isScrolling = false;
+  let scrollTimeout = null;
+  
   function tickCubes(time) {
     if (!REDUCED_MOTION && cubeStates.length > 0) {
       const dt = (time - lastCubeTime) / 1000; // delta in seconds
@@ -1590,13 +1667,20 @@
 
       for (const state of cubeStates) {
         if (!state.cube) continue;
+        
+        // Performance optimization: Only animate visible cubes
+        const rect = state.block.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (!isVisible) continue;
 
         // Calculate scroll-based speed multiplier
         const progress = elementProgress(state.block, textPanel);
         state.scrollMultiplier = 1 + progress * 4; // 1x to 5x speed based on scroll
 
         // Update rotation angles (include transient hover boost, pause while dragging)
-        const speedMult = (state.isDragging ? 0 : state.scrollMultiplier * (1 + state.hoverBoost));
+        // Performance optimization: Reduce animation during scroll
+        const scrollThrottle = isScrolling ? 0.3 : 1.0;
+        const speedMult = (state.isDragging ? 0 : state.scrollMultiplier * (1 + state.hoverBoost) * scrollThrottle);
         state.rotX += state.baseSpeedX * speedMult * dt * 60; // normalize to 60fps
         state.rotY += state.baseSpeedY * speedMult * dt * 60;
         state.rotZ += state.baseSpeedZ * speedMult * dt * 60;
@@ -1613,31 +1697,70 @@
     }
     cubesRAF = requestAnimationFrame(tickCubes);
   }
-  function startCubes(){ if (!cubesActive){ cubesActive = true; cubesRAF = requestAnimationFrame(tickCubes); } }
+  function startCubes(){ 
+    if (!cubesActive){ 
+      cubesActive = true; 
+      cubesRAF = requestAnimationFrame(tickCubes); 
+    } 
+  }
+  
+  // Performance optimization: Throttle animation during scroll
+  function onScrollStart() {
+    isScrolling = true;
+    clearTimeout(scrollTimeout);
+  }
+  
+  function onScrollEnd() {
+    scrollTimeout = setTimeout(() => {
+      isScrolling = false;
+    }, 150); // Stop throttling 150ms after scroll ends
+  }
+  
   // Keep the cube moving gently at all times (no stop)
   function stopCubes(){ /* intentionally no-op to preserve gentle continuous motion */ }
 
   const tp = document.getElementById('textPanel');
   let scrollStopTimer;
   tp.addEventListener('scroll', () => {
+    onScrollStart();
     startCubes();
   }, { passive: true });
+  
+  // Add scroll end detection
+  tp.addEventListener('scroll', () => {
+    clearTimeout(scrollStopTimer);
+    scrollStopTimer = setTimeout(onScrollEnd, 100);
+  }, { passive: true });
+  
   // start immediately
   startCubes();
 
+  // Performance optimization: Cache expensive calculations
+  let cachedHeroH = null;
+  let cachedBgMax = null;
+  let lastScrollTop = -1;
+  
   function update() {
     const textMax = Math.max(1, textPanel.scrollHeight - textPanel.clientHeight);
     const t = clamp(textPanel.scrollTop / textMax, 0, 1);
+    
+    // Performance optimization: Skip update if scroll position hasn't changed significantly
+    const currentScrollTop = textPanel.scrollTop;
+    if (Math.abs(currentScrollTop - lastScrollTop) < 1) return;
+    lastScrollTop = currentScrollTop;
 
     // Map text progress to background timeline with offset
     const offsetStart = 0.00; // reveal full top of first image
     const offsetEnd   = 1.00;
 
-    // Use the hero's actual height (works with 100svh on mobile)
-    const heroH = heroEl.clientHeight;
-    const bgMax  = Math.max(1, bg.scrollHeight - heroH);
+    // Performance optimization: Cache hero height and bg max calculations
+    if (cachedHeroH === null) {
+      cachedHeroH = heroEl.clientHeight;
+      cachedBgMax = Math.max(1, bg.scrollHeight - cachedHeroH);
+    }
+    
     const bgProg = clamp(offsetStart + (offsetEnd - offsetStart) * t, 0, 1);
-    const y      = -bgProg * bgMax;
+    const y      = -bgProg * cachedBgMax;
 
     // Reduced motion: freeze background, but still update UI state
     bg.style.transform = REDUCED ? 'translateY(0)' : `translateY(${y}px)`;
@@ -1825,7 +1948,12 @@
   }
 
   textPanel.addEventListener('scroll', onTextScroll, { passive: true });
-  window.addEventListener('resize', () => requestAnimationFrame(update));
+  window.addEventListener('resize', () => {
+    // Invalidate cache on resize
+    cachedHeroH = null;
+    cachedBgMax = null;
+    requestAnimationFrame(update);
+  });
   window.addEventListener('load',   () => requestAnimationFrame(update));
 
   if (document.fonts && document.fonts.ready) {
@@ -1856,9 +1984,14 @@
     });
   })();
 
-  window.addEventListener('wheel', globalWheelRouter, { passive: false });
-  window.addEventListener('touchstart', onTouchStart, { passive: false });
-  window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  // Performance optimization: Use passive listeners for better scroll performance
+  // Only intercept when necessary (mobile touch routing)
+  if (window.innerWidth <= 768) {
+    window.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  }
+  // Desktop: let browser handle wheel events natively for better performance
+  window.addEventListener('wheel', globalWheelRouter, { passive: true });
 
   new ResizeObserver(() => requestAnimationFrame(update)).observe(textPanel);
 
@@ -2003,9 +2136,22 @@
     function prepareSubtext(){
       if (subtextPrepared || !subtext) return;
       const words = subtextString.split(/(\s+)/); // keep spaces
+      let isSecondSentence = false;
+      
       subtext.innerHTML = words.map((w, i) => {
         if (w.trim().length === 0) return w; // space
-        return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms;\">${w}</span>`;
+        
+        // Check if we're in the second sentence (after the first period)
+        if (w.includes('.')) {
+          // Only switch to second sentence after we've processed the period
+          if (!isSecondSentence) {
+            isSecondSentence = true;
+            return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms;\">${w}</span>`;
+          }
+        }
+        
+        const fontFamily = isSecondSentence ? 'font-family: \'Minion Pro\', serif;' : '';
+        return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms; ${fontFamily}\">${w}</span>`;
       }).join('');
       subtextPrepared = true;
     }
