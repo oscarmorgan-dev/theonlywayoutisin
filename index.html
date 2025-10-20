@@ -1380,7 +1380,8 @@
           z-index: 1;
         }
         .module-popup.show .popup-card{ transform: scale(1); }
-        .module-popup .popup-card img{ 
+        .module-popup .popup-card img,
+        .module-popup .popup-card video{ 
           position: absolute; 
           top: 0; 
           left: 0; 
@@ -1419,14 +1420,18 @@
           transition: none !important;
           transform: none !important;
         }
-        /* Maximum specificity override for button visibility */
+        /* Invert module popup button color when active (pressed) */
+        .text-panel .section.blur-text .module-popup-btn{ color: #F5F6F7 !important; }
+        /* Keep button anchored to module when popup is open */
         .text-panel .section.blur-text button.module-popup-btn.intro-button{
           opacity: 1 !important;
           transition: none !important;
           transform: none !important;
           visibility: visible !important;
           display: block !important;
-          position: fixed !important;
+          position: absolute !important; /* anchor to module */
+          left: 5% !important;
+          bottom: 16px !important;
           z-index: 9999 !important;
         }
         /* Nuclear option: override any possible fade with maximum specificity */
@@ -1523,7 +1528,9 @@
             <div class="module-popup" data-module="section-02" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <img src="assets/images/grid 5/UT-1.png" alt="Preview" loading="lazy" />
+                <video src="assets/images/textPanel/peacock-video.mp4" autoplay loop muted playsinline>
+                  <p>Your browser doesn't support HTML5 video.</p>
+                </video>
               </div>
             </div>
           </div>
@@ -2133,6 +2140,7 @@
           btn.textContent = '[Click to view]';
           const sectionEl = btn.closest('.section');
           if (sectionEl) {
+            sectionEl.classList.remove('blur-text');
             // Restore opacity to text elements
             const titleEl = sectionEl.querySelector('.section-title');
             const bodyEl = sectionEl.querySelector('.section-body');
@@ -2145,6 +2153,7 @@
           btn.textContent = '[Click to hide]';
           const sectionEl = btn.closest('.section');
           if (sectionEl) {
+            sectionEl.classList.add('blur-text');
             // Instead of adding blur-text to the entire section, target specific elements
             const titleEl = sectionEl.querySelector('.section-title');
             const bodyEl = sectionEl.querySelector('.section-body');
@@ -2166,6 +2175,7 @@
             btn.textContent = '[Click to view]';
           }
           if (section) {
+            section.classList.remove('blur-text');
             // Restore opacity to text elements
             const titleEl = section.querySelector('.section-title');
             const bodyEl = section.querySelector('.section-body');
@@ -2205,8 +2215,8 @@
           }
         }
         
-        const fontFamily = isSecondSentence ? 'font-family: \'Minion Pro\', serif;' : '';
-        return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms; ${fontFamily}\">${w}</span>`;
+        const fontStyle = isSecondSentence ? "font-family: 'Minion Pro', serif; font-style: italic;" : '';
+        return `<span class=\"word\" style=\"transition: opacity 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms, transform 420ms cubic-bezier(0.2, 0.6, 0.15, 1) ${i*42}ms; ${fontStyle}\">${w}</span>`;
       }).join('');
       subtextPrepared = true;
     }
