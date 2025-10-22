@@ -1131,6 +1131,10 @@
         .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 16px; line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
         /* Module 02 paragraph should match Module 01 subtext size */
         .section-02 .section-body{ font-size: clamp(6px, 2.2vw, 18px); }
+        @media (max-width: 768px){
+          /* Ensure Module 02 body text matches global body size on mobile */
+          .section-02 .section-body{ font-size: 16px; }
+        }
         /* Smooth filter transitions for text */
         .section-title, .section-body{
           transition: filter 820ms cubic-bezier(0.2, 0.6, 0.15, 1);
@@ -1557,7 +1561,9 @@
             <div class="module-popup" data-module="section-04" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <img src="assets/images/grid 4/001 - VOCE.jpg" alt="Preview" loading="lazy" />
+                <video src="assets/images/textPanel/eyeball0001-0250.mp4" autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+                  <p>Your browser doesn't support HTML5 video.</p>
+                </video>
               </div>
             </div>
           </div>
@@ -1571,7 +1577,9 @@
             <div class="module-popup" data-module="section-05" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <img src="assets/images/grid 2/code_overlay.png" alt="Preview" loading="lazy" />
+                <video src="assets/images/textPanel/slide0001-0250.mp4" autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+                  <p>Your browser doesn't support HTML5 video.</p>
+                </video>
               </div>
             </div>
           </div>
@@ -1932,8 +1940,8 @@
 
     // Blur removed
 
-    // Footer reveal at end of text with slight damping
-    const atEnd = t >= 0.999;
+    // Footer reveal at end of text with longer damping
+    const atEnd = t >= 1;
     if (footer) {
       if (atEnd) {
         // cancel any pending hide
@@ -1946,7 +1954,7 @@
             if (typeof stopAuto === 'function' && typeof playRaf !== 'undefined' && playRaf) {
               stopAuto();
             }
-          }, 220); // slight, damp delay
+          }, 1200); // longer damp delay to allow reading Module 06
         }
       } else {
         // cancel any pending reveal
