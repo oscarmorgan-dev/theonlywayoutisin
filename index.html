@@ -881,7 +881,7 @@
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: 0 6px 18px rgba(0,0,0,.18);
-            background: #fff;
+            background: transparent !important;
             /* Optimize mobile scrolling */
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
@@ -922,7 +922,7 @@
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             box-shadow: 0 6px 18px rgba(0,0,0,.18);
-            background: #fff;
+            background: transparent !important;
             /* Optimize mobile scrolling */
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
@@ -1104,26 +1104,30 @@
         /* ===== Sections inside the existing text panel ===== */
         /* Make modules cover the panel with the same translucent feel */
         .text-panel { padding: 0; }
+        .text-panel { background: transparent !important; }
         .text-panel .section{ position: relative; width: 100%; height: 80vh; display: flex; align-items: center; border: none; }
         .text-panel .section + .section{ border-top: 2px solid #333; }
-        .text-panel .section-01{ background: #aeadaa; }
+        .text-panel .section-01{ background: #e6e7e8; }
         .text-panel .section-02{ background: rgba(230,231,232,0.95); }
         .text-panel .section-03{ background: rgba(167,169,172,0.95); }
         .text-panel .section-04{ background: rgba(241,90,41,0.95); }
         .text-panel .section-05{ background: rgba(46,49,146,0.95); }
         .text-panel .section-06{ background: rgba(65,64,66,0.95); }
+        .text-panel .section-07{ background: rgba(0,0,0,0.95); }
         .text-panel .section-inner{ width: 100%; margin: 0; padding: 32px 5%; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: left; transform: translateY(-10%); }
-        .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; transform: none; }
+        .text-panel .section-01 .section-inner{ padding: 32px 5%; display: grid; place-items: center; transform: none; background: transparent; }
+        .text-panel .section-01 .intro-grid{ background: transparent; }
         /* ===== Type system ===== */
         .module-number{ font-family: 'Minion Pro', serif; font-size: 16px; letter-spacing: 0.02em; margin: 0 0 16px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; position: relative; z-index: 1; }
         /* Module 02 number should match Module 01 subtext size and use Monument Grotesk Semi Mono */
         .section-02 .module-number{ font-size: clamp(6px, 2.2vw, 18px); font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; }
-        /* Modules 03-06 numbers should use Monument Grotesk Semi Mono */
+        /* Modules 03-07 numbers should use Monument Grotesk Semi Mono */
         .section-03 .module-number,
         .section-04 .module-number,
         .section-05 .module-number,
-        .section-06 .module-number{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; }
-        .section-05 .module-number, .section-06 .module-number{ color: #F5F6F7; }
+        .section-06 .module-number,
+        .section-07 .module-number{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; }
+        .section-05 .module-number, .section-06 .module-number, .section-07 .module-number{ color: #F5F6F7; }
         .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
         /* Module 02 title should match Module 01 title size */
         .section-02 .section-title{ font-size: clamp(21px, 4.25vw, 41px); }
@@ -1140,14 +1144,14 @@
           transition: filter 820ms cubic-bezier(0.2, 0.6, 0.15, 1);
           will-change: filter;
         }
-        .section-05 .section-title, .section-05 .section-body, .section-06 .section-title, .section-06 .section-body{ color: #F5F6F7; }
+        .section-05 .section-title, .section-05 .section-body, .section-06 .section-title, .section-06 .section-body, .section-07 .section-title, .section-07 .section-body{ color: #F5F6F7; }
         /* ===== Intro (module 1) ===== */
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
         .intro-grid{ position: relative; }
         .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; opacity: 1; transition: opacity 320ms ease; }
         .intro-square .cube-block{ margin: 0; }
-        .intro-copy{ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 5%; text-align: left; text-align-last: left; z-index: 1; pointer-events: auto; width: 100%; }
+        .intro-copy{ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 5%; text-align: left; text-align-last: left; z-index: 1; pointer-events: auto; width: 100%; background: transparent; }
         .intro-copy .intro-text{
           font-family: 'MonumentGrotesk-Semi-Mono', 'Monument Semi Grotesk', Arial, sans-serif;
           color: #000000;
@@ -1402,7 +1406,8 @@
         .text-panel .section .module-popup-btn{ position: absolute; left: 5%; bottom: 16px; z-index: 99999; }
         /* White text for buttons in white-text modules */
         .text-panel .section-05 .module-popup-btn,
-        .text-panel .section-06 .module-popup-btn{ color: #F5F6F7; }
+        .text-panel .section-06 .module-popup-btn,
+        .text-panel .section-07 .module-popup-btn{ color: #F5F6F7; }
         /* Fade the text when module popup is open; buttons remain visible */
         .text-panel .section.blur-text .section-title,
         .text-panel .section.blur-text .section-body{ 
@@ -1561,7 +1566,7 @@
             <div class="module-popup" data-module="section-04" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <video src="assets/images/textPanel/eyeball0001-0250.mp4" autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+                <video src="assets/images/textPanel/eyball_update_2.mp4" autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
                   <p>Your browser doesn't support HTML5 video.</p>
                 </video>
               </div>
@@ -1587,17 +1592,23 @@
         </section>
         <section class="section section-06" aria-label="Core">
           <div class="section-inner">
-            <div class="module-number">005</div>
+            <div class="module-number">006</div>
             <h2 class="section-title sr"><span class="ttl">Core</span></h2>
             <p class="section-body sr">Simply, the ongoing pursuit of the successful integration of attitudes towards art, culture, and commerce into creative as a service.</p>
             <div class="module-popup" data-module="section-06" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <img src="assets/images/grid 4/003 - NE003.jpg" alt="Preview" loading="lazy" />
+                <video src="assets/images/textPanel/door-test.mp4" autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+                  <p>Your browser doesn't support HTML5 video.</p>
+                </video>
               </div>
             </div>
           </div>
           <button class="intro-button module-popup-btn" data-module="section-06" type="button" aria-haspopup="dialog">[Click to view]</button>
+        </section>
+        <section class="section section-07" aria-label="Foundation">
+          <div class="section-inner">
+          </div>
         </section>
 
         <!-- Stash original cube so existing logic initializes, JS will remount into #cubeMount -->
@@ -1941,7 +1952,8 @@
     // Blur removed
 
     // Footer reveal at end of text with longer damping
-    const atEnd = t >= 1;
+    const atEnd = t >= 0.99; // Changed from 1 to 0.99 to account for rounding issues
+    console.log('Footer debug - t:', t, 'atEnd:', atEnd, 'scrollTop:', textPanel.scrollTop, 'textMax:', textMax);
     if (footer) {
       if (atEnd) {
         // cancel any pending hide
