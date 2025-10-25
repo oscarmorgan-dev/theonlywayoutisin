@@ -81,6 +81,13 @@
             font-weight: 900;
             font-style: normal;
         }
+
+        @font-face {
+            font-family: 'KHTeka-Regular';
+            src: url('KHTeka-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
         :root { --side-margin: 80px; --content-pad: 40px; --pellet-bg: rgba(255,255,255,0.75); --pellet-border: #333; --pellet-font-size: 16px; --pellet-line: 1.1; --pellet-maxw: 66%; }
         /* Pellet token (shared styles) */
         .text-panel .pellet {
@@ -1151,7 +1158,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Sabbath Black', serif;
-            font-size: clamp(24px, 4vw, 48px);
+            font-size: clamp(28px, 4vw, 48px);
             color: #000000;
             text-align: center;
             z-index: 15;
@@ -1168,7 +1175,7 @@
         left: 50%;
         transform: translateX(-50%);
         font-family: 'Minion3 Regular', serif !important;
-        font-size: clamp(18px, 3.25vw, 26px);
+        font-size: clamp(16px, 2.5vw, 24px);
         color: #ffffff !important;
         text-align: center;
         z-index: 15;
@@ -1181,7 +1188,8 @@
     }
     
     .author-name {
-        font-family: 'KH Teka', serif !important;
+        font-family: 'KH Teka', 'KHTeka-Regular', serif !important;
+        font-weight: 400 !important;
     }
         @keyframes fadeInText {
             from {
