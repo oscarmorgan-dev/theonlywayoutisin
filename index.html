@@ -1192,11 +1192,21 @@
         font-weight: 400 !important;
     }
 
+    /* Hide line break on desktop */
+    .mobile-break {
+        display: none;
+    }
+
     /* Mobile-specific: Two-line subheading */
     @media (max-width: 768px) {
         .module-subtitle {
             white-space: normal;
             line-height: 1.2;
+            text-align: center;
+        }
+        
+        .mobile-break {
+            display: inline;
         }
     }
         @keyframes fadeInText {
@@ -1607,7 +1617,7 @@
             <p>Your browser doesn't support HTML5 video.</p>
           </video>
           <h1 class="module-title">The only way out is in</h1>
-          <p class="module-subtitle">Text and Images by <span class="author-name">OSCAR B. MORGAN</span></p>
+          <p class="module-subtitle">Text and Images by <span class="mobile-break"><br></span><span class="author-name">OSCAR B. MORGAN</span></p>
           <div class="section-inner intro-grid">
             <nav class="intro-links" aria-label="Primary links">
               <a class="intro-link" href="mailto:studio@oscarbmorgan.com">Contact</a>
