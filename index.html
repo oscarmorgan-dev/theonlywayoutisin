@@ -53,6 +53,34 @@
             font-weight: 400;
             font-style: italic;
         }
+
+        @font-face {
+            font-family: 'Tratatello';
+            src: url('tratatello.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'P22 Operina Pro';
+            src: url('P22 Operina Pro Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Minion3 Regular';
+            src: url('Minion3-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Sabbath Black';
+            src: url('Sabbath-Black Black.ttf') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+        }
         :root { --side-margin: 80px; --content-pad: 40px; --pellet-bg: rgba(255,255,255,0.75); --pellet-border: #333; --pellet-font-size: 16px; --pellet-line: 1.1; --pellet-maxw: 66%; }
         /* Pellet token (shared styles) */
         .text-panel .pellet {
@@ -1107,7 +1135,63 @@
         .text-panel { background: transparent !important; }
         .text-panel .section{ position: relative; width: 100%; height: 80vh; display: flex; align-items: center; border: none; }
         .text-panel .section + .section{ border-top: 2px solid #333; }
-        .text-panel .section-01{ background: #e6e7e8; }
+        .text-panel .section-01{ background: #e6e7e8; position: relative; }
+        .section-bg-video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 10;
+        }
+        .module-title {
+            position: absolute;
+            top: calc(20% - 55px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Sabbath Black', serif;
+            font-size: clamp(24px, 4vw, 48px);
+            color: #000000;
+            text-align: center;
+            z-index: 15;
+            margin: 0;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            opacity: 0;
+            animation: fadeInText 1.5s ease-in-out 0.5s forwards;
+        }
+    .module-subtitle {
+        position: absolute;
+        top: calc(20% - 70px + 70px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Minion3 Regular', serif !important;
+        font-size: clamp(18px, 3.25vw, 26px);
+        color: #ffffff !important;
+        text-align: center;
+        z-index: 15;
+        margin: 0;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        opacity: 0;
+        animation: fadeInText 1.5s ease-in-out 1.5s forwards;
+    }
+    
+    .author-name {
+        font-family: 'KH Teka', serif !important;
+    }
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
         .text-panel .section-02{ background: rgba(230,231,232,0.95); }
         .text-panel .section-03{ background: rgba(167,169,172,0.95); }
         .text-panel .section-04{ background: rgba(241,90,41,0.95); }
@@ -1148,7 +1232,7 @@
         /* ===== Intro (module 1) ===== */
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
-        .intro-grid{ position: relative; }
+        .intro-grid{ position: relative; z-index: 15; }
         .intro-square{ width: min(64vw, 520px); aspect-ratio: 1 / 1; border: none; display: grid; place-items: center; background: transparent; margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; opacity: 1; transition: opacity 320ms ease; }
         .intro-square .cube-block{ margin: 0; }
         .intro-copy{ position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 5%; text-align: left; text-align-last: left; z-index: 1; pointer-events: auto; width: 100%; background: transparent; }
@@ -1239,7 +1323,7 @@
           -webkit-appearance: none; 
           border: none; 
           background: transparent; 
-          color: #000000; 
+          color: #ffffff; 
           padding: 8px 0; 
           font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; 
           font-size: 12px; 
@@ -1357,7 +1441,7 @@
         .intro-copy .section-title::after,
         .intro-copy .section-body::after{ content: ""; display: inline-block; width: 100%; }
         #cubeMount, #cubeMount > *{ width: 100%; height: 100%; }
-        .intro-links{ display: none; }
+        .intro-links{ display: none; z-index: 20; }
         .intro-link{ font-family: "Monument Semi Grotesk", system-ui, -apple-system, Arial, sans-serif; font-size: 18px; text-decoration: none; color: #000; }
         .section-06 .intro-link { color: #F5F6F7; }
 
@@ -1502,14 +1586,13 @@
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
         <!-- ===== Six-module scaffold (inside #textPanel) ===== -->
         <section class="section section-01" aria-label="Intro">
+          <video class="section-bg-video" autoplay muted playsinline>
+            <source src="assets/images/textPanel/door-firstpass0001-0250.mp4" type="video/mp4">
+            <p>Your browser doesn't support HTML5 video.</p>
+          </video>
+          <h1 class="module-title">The only way out is in</h1>
+          <p class="module-subtitle">Text and Images by <span class="author-name">OSCAR B. MORGAN</span></p>
           <div class="section-inner intro-grid">
-            <div class="intro-square">
-              <div id="cubeMount" aria-hidden="true"></div>
-            </div>
-            <div class="intro-copy">
-              <p class="intro-text title-shift">The only way out is in</p>
-              <p id="introSubtext" class="intro-subtext" aria-live="polite"></p>
-            </div>
             <nav class="intro-links" aria-label="Primary links">
               <a class="intro-link" href="mailto:studio@oscarbmorgan.com">Contact</a>
               <a class="intro-link" href="#about">About</a>
@@ -1520,7 +1603,6 @@
             <a class="intro-button" href="#footerPanel">About</a>
             <a class="intro-button" href="#field-notes">Field notes</a>
             <a class="intro-button" href="#">Shop</a>
-            <button id="toggleCubeBtn" class="intro-button" type="button">Hide cube</button>
           </div>
         </section>
         <section class="section section-02" aria-label="Surface">
@@ -1611,21 +1693,6 @@
           </div>
         </section>
 
-        <!-- Stash original cube so existing logic initializes, JS will remount into #cubeMount -->
-        <div id="cubeStash" style="display:none">
-          <div class="cube-block" data-ax="xy" data-speed="1.00" data-ease="smooth">
-            <div class="cube-scene">
-              <div class="cube">
-                <div class="cube-face cube-face--front"><span class="cube-text">Oscar B Morgan</span></div>
-                <div class="cube-face cube-face--back"><span class="cube-text">studio@oscarbmorgan.com</span></div>
-                <div class="cube-face cube-face--right"></div>
-                <div class="cube-face cube-face--left"><span class="cube-text">© Oscar B Morgan 2025</span></div>
-                <div class="cube-face cube-face--top"><span id="helsinkiClock" class="cube-clock"></span></div>
-                <div class="cube-face cube-face--bottom"></div>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
 
