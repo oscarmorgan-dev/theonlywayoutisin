@@ -1243,16 +1243,12 @@
         .section-06 .module-number,
         .section-07 .module-number{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; }
         .section-05 .module-number, .section-06 .module-number, .section-07 .module-number{ color: #F5F6F7; }
-        .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: 32px; letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
-        /* Module 02 title should match Module 01 title size */
-        .section-02 .section-title{ font-size: clamp(21px, 4.25vw, 41px); }
+        .section-title{ font-family: 'Monument Semi Grotesk','MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif; font-size: clamp(21px, 4.25vw, 41px); letter-spacing: 0.01em; margin: 0 0 12px 0; color: #000; font-weight: 400; font-synthesis: none; -webkit-font-smoothing: antialiased; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; }
         .section-title .dist, .section-title .status { display:block; font-size: 16px; line-height: 1.2; letter-spacing: 0; margin-top: 2px; }
-        .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: 16px; line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
-        /* Module 02 paragraph should match Module 01 subtext size */
-        .section-02 .section-body{ font-size: clamp(6px, 2.2vw, 18px); }
+        .section-body{ font-family: 'KH Teka', system-ui, -apple-system, Arial, sans-serif; font-size: clamp(6px, 2.2vw, 18px); line-height: 1.32; max-width: 62ch; color: #000; text-align: left; hyphens: none; -webkit-hyphens: none; -ms-hyphens: none; overflow-wrap: normal; word-break: normal; }
         @media (max-width: 768px){
-          /* Ensure Module 02 body text matches global body size on mobile */
-          .section-02 .section-body{ font-size: 16px; }
+          /* Ensure all modules body text matches global body size on mobile */
+          .section-body{ font-size: 16px; }
         }
         /* Smooth filter transitions for text */
         .section-title, .section-body{
@@ -1371,8 +1367,8 @@
           outline: none;
           /* underline animation handled via ::after */
         }
-        /* Module 02 button should revert to original size */
-        .section-02 .intro-button{ font-size: 12px; }
+        /* All module buttons should use consistent 12px font size */
+        .intro-button{ font-size: 12px; }
         /* Ensure module popup buttons don't stretch full width in column flex containers */
         .module-popup-btn{ align-self: flex-start; }
         html { scroll-behavior: smooth; }
