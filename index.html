@@ -1139,7 +1139,7 @@
         /* ===== Sections inside the existing text panel ===== */
         /* Make modules cover the panel with the same translucent feel */
         .text-panel { padding: 0; }
-        .text-panel { background: transparent !important; }
+        .text-panel { background: transparent; }
         .text-panel .section{ position: relative; width: 100%; height: 80vh; display: flex; align-items: center; border: none; }
         .text-panel .section + .section{ border-top: 2px solid #333; }
         .text-panel .section-01{ background: #e6e7e8; position: relative; }
@@ -1638,8 +1638,8 @@
       <section id="textPanel" class="text-panel" tabindex="0" aria-label="Story">
         <!-- ===== Six-module scaffold (inside #textPanel) ===== -->
         <section class="section section-01" aria-label="Intro">
-          <video class="section-bg-video" autoplay muted playsinline>
-            <source src="assets/images/textPanel/door-firstpass0001-0250.mp4" type="video/mp4">
+          <video class="section-bg-video" autoplay muted playsinline loop>
+            <source src="assets/images/textPanel/hero-logo-test0001-0400.mp4" type="video/mp4">
             <p>Your browser doesn't support HTML5 video.</p>
           </video>
           <h1 class="module-title">The only way out is in</h1>
@@ -1665,7 +1665,7 @@
             <div class="module-popup" data-module="section-02" aria-hidden="true">
               <div class="popup-backdrop" aria-hidden="true"></div>
               <div class="popup-card" role="dialog" aria-label="Preview">
-                <video src="assets/images/textPanel/peacock-video.mp4" loop muted playsinline>
+                <video src="assets/images/textPanel/hero-logo-test0001-0400.mp4" loop muted playsinline>
                   <p>Your browser doesn't support HTML5 video.</p>
                 </video>
                 <video src="assets/images/textPanel/peack-video-2.mp4" loop muted playsinline>
