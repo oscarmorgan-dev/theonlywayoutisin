@@ -1370,22 +1370,11 @@
         /* All module buttons should use consistent 12px font size */
         .intro-button{ font-size: 12px; }
         
-        /* Reactive button color inversion based on background */
+        /* Reactive text color inversion using blend modes */
         .intro-button {
-            background: rgba(255, 255, 255, 0.9);
             color: #000;
-            backdrop-filter: blur(4px);
-            border-radius: 2px;
-            padding: 8px 12px;
+            mix-blend-mode: difference;
             transition: all 0.3s ease;
-        }
-        
-        /* Dark background modules - invert to white text */
-        .section-05 .intro-button,
-        .section-06 .intro-button,
-        .section-07 .intro-button {
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
         }
         /* Ensure module popup buttons don't stretch full width in column flex containers */
         .module-popup-btn{ align-self: flex-start; }
