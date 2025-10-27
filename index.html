@@ -1272,6 +1272,37 @@
             letter-spacing: 0.05em;
             z-index: 10;
         }
+        
+        /* Mouse depth counter */
+        .mouse-depth-counter {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-family: 'Monument Semi Grotesk', 'MonumentGrotesk-Semi-Mono', system-ui, -apple-system, Arial, sans-serif;
+            font-size: 12px;
+            color: #000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 2px;
+            backdrop-filter: blur(4px);
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        }
+        
+        .mouse-depth-counter .depth-number {
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        
+        /* Cross cursor */
+        body {
+            cursor: crosshair;
+        }
+        
+        /* Ensure interactive elements have pointer cursor */
+        a, button, .intro-button, .module-popup-btn, .nav-play-button, .nav-mute {
+            cursor: pointer !important;
+        }
         /* ===== Intro (module 1) ===== */
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
@@ -1618,6 +1649,11 @@
 
     <!-- Unified hero -->
     <main id="hero" class="hero">
+      <!-- Mouse depth counter -->
+      <div id="mouseDepthCounter" class="mouse-depth-counter">
+        <span class="depth-number">01</span>
+      </div>
+      
       <div id="bg" class="bg">
         <div class="background-block"><img src="assets/images/background/001.png" alt="Background 001" decoding="async" fetchpriority="high"></div>
         <div class="background-separator"></div>
@@ -1771,6 +1807,7 @@
   const textPanel = document.getElementById('textPanel');
   const footer = document.getElementById('footerPanel');
         const navDepthCounter = document.getElementById('navDepthCounter');
+  const mouseDepthCounter = document.getElementById('mouseDepthCounter');
   const heroEl = document.getElementById('hero');
   // Footer reveal damping state
   let footerRevealTimer = null;
@@ -1980,6 +2017,15 @@
       }
       const shown = Math.max(0, Math.round(update._depth));
       navDepthCounter.textContent = shown === 0 ? '0m' : `- ${shown}m`;
+      
+      // Update mouse depth counter with same value
+      if (mouseDepthCounter) {
+        const depthNumber = mouseDepthCounter.querySelector('.depth-number');
+        if (depthNumber) {
+          const formattedDepth = shown === 0 ? '01' : String(shown).padStart(2, '0');
+          depthNumber.textContent = formattedDepth;
+        }
+      }
     }
 
     // --- Process spheres animation ---
@@ -2487,11 +2533,42 @@
     }
   }
   
+  // Mouse depth counter tracking
+  function initMouseDepthCounter() {
+    if (!mouseDepthCounter) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    // Track mouse movement
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Update counter position
+      mouseDepthCounter.style.left = mouseX + 'px';
+      mouseDepthCounter.style.top = mouseY + 'px';
+    });
+    
+    // Hide counter when mouse leaves window
+    document.addEventListener('mouseleave', () => {
+      mouseDepthCounter.style.opacity = '0';
+    });
+    
+    // Show counter when mouse enters window
+    document.addEventListener('mouseenter', () => {
+      mouseDepthCounter.style.opacity = '1';
+    });
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAll);
   } else {
     initAll();
   }
+  
+  // Initialize mouse depth counter
+  initMouseDepthCounter();
   document.addEventListener('DOMContentLoaded', () => {
     const mount = document.getElementById('cubeMount');
     const cubeEl = document.querySelector('.text-panel .cube-block') || document.querySelector('#cubeStash .cube-block');
