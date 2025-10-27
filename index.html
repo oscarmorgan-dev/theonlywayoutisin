@@ -1256,6 +1256,22 @@
           will-change: filter;
         }
         .section-05 .section-title, .section-05 .section-body, .section-06 .section-title, .section-06 .section-body, .section-07 .section-title, .section-07 .section-body{ color: #F5F6F7; }
+        
+        /* Fin. text styling for final module */
+        .fin-text {
+            font-family: 'Sabbath Black', serif;
+            font-size: clamp(48px, 8vw, 120px);
+            color: #F5F6F7;
+            text-align: center;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            z-index: 10;
+        }
         /* ===== Intro (module 1) ===== */
         .intro-grid{ display: grid; grid-template-rows: auto auto; justify-items: center; row-gap: 28px; height: 100%; align-content: center; }
         .section-01 .intro-links{ margin-top: 8px; }
@@ -1725,6 +1741,7 @@
         </section>
         <section class="section section-07" aria-label="Foundation">
           <div class="section-inner">
+            <h1 class="fin-text">Fin.</h1>
           </div>
         </section>
 
